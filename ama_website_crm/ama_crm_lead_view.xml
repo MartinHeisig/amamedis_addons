@@ -5,15 +5,19 @@
         <record id="ama_crm_lead_form" model="ir.ui.view">
             <field name="name">crm.lead.ama.form</field>
             <field name="model">crm.lead</field>
+            <field name="priority">17</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
             <field name="arch" type="xml">
+                <field name="medium_id" position="after">
+                    <field name="medium_nr"/>
+                </field>
                 <group string="Misc" position="after">
                     <group string="Inbound">
-                        <field name="CallID"/>
+                        <field name="DestCLI"/>
+                        <field name="CLI"/>
                         <field name="ACDGroup"/>
                         <field name="DDI2"/>
-                        <field name="CLI"/>
-                        <field name="DestCLI"/>
+                        <field name="CallID"/>
                         <field name="AgentSec"/>
                     </group>
                 </group>

@@ -83,9 +83,9 @@ class AmaWebsiteCrm(http.Controller):
 
         # return self.get_contactus_response(values, kwargs)
         
-        
+class AmaWebsiteCrm2(http.Controller):       
     @http.route(['/crm/updatelead'], type='http', auth="public", website=True)
-    def contactus2(self, **kwargs):
+    def contactus(self, **kwargs):
         def dict_to_str(title, dictvar):
             ret = "\n\n%s" % title
             for field in dictvar:
@@ -110,15 +110,14 @@ class AmaWebsiteCrm(http.Controller):
         
             
         if values.get("CallID"):
-            lead_ids = request.registry['crm.lead'].search(['CallID', '=', values['CallID']])
+            lead_ids = request.registry['crm.lead'].search(request.cr, SUPERUSER_ID, [('CallID', '=', values['CallID'])])
             
             for leadID in lead_ids:
-                lead = self.pool.get('crm.lead').browse(leadID)
+                lead = request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, leadID)
                 if values.get('DestCLI'):
                     lead.DestCLI = values['DestCLI']
                 if values.get('AgentSec'):
                     lead.AgentSec = values['AgentSec']
                 if post_description:
                     lead.description += dict_to_str(_("Custom Fields (Update): "), post_description)
-
  
