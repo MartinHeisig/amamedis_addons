@@ -39,9 +39,15 @@ class AmaWebsiteCrm(http.Controller):
                 post_description.append("%s: %s" % (field_name, field_value))
 
         if values.get("CLI"):
-            values["name"] = values.get("CLI")
+            '''partner_ids = request.registry['res.partner'].search(request.cr, SUPERUSER_ID, [('phone', 'like', values['CLI'])])
+            partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_ids)
+            if partner and partner[0]:
+                values["partner_id"] = partner[0].id
+                values["name"] = partner[0].name
+            else:'''
+            values["name"] = 'Call from ' + values.get("CLI")
         elif values.get("CallID"):
-            values["name"] = values.get("CallID")
+            values["name"] = 'CallID: ' + values.get("CallID")
         else:
             values["name"] = "Call to Callcenter"
                 
@@ -69,6 +75,43 @@ class AmaWebsiteCrm(http.Controller):
 
         lead_id = self.create_lead(request, dict(values, user_id=False), kwargs)
         values.update(lead_id=lead_id)
+        
+        lead = request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, lead_id)
+        cli = lead.CLI
+        if cli:
+            lead.name = "Call from " + cli
+            i = 0
+            partner_ids = False
+            while not partner_ids and i<3:
+                partner_ids = request.registry['res.partner'].search(request.cr, SUPERUSER_ID, [('phone', 'like', cli[:len(cli)-i])])
+                i += 1
+            if partner_ids and partner_ids[0]:
+                partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_ids[0])
+                partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False
+                lead.partner_id = partner.id
+                lead.partner_name = partner_name
+                lead.contact_name = (not partner.is_company and partner.name) or False
+                lead.title = partner.title and partner.title.id or False
+                lead.street = partner.street
+                lead.street2 = partner.street2
+                lead.city = partner.city
+                lead.state_id = partner.state_id and partner.state_id.id or False
+                lead.country_id = partner.country_id and partner.country_id.id or False
+                lead.email_from = partner.email
+                lead.phone = partner.phone
+                lead.mobile = partner.mobile
+                lead.fax = partner.fax
+                lead.zip = partner.zip
+                lead.function = partner.function
+                lead.name = partner_name or partner.name
+                
+        
+        # request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, lead_id)._search_partner()
+        
+        '''if values['CLI']:
+            lead = request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, lead_id)
+            lead.CLI = values['CLI']'''
+            
         '''if lead_id:
             for field_value in post_file:
                 attachment_value = {

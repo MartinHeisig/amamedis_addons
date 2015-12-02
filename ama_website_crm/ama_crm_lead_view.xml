@@ -14,7 +14,7 @@
                 <group string="Misc" position="after">
                     <group string="Inbound">
                         <field name="DestCLI"/>
-                        <field name="CLI"/>
+                        <field name="CLI" widget="phone" on_change="on_change_cli(CLI)"/>
                         <field name="ACDGroup"/>
                         <field name="DDI2"/>
                         <field name="CallID"/>
