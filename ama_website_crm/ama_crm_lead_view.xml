@@ -11,14 +11,27 @@
                 <field name="medium_id" position="after">
                     <field name="medium_nr"/>
                 </field>
-                <group string="Misc" position="after">
-                    <group string="Inbound">
+                <group string="Misc" position="before">
+                    <group string="Inbound" colspan="4">
+                    <group>
                         <field name="DestCLI"/>
-                        <field name="CLI" widget="phone" on_change="on_change_cli(CLI)"/>
+                        <field name="CLI" widget="phone"/>
+                        <!-- Aufruf für Onchange alte API: field name="CLI" widget="phone" on_change="on_change_cli(CLI)"/-->
                         <field name="ACDGroup"/>
                         <field name="DDI2"/>
                         <field name="CallID"/>
                         <field name="AgentSec"/>
+                        <field name="SNR" widget="phone"/>
+                    </group>
+                    <group string=" ">
+                        <field name="CallStart"/>
+                        <field name="CallID2"/>
+                        <field name="CallID3"/>
+                        <field name="DialoutStart"/>
+                        <field name="DialoutDest" widget="phone"/>
+                        <field name="DialoutSec"/>
+                        <field name="TotalSec"/>
+                    </group>
                     </group>
                 </group>
             </field>

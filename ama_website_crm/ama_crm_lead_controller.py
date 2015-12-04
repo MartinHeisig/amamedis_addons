@@ -4,6 +4,12 @@ from openerp import http
 from openerp import http, SUPERUSER_ID
 from openerp.http import request
 from openerp.tools.translate import _
+from openerp.osv import osv
+
+# from sets import Set
+
+import datetime
+import urllib
 
 
 class AmaWebsiteCrm(http.Controller):
@@ -25,8 +31,8 @@ class AmaWebsiteCrm(http.Controller):
         _BLACKLIST = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date', 'user_id', 'active']  # Allow in description
         _REQUIRED = []  # Could be improved including required from model
 
-        post_file = []  # List of file to add to ir_attachment once we have the ID
         post_description = []  # Info to add after the message
+        error_description = []
         values = {}
 
         values['medium_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'crm.crm_medium_phone')
@@ -34,44 +40,26 @@ class AmaWebsiteCrm(http.Controller):
 
         for field_name, field_value in kwargs.items():
             if field_name in request.registry['crm.lead']._fields and field_name not in _BLACKLIST:
-                values[field_name] = field_value
+                if field_name in ['CallID', 'ACDGroup'] and not field_value.isdigit():
+                    error_description.append("%s: %s" % (field_name, field_value))
+                else:
+                    values[field_name] = field_value
             elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
                 post_description.append("%s: %s" % (field_name, field_value))
 
         if values.get("CLI"):
-            '''partner_ids = request.registry['res.partner'].search(request.cr, SUPERUSER_ID, [('phone', 'like', values['CLI'])])
-            partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_ids)
-            if partner and partner[0]:
-                values["partner_id"] = partner[0].id
-                values["name"] = partner[0].name
-            else:'''
             values["name"] = 'Call from ' + values.get("CLI")
         elif values.get("CallID"):
             values["name"] = 'CallID: ' + values.get("CallID")
         else:
             values["name"] = "Call to Callcenter"
                 
-        # fields validation : Check that required field from model crm_lead exists
-        error = set(field for field in _REQUIRED if not values.get(field))
-
-        # need to check where error report has to be sent
-        '''if error:
-            values = dict(values, error=error, kwargs=kwargs.items())
-            return request.website.render(kwargs.get("view_from", "website.contactus"), values)'''
-
         values['description'] = "Automatically generated from phone call"
         # description is required, so it is always already initialized
+        if error_description:
+            values['description'] += dict_to_str(_("Datatype Mismatch: "), error_description)
         if post_description:
             values['description'] += dict_to_str(_("Custom Fields: "), post_description)
-
-        '''if kwargs.get("show_info"):
-            post_description = []
-            environ = request.httprequest.headers.environ
-            post_description.append("%s: %s" % ("IP", environ.get("REMOTE_ADDR")))
-            post_description.append("%s: %s" % ("USER_AGENT", environ.get("HTTP_USER_AGENT")))
-            post_description.append("%s: %s" % ("ACCEPT_LANGUAGE", environ.get("HTTP_ACCEPT_LANGUAGE")))
-            post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
-            values['description'] += dict_to_str(_("Environ Fields: "), post_description)'''
 
         lead_id = self.create_lead(request, dict(values, user_id=False), kwargs)
         values.update(lead_id=lead_id)
@@ -82,11 +70,55 @@ class AmaWebsiteCrm(http.Controller):
             lead.name = "Call from " + cli
             i = 0
             partner_ids = False
+            partner = False
+            
             while not partner_ids and i<3:
-                partner_ids = request.registry['res.partner'].search(request.cr, SUPERUSER_ID, [('phone', 'like', cli[:len(cli)-i])])
+                partner_ids = request.registry['res.partner'].search(request.cr, SUPERUSER_ID, ['|',('phone', 'like', cli[:len(cli)-i]),'|',('mobile', 'like', cli[:len(cli)-i]),('fax', 'like', cli[:len(cli)-i])])
                 i += 1
-            if partner_ids and partner_ids[0]:
-                partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_ids[0])
+            if partner_ids:
+                if len(partner_ids) > 1:
+                    # tmp_partner_ids = Set([]) # Achtung: Hier drin sind Partner, nicht deren IDs
+                    tmp_partner_ids = set()
+                    for tmp_partner_id in partner_ids:
+                        tmp_partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, tmp_partner_id)
+                        if not tmp_partner.is_company:
+                            if tmp_partner.parent_id:
+                                tmp_partner = tmp_partner.parent_id
+                            else:
+                                tmp_partner_ids.add(tmp_partner) 
+                        if tmp_partner.is_company:
+                            if tmp_partner.parent_id:
+                                tmp_parent = tmp_partner.parent_id
+                                if tmp_parent.phone.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.mobile.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.fax.startswith(cli[:len(cli)-(i-1)]):
+                                    tmp_partner_ids.add(tmp_parent)
+                                else:
+                                    tmp_partner_ids.add(tmp_partner)
+                            else:
+                                tmp_partner_ids.add(tmp_partner)
+                    if len(tmp_partner_ids) > 1:
+                        # del_partner = Set([])
+                        del_partner = set()
+                        for partner_a in tmp_partner_ids:
+                            partner_search = partner_a
+                            while partner_search.parent_id:
+                                partner_search = partner_search.parent_id
+                                if partner_search in tmp_partner_ids:
+                                    del_partner.add(partner_a)
+                                    break
+                        tmp_partner_ids.difference_update(del_partner)
+                        # tmp_partner_ids = tmp_partner_ids.difference(del_partner)
+                    if len(tmp_partner_ids) > 1:
+                        lead.description += "\nFehler beim Kontaktsuchen - es gab mehrere Treffer:"
+                        for partner in tmp_partner_ids:
+                            # partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, id)
+                            lead.description += "\nID: " + partner.id + " Name: " + partner.name
+                    else:
+                        # partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, tmp_partner_ids[0])
+                        partner = tmp_partner_ids.pop()
+                else:
+                    partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_ids[0])
+            
+            if partner:
                 partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False
                 lead.partner_id = partner.id
                 lead.partner_name = partner_name
@@ -103,26 +135,10 @@ class AmaWebsiteCrm(http.Controller):
                 lead.fax = partner.fax
                 lead.zip = partner.zip
                 lead.function = partner.function
-                lead.name = partner_name or partner.name
-                
-        
-        # request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, lead_id)._search_partner()
-        
-        '''if values['CLI']:
-            lead = request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, lead_id)
-            lead.CLI = values['CLI']'''
-            
-        '''if lead_id:
-            for field_value in post_file:
-                attachment_value = {
-                    'name': field_value.filename,
-                    'res_name': field_value.filename,
-                    'res_model': 'crm.lead',
-                    'res_id': lead_id,
-                    'datas': base64.encodestring(field_value.read()),
-                    'datas_fname': field_value.filename,
-                }
-                request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)'''
+                lead.name = partner.name
+                lead.section_id = partner.section_id
+            else:
+                lead.phone = lead.CLI
 
         # return self.get_contactus_response(values, kwargs)
         
@@ -139,28 +155,50 @@ class AmaWebsiteCrm2(http.Controller):
         _BLACKLIST = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date', 'user_id', 'active']  # Allow in description
         _REQUIRED = []  # Could be improved including required from model
 
-        post_file = []  # List of file to add to ir_attachment once we have the ID
+        error_description = []
         post_description = []  # Info to add after the message
         values = {}
 
         for field_name, field_value in kwargs.items():
             if field_name in request.registry['crm.lead']._fields and field_name not in _BLACKLIST:
-                values[field_name] = field_value
+                if field_name in ['AgentSec', 'CallID', 'CallID2', 'CallID3', 'TotalSec', 'DialoutSec'] and not field_value.isdigit():
+                    error_description.append("%s: %s" % (field_name, field_value))
+                else:
+                    values[field_name] = field_value
             elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
                 post_description.append("%s: %s" % (field_name, field_value))
 
-                
-        
-            
-        if values.get("CallID"):
+        if values.get("CallID") and values['CallID'] != '0':
             lead_ids = request.registry['crm.lead'].search(request.cr, SUPERUSER_ID, [('CallID', '=', values['CallID'])])
             
             for leadID in lead_ids:
                 lead = request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, leadID)
-                if values.get('DestCLI'):
+                if values.get('DestCLI') and values['DestCLI'] != '0':
                     lead.DestCLI = values['DestCLI']
                 if values.get('AgentSec'):
                     lead.AgentSec = values['AgentSec']
+                if values.get('CallID2') and values['CallID2'] != '0':
+                    lead.CallID2 = values['CallID2']
+                if values.get('CallID3') and values['CallID3'] != '0':
+                    lead.CallID3 = values['CallID3']
+                    if values.get('DialoutStart') and values['DialoutStart'] != '0':
+                        try:
+                            lead.DialoutStart = datetime.datetime.strptime(urllib.unquote(values['DialoutStart']).decode('utf8'), '%m/%d/%Y %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+                        except ValueError, TypeError:
+                            error_description.append("%s: %s" % ('DialoutStart', values['DialoutStart']))
+                    if values.get('DialoutSec'):
+                        lead.DialoutSec = values['DialoutSec']
+                    if values.get('DialoutDest') and values['DialoutDest'] != '0':
+                        lead.DialoutDest = values['DialoutDest']
+                if values.get('CallStart') and values['CallStart'] != '0':
+                    try:
+                        lead.CallStart = datetime.datetime.strptime(urllib.unquote(values['CallStart']).decode('utf8'), '%m/%d/%Y %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+                    except ValueError, TypeError:
+                        error_description.append("%s: %s" % ('CallStart', values['CallStart']))
+                if values.get('TotalSec'):
+                    lead.TotalSec = values['TotalSec']
+                if error_description:
+                    lead.description += dict_to_str(_("Datatype Mismatch (Update): "), error_description)
                 if post_description:
                     lead.description += dict_to_str(_("Custom Fields (Update): "), post_description)
  
