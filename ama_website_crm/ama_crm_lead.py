@@ -12,7 +12,7 @@ class ama_website_crm(models.Model):
     CLI = fields.Char('CLI (A-Teilnehmer)', widget='phone', readonly=True)
     DestCLI = fields.Char('Zielperson', help='Personalnummer des zuletzt verbundenen Agenten oder genutzte Zielnummer einer Überlaufzielliste', readonly=True)
     AgentSec = fields.Integer('Sekunden', help='Sekunden, die der Anrufer mit dem 1. Agent bzw. Überlaufziels verbunden war', readonly=True)
-    medium_nr = fields.Many2one('ama.acd.ddi', ondelete='set null', string='Kanal Detail', readonly=True)
+    medium_nr = fields.Many2one('ama.acd.ddi', ondelete='set null', string='Kanal Detail')
     SNR = fields.Char('SNR', help='vom Anrufer angerufene Nummer', widget='phone', readonly=True)
     CallStart = fields.Datetime('CallStart', help='Anrufbeginn', readonly=True)
     DialoutStart = fields.Datetime('DialoutStart', help='Anrufbeginn der Verbindung beim Durchstellen durch den Agent', readonly=True)

@@ -37,6 +37,21 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="ama_sale_config_inbound_acd_action">
+            <field name="name">ACD-DDI-Combinations</field>
+            <field name="res_model">ama.acd.ddi</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first combination
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="ama_sale_config_inbound_menu" name="Inbound" parent="base.menu_base_config" sequence="5"/>
+        
+        <menuitem id="ama_sale_config_inbound_acd_menu" name="Kanal Details" parent="ama_sale_config_inbound_menu" action="ama_sale_config_inbound_acd_action"/>
+        
   
   </data>
 </openerp>

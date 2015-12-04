@@ -23,6 +23,7 @@
     # always loaded
     'data': [
         'ama_crm_lead_view.xml',
+        'ir.model.access.csv'
     ],
     # only loaded in demonstration mode
     'demo': [
