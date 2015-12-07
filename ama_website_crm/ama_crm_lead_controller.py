@@ -6,7 +6,7 @@ from openerp.http import request
 from openerp.tools.translate import _
 from openerp.osv import osv
 
-# from sets import Set
+import pytz
 
 import datetime
 import urllib
@@ -167,7 +167,7 @@ class AmaWebsiteCrm2(http.Controller):
         error_description = []
         post_description = []  # Info to add after the message
         values = {}
-
+        
         for field_name, field_value in kwargs.items():
             if field_name in request.registry['crm.lead']._fields and field_name not in _BLACKLIST:
                 if field_name in ['AgentSec', 'CallID', 'CallID2', 'CallID3', 'TotalSec', 'DialoutSec'] and not field_value.isdigit():
@@ -182,6 +182,8 @@ class AmaWebsiteCrm2(http.Controller):
             
             for leadID in lead_ids:
                 lead = request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, leadID)
+                su = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, SUPERUSER_ID)
+                tz = pytz.timezone(su.partner_id.tz) or pytz.utc
                 if values.get('DestCLI') and values['DestCLI'] != '0':
                     lead.DestCLI = values['DestCLI']
                 if values.get('AgentSec'):
@@ -192,7 +194,7 @@ class AmaWebsiteCrm2(http.Controller):
                     lead.CallID3 = values['CallID3']
                     if values.get('DialoutStart') and values['DialoutStart'] != '0':
                         try:
-                            lead.DialoutStart = datetime.datetime.strptime(urllib.unquote(values['DialoutStart']).decode('utf8'), '%m/%d/%Y %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+                            lead.DialoutStart = tz.localize(datetime.datetime.strptime(urllib.unquote(values['DialoutStart']).decode('utf8'), '%m/%d/%Y %H:%M:%S')).astimezone(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
                         except ValueError, TypeError:
                             error_description.append("%s: %s" % ('DialoutStart', values['DialoutStart']))
                     if values.get('DialoutSec'):
@@ -201,7 +203,7 @@ class AmaWebsiteCrm2(http.Controller):
                         lead.DialoutDest = values['DialoutDest']
                 if values.get('CallStart') and values['CallStart'] != '0':
                     try:
-                        lead.CallStart = datetime.datetime.strptime(urllib.unquote(values['CallStart']).decode('utf8'), '%m/%d/%Y %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+                        lead.CallStart = tz.localize(datetime.datetime.strptime(urllib.unquote(values['CallStart']).decode('utf8'), '%m/%d/%Y %H:%M:%S')).astimezone(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
                     except ValueError, TypeError:
                         error_description.append("%s: %s" % ('CallStart', values['CallStart']))
                 if values.get('TotalSec'):
