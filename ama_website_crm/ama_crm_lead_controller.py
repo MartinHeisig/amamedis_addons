@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-
 from openerp import http, SUPERUSER_ID
-from openerp.http import request
+from openerp.http import request, Response
 from openerp.tools.translate import _
 from openerp.osv import osv
 
-import pytz
+from werkzeug.wrappers import BaseResponse as Response
 
 import datetime
+import pytz
 import urllib
 
 
@@ -71,15 +70,6 @@ class AmaWebsiteCrm(http.Controller):
             i = 0
             partner_ids = False
             partner = False
-            
-            '''
-            TODO: CallStart wird irgendwo um eine Stunde erhöht, sie Interessent Diekmann Fr 4.12. 17:28
-            http://85.232.6.132/web?debug=#id=1633&view_type=form&model=crm.lead&menu_id=275&action=334
-            
-            erzeugt durch:
-            2015-12-04 16:28:54,656 26051 INFO amamedis2 werkzeug: 127.0.0.1 - - [04/Dec/2015 16:28:54] "GET /crm/updatelead?CallID=928621243&AgentSec=17&ACDGroup=76331&DestCLI=51351&DDI2=88&CLI=00493411286310&CallID2=928621244&CallID3=0&CallStart=12%2F04%2F2015%2017%3A28%3A17&TotalSec=22&DialoutStart=0&DialoutSec=0&DialoutDest=0& HTTP/1.0" 204 -
-
-            '''
             
             while not partner_ids and i<3:
                 partner_ids = request.registry['res.partner'].search(request.cr, SUPERUSER_ID, ['|',('phone', 'like', cli[:len(cli)-i]),'|',('mobile', 'like', cli[:len(cli)-i]),('fax', 'like', cli[:len(cli)-i])])
@@ -149,7 +139,7 @@ class AmaWebsiteCrm(http.Controller):
             else:
                 lead.phone = lead.CLI
 
-        # return self.get_contactus_response(values, kwargs)
+        return Response(status=200)
         
 class AmaWebsiteCrm2(http.Controller):       
     @http.route(['/crm/updatelead'], type='http', auth="public", website=True)
@@ -213,3 +203,4 @@ class AmaWebsiteCrm2(http.Controller):
                 if post_description:
                     lead.description += dict_to_str(_("Custom Fields (Update): "), post_description)
  
+        return Response(status=200)
