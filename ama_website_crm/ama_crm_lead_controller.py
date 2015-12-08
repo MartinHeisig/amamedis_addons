@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp import http, SUPERUSER_ID
-from openerp.http import request, Response
+from openerp.http import request
 from openerp.tools.translate import _
 from openerp.osv import osv
 
