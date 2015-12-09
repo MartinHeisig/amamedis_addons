@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="crm.tracking.medium" id="crm_t_m_fax">
+            <field name="name">Fax</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</openerp>
