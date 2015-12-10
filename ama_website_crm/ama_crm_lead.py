@@ -5,7 +5,7 @@ from openerp.exceptions import except_orm, Warning
 
 import openerp.tools.mail as mail
 
-import openerp.addons.crm as crm
+import openerp.addons.crm.crm as crm
 import datetime
 import logging
 import math
@@ -20,7 +20,6 @@ class ama_website_crm(models.Model):
     _phone_fields = ['phone', 'mobile', 'fax', 'CLI', 'SNR', 'DialoutDest']
     
     # TODO: at this time the partner search is written in three different methods. should all be redirected to the on_change-method of CLI
-    # TODO: in (overwritten) method 'mesage_new' the thing with the priority - how to access this attribute from crm? 
     
     CallID = fields.Integer('CallID', readonly=True)
     ACDGroup = fields.Integer('ACDGroup', readonly=True)
@@ -174,11 +173,9 @@ class ama_website_crm(models.Model):
         }
         if msg.get('author_id'):
             defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
-        # if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-        # if msg.get('priority') in dict(super(ama_website_crm, self).AVAILABLE_PRIORITIES):
-        #     defaults['priority'] = msg.get('priority')
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+            defaults['priority'] = msg.get('priority')
 
-        #if 'ums@zentraldata.de' in defaults['email_from'] and defaults['name'].startswith('Fax an'):
         if defaults['name'].startswith('Fax an'):
             defaults['description'] = 'Automatically generated from fax'
             defaults['medium_id'] = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'ama_website_crm.crm_t_m_fax')
