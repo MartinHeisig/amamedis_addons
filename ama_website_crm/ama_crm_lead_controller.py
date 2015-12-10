@@ -116,6 +116,11 @@ class AmaWebsiteCrm(http.Controller):
                         partner = tmp_partner_ids.pop()
                 else:
                     partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_ids[0])
+                    if not partner.is_company:
+                        if partner.parent_id:
+                            partner = partner.parent_id
+                        else:
+                            lead.description += "\nFehler beim Kontaktsuchen - einziger gefundener Kontakt ist keinem Unternehmen zugeordnet"
             
             if partner:
                 partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False

@@ -113,6 +113,11 @@ class ama_website_crm(models.Model):
                             partner = tmp_partner_ids.pop()
                     else:
                         partner = partner_ids[0]
+                        if not partner.is_company:
+                            if partner.parent_id:
+                                partner = partner.parent_id
+                            else:
+                                record.description += "\nFehler beim Kontaktsuchen - einziger gefundener Kontakt ist keinem Unternehmen zugeordnet"
                 
                 if partner:
                     partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False
@@ -276,6 +281,12 @@ class ama_website_crm(models.Model):
                                     partner = tmp_partner_ids.pop()
                             else:
                                 partner = self.pool.get('res.partner').browse(cr, uid, partner_ids[0])
+                                if not partner.is_company:
+                                    if partner.parent_id:
+                                        partner = partner.parent_id
+                                    else:
+                                        defaults['description'] += "\nFehler beim Kontaktsuchen - einziger gefundener Kontakt ist keinem Unternehmen zugeordnet"
+                                        
                         defaults['CLI'] = cli
                         defaults['partner_id'] = partner.id
                         defaults.update(self.on_change_partner_id(cr, uid, None, partner.id, context=context)['value'])
