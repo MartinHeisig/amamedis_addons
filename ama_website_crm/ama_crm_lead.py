@@ -24,7 +24,7 @@ class ama_website_crm(models.Model):
     CallID = fields.Integer('CallID', readonly=True)
     ACDGroup = fields.Integer('ACDGroup', readonly=True)
     DDI2 = fields.Char('DDI2', readonly=True)
-    CLI = fields.Char('CLI (A-Teilnehmer)', widget='phone')
+    CLI = fields.Char('CLI (A-Teilnehmer)', widget='phone', readonly=True)
     DestCLI = fields.Char('Zielperson', help='Personalnummer des zuletzt verbundenen Agenten oder genutzte Zielnummer einer Überlaufzielliste', readonly=True)
     AgentSec = fields.Integer('Sekunden', help='Sekunden, die der Anrufer mit dem 1. Agent bzw. Überlaufziels verbunden war', readonly=True)
     medium_nr = fields.Many2one('ama.acd.ddi', ondelete='set null', string='Kanal Detail', compute='_search_acd_ddi', store=True)
@@ -108,8 +108,14 @@ class ama_website_crm(models.Model):
                             for partner in tmp_partner_ids:
                                 # partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, id)
                                 record.description += "\nID: " + str(partner.id) + " Name: " + partner.name
+                            while True:
+                                partner = tmp_partner_ids.pop()
+                                if partner.is_company:
+                                    break
+                                if not partner.is_company and len(tmp_partner_ids) == 0:
+                                    record.description += "\nFehler beim Kontaktsuchen - alle gefundenen Kontakte sind keinem Unternehmen zugeordnet"
+                                    break
                         else:
-                            # partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, tmp_partner_ids[0])
                             partner = tmp_partner_ids.pop()
                     else:
                         partner = partner_ids[0]
@@ -277,6 +283,13 @@ class ama_website_crm(models.Model):
                                     defaults['description'] += "\nFehler beim Kontaktsuchen - es gab mehrere Treffer:"
                                     for partner in tmp_partner_ids:
                                         defaults['description'] += "\nID: " + str(partner.id) + " Name: " + partner.name
+                                    while True:
+                                        partner = tmp_partner_ids.pop()
+                                        if partner.is_company:
+                                            break
+                                        if not partner.is_company and len(tmp_partner_ids) == 0:
+                                            defaults['description'] += "\nFehler beim Kontaktsuchen - alle gefundenen Kontakte sind keinem Unternehmen zugeordnet"
+                                            break
                                 else:
                                     partner = tmp_partner_ids.pop()
                             else:

@@ -110,9 +110,15 @@ class AmaWebsiteCrm(http.Controller):
                         lead.description += "\nFehler beim Kontaktsuchen - es gab mehrere Treffer:"
                         for partner in tmp_partner_ids:
                             # partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, id)
-                            lead.description += "\nID: " + partner.id + " Name: " + partner.name
+                            lead.description += "\nID: " + str(partner.id) + " Name: " + partner.name
+                        while True:
+                            partner = tmp_partner_ids.pop()
+                            if partner.is_company:
+                                break
+                            if not partner.is_company and len(tmp_partner_ids) == 0:
+                                lead.description += "\nFehler beim Kontaktsuchen - alle gefundenen Kontakte sind keinem Unternehmen zugeordnet"
+                                break
                     else:
-                        # partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, tmp_partner_ids[0])
                         partner = tmp_partner_ids.pop()
                 else:
                     partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_ids[0])
