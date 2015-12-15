@@ -301,10 +301,13 @@ class ama_website_crm(models.Model):
                                         defaults['description'] += "\nFehler beim Kontaktsuchen - einziger gefundener Kontakt ist keinem Unternehmen zugeordnet"
                                         
                         defaults['CLI'] = cli
-                        defaults['partner_id'] = partner.id
-                        defaults.update(self.on_change_partner_id(cr, uid, None, partner.id, context=context)['value'])
-                        defaults['section_id'] = partner.section_id.id
-                        defaults['name'] = partner.name
+                        if partner:
+                            defaults['partner_id'] = partner.id
+                            defaults.update(self.on_change_partner_id(cr, uid, None, partner.id, context=context)['value'])
+                            defaults['section_id'] = partner.section_id.id
+                            defaults['name'] = partner.name
+                        else:
+                            defaults['description'] += "\nFehler beim Kontaktsuchen - es wurde kein passender Kontakt gefunden fuer die CLI: " + cli
                     else:
                         error_description.append(line)
                 
