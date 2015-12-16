@@ -200,38 +200,45 @@ class ama_website_crm(models.Model):
                         if cid.isdigit():
                             defaults['CallID'] = cid
                         else:
-                            error_description.append(line)
+                            if line not in error_description:
+                                error_description.append(line)
                     except:
-                        error_description.append(line)
+                        if line not in error_description:
+                            error_description.append(line)
                 if line.startswith('SNR:'):
                     try:
                         defaults['SNR'] = line.split(':', 1)[1]
                     except:
-                        error_description.append(line)
+                        if line not in error_description:
+                            error_description.append(line)
                 if line.startswith('ACDGroup:'):
                     try:
                         acd = line.split(':', 1)[1]
                         if acd.isdigit():
                             defaults['ACDGroup'] = acd
                         else:
-                            error_description.append(line)
+                            if line not in error_description:
+                                error_description.append(line)
                     except:
-                        error_description.append(line)
+                        if line not in error_description:
+                            error_description.append(line)
                 if line.startswith('DDI2:'):
                     try:
                         tmp = line.split(':', 1)[1]
                         if tmp != '(-1)':
                             defaults['DDI2'] = line.split(':', 1)[1]
                     except:
-                        error_description.append(line)
+                        if line not in error_description:
+                            error_description.append(line)
                 if line.startswith('CLI:'):
                 
                     cli_t = False
                     try:
-                        cli_t = line.split(':', 1)[1]
+                        cli_t = line.split(':', 1)[1].replace(' ', '')
                     except:
-                        error_description.append(line)
-                    if cli_t:
+                        if line not in error_description:
+                            error_description.append(line)
+                    if cli_t and (cli_t.isdigit() or (cli_t.startswith('+') and cli_t[1:].isdigit())):
                         if self.pool.get('res.users').browse(cr, uid, uid).company_id.country_id:
                             countrycode = self.pool.get('res.users').browse(cr, uid, uid).company_id.country_id.code
                         elif self.pool.get('res.users').browse(cr, uid, uid).country_id:
@@ -250,6 +257,21 @@ class ama_website_crm(models.Model):
                         while not partner_ids and i<3:
                             partner_ids = self.pool.get('res.partner').search(cr, uid, ['|',('phone', 'like', cli[:len(cli)-i]),'|',('mobile', 'like', cli[:len(cli)-i]),('fax', 'like', cli[:len(cli)-i])])
                             i += 1
+                            # defaults['description'] += "\nSuchlauf fuer: " + cli[:len(cli)-i]
+                        if not partner_ids:
+                            i = 0
+                            cli_t = False
+                            try:
+                                cli_t = cli.split('+49', 1)[1]
+                            except:
+                                if line not in error_description:
+                                    error_description.append(line)
+                            if cli_t:
+                                cli = cli_t
+                                while not partner_ids and i<3:
+                                    partner_ids = self.pool.get('res.partner').search(cr, uid, ['|',('phone', 'like', cli[:len(cli)-i]),'|',('mobile', 'like', cli[:len(cli)-i]),('fax', 'like', cli[:len(cli)-i])])
+                                    i += 1
+                                    # defaults['description'] += "\nSuchlauf fuer: " + cli[:len(cli)-i]
                         if partner_ids:
                             if len(partner_ids) > 1:
                                 tmp_partner_ids = set()
@@ -309,7 +331,8 @@ class ama_website_crm(models.Model):
                         else:
                             defaults['description'] += "\nFehler beim Kontaktsuchen - es wurde kein passender Kontakt gefunden fuer die CLI: " + cli
                     else:
-                        error_description.append(line)
+                        if line not in error_description:
+                            error_description.append(line)
                 
                 if line.startswith('CallStart:'):
                     try:
@@ -317,16 +340,19 @@ class ama_website_crm(models.Model):
                         tz = pytz.timezone(self.pool.get('res.users').browse(cr, uid, uid).partner_id.tz) or pytz.utc
                         defaults['CallStart'] = tz.localize(datetime.datetime.strptime(cs, '%d.%m.%Y %H:%M')).astimezone(pytz.utc).strftime('%Y-%m-%d %H:%M')
                     except:
-                        error_description.append(line)
+                        if line not in error_description:
+                            error_description.append(line)
                 if line.startswith('HSekunden:'):
                     try:
                         hsec = line.split(':', 1)[1]
                     except:
-                        error_description.append(line)
+                        if line not in error_description:
+                            error_description.append(line)
                     if hsec and hsec.isdigit():
                         defaults['TotalSec'] = int(math.ceil(float(hsec) / 100))
                     else:
-                        error_description.append(line)
+                        if line not in error_description:
+                            error_description.append(line)
                 if error_description:
                     defaults['description'] += '\nDatatype Mismatch (Parse Fax): '
                     for l in error_description:
