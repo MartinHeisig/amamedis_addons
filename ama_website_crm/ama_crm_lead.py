@@ -55,8 +55,7 @@ class ama_website_crm(models.Model):
                     
                 cli = phonenumbers.format_number(phonenumbers.parse(record.CLI, countrycode), phonenumbers.PhoneNumberFormat.E164)
                 _logger.debug("initial value: '%s' updated value: '%s'", record.CLI, cli)
-                # if 'ums@zentraldata.de' in record.email:
-                if 'heisig@amamedis.de' or 'ums@zentraldata.de' in record.email_from:
+                if defaults['name'].startswith('Fax an'):
                     record.name = 'Fax from ' + cli
                     record.description = 'Automatically generated from fax'
                 else:

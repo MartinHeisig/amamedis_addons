@@ -18,12 +18,13 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'website_crm', 'base_phone'],
+    'depends': ['base', 'website_crm', 'base_phone', 'sale_crm'],
 
     # always loaded
     'data': [
         'ama_crm_lead_view.xml',
         'ama_crm_lead_data.xml',
+        'ama_crm_make_sale_view.xml',
         'ir.model.access.csv'
     ],
     # only loaded in demonstration mode

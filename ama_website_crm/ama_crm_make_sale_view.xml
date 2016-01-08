@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <record id="ama_crm_make_sale_form" model="ir.ui.view">
+            <field name="name">crm.make.sale.ama.form</field>
+            <field name="model">crm.make.sale</field>
+            <field name="priority">17</field>
+            <field name="inherit_id" ref="sale_crm.view_crm_make_sale"/>
+            <field name="arch" type="xml">
+                <field name="close" position="after">
+                    <field name="messageBehavior"/>
+                </field>
+            </field>
+        
+        </record>
+
+    </data>
+</openerp>
