@@ -10,6 +10,7 @@
             <field name="arch" type="xml">
                 <field name="close" position="after">
                     <field name="messageBehavior"/>
+                    <field name="attachmentBehavior"/>
                 </field>
             </field>
         

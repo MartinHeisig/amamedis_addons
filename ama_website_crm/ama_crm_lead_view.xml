@@ -96,10 +96,35 @@
                 </p>
             </field>
         </record>
-
+        
         <menuitem id="ama_sale_config_inbound_menu" name="Inbound" parent="base.menu_base_config" sequence="5"/>
         
         <menuitem id="ama_sale_config_inbound_acd_menu" name="Kanal Details" parent="ama_sale_config_inbound_menu" action="ama_sale_config_inbound_acd_action"/>
+        
+        <act_window id="ama_rename_attachments"
+            multi="True"
+            key2="client_action_multi" name="Anhänge..."
+            res_model="ir.attachment" src_model="crm.lead"
+            view_mode="tree,form" target="new" view_type="form" />
+
+        <!--record id="ama_rename_attachments_action" model="ir.actions.server">
+            <field name="name">Anhänge222...</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.model_ir_attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="base.view_attachment_tree"/>
+            <field name="domain">[('res_id','=',active_id),('res_model','=',active_model),]</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="ama_rename_attachments_value" model="ir.values">
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="model">crm.lead</field>
+            <field name="name">Anhänge2...</field>
+            <field name="value" eval="'ir.actions.server,%d'%ama_rename_attachments_action"/>
+        </record-->
         
   
   </data>

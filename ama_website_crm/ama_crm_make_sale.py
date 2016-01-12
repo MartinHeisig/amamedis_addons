@@ -16,7 +16,13 @@ class ama_crm_make_sale(models.TransientModel):
         ('none', "Nicht verschieben"),
         ('order', "Zum Auftrag verschieben"),
         ('partner', "Zum Partner verschieben"),
-    ], default='none', required=True, string='Nachrichten verschieben?')
+    ], default='order', required=True, string='Nachrichten verschieben?')
+
+    attachmentBehavior = fields.Selection([
+        ('none', "Nicht verschieben"),
+        ('order', "Zum Auftrag verschieben"),
+        ('partner', "Zum Partner verschieben"),
+    ], default='order', required=True, string='Anhänge verschieben?')
 
     def makeOrder(self, cr, uid, ids, context=None):
         """
@@ -95,6 +101,40 @@ class ama_crm_make_sale(models.TransientModel):
                                     'model': 'res.partner',
                                     'subject' : _("Message moved from Lead %s : %s") % (case.id, history.subject)
                             }, context=context)
+                if make.attachmentBehavior == 'order':
+                    attach_obj = self.pool.get('ir.attachment')
+                    order_attachments = attach_obj.browse(cr, uid, attach_obj.search(cr, uid, [('res_model', '=', 'sale.order'), ('res_id', '=', new_id)], context=context), context=context)
+
+                    #counter of all attachments to move. Used to make sure the name is different for all attachments
+                    count = 1
+                    attachments = attach_obj.browse(cr, uid, attach_obj.search(cr, uid, [('res_model', '=', 'crm.lead'), ('res_id', '=', case.id)], context=context), context=context)
+                    for attachment in attachments:
+                        values = {'res_id': new_id, 'res_model': 'sale.order',}
+                        '''for attachment_in_saleorder in order_attachments:
+                            if attachment.name == attachment_in_saleorder.name:
+                                values['name'] = "%s (%s)" % (attachment.name, count,)
+                        count+=1'''
+                        attachment.write(values)
+                    
+                if make.attachmentBehavior == 'partner':
+                    attach_obj = self.pool.get('ir.attachment')
+                    order_attachments = attach_obj.browse(cr, uid, attach_obj.search(cr, uid, [('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)], context=context), context=context)
+
+                    #counter of all attachments to move. Used to make sure the name is different for all attachments
+                    count = 1
+                    attachments = attach_obj.browse(cr, uid, attach_obj.search(cr, uid, [('res_model', '=', 'crm.lead'), ('res_id', '=', case.id)], context=context), context=context)
+                    for attachment in attachments:
+                        values = {'res_id': partner.id, 'res_model': 'res.partner',}
+                        '''for attachment_in_respartner in order_attachments:
+                            if attachment.name == attachment_in_respartner.name:
+                                tmpname = attachment.name.rsplit('.', 1)
+                                if len(tmpname) > 1:
+                                    values['name'] = "%s (%s).%s" % (tmpname[0], count, tmpname[1])
+                                else:
+                                    values['name'] = "%s (%s)" % (attachment.name, count,)
+                        count+=1'''
+                        attachment.write(values)
+                
             if make.close:
                 case_obj.case_mark_won(cr, uid, data, context=context)
             if not new_ids:
