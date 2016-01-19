@@ -255,7 +255,7 @@ class ama_website_crm(models.Model):
             for attachment in record.attachments:
                 values = {'res_id': record.partner_id.id, 'res_model': 'res.partner', 'partner_id': record.partner_id.id}
                 attachment.write(values)
-            record.partner_id.message_post(body=re.sub(r"\r|\n|(\r\n)", "<br />", record.description), subject=_("Description from Lead %s") % (record.id), type='comment')
+            record.partner_id.message_post(body=re.sub(r"\r|\n|(\r\n)", "<br />", record.description or ''), subject=_("Description from Lead %s") % (record.id), type='comment')
     
     @api.depends('ACDGroup', 'DDI2')
     @api.multi

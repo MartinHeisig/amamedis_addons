@@ -99,7 +99,7 @@ class ama_crm_make_sale(models.TransientModel):
                     for attachment in case.attachments:
                         values = {'res_id': new_id, 'res_model': 'sale.order', 'partner_id': partner.id}
                         attachment.write(values)
-                    sale_order.message_post(body=re.sub(r"\r|\n|(\r\n)", "<br />", case.description), subject=_("Description from Lead %s") % (case.id), type='comment')
+                    sale_order.message_post(body=re.sub(r"\r|\n|(\r\n)", "<br />", case.description or ''), subject=_("Description from Lead %s") % (case.id), type='comment')
                     
                 '''if make.messageBehavior == 'order':
                     message = self.pool.get('mail.message')
