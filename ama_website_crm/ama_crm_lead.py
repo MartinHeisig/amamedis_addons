@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from openerp import models, fields, api, tools
 from openerp.exceptions import except_orm, Warning
 
 import openerp.tools.mail as mail
+from email.message import Message
+from openerp.addons.mail.mail_message import decode
+from openerp.tools.translate import _
 
 import openerp.addons.crm.crm as crm
 import datetime
@@ -11,6 +14,7 @@ import logging
 import math
 import phonenumbers
 import pytz
+import re
 import urllib
 
 _logger = logging.getLogger(__name__)
@@ -36,6 +40,62 @@ class ama_website_crm(models.Model):
     CallID2 = fields.Integer('CallID2', help='CallID des ersten ausgehenden Calls (zum Agenten)', readonly=True)
     CallID3 = fields.Integer('CallID3', help='CallID des ersten ausgehenden Calls (zum 2. Agenten oder ext. MA)', readonly=True)
     TotalSec = fields.Integer('TotalSec', help='Sekunden, die der Anruf war', readonly=True)
+    attachments = fields.One2many('ir.attachment', 'res_id', domain=[('res_model','=','crm.lead')])
+    attachmentType = fields.Selection([
+        ('order_fax', "Bestellung Fax"),
+        ('order', "Bestellung Mail/Telefon"),
+        ('sepa_fax', "SEPA Fax"),
+        ('info_chance', "Info Chance"),
+        ('info_order', "Info Auftrag"),
+        ('info_company', "Info Firma"),
+    ], required=True, string='Nachricht-/Ereignisart')
+    attachmentName = fields.Char('Name Anhang')
+    
+    '''@api.onchange('partner_id')
+    @api.multi
+    def _change_attachment_partner(self):
+        for record in self:
+            record.description += '\n' + record.partner_id.name
+            for attachment in record.attachments:
+                record.description += '\n' + record.partner_id.name + ' --> ' + attachment.name
+                values = {'partner_id': record.partner_id[0]}
+                attachment.write(values)'''
+    
+    @api.onchange('attachmentType')
+    @api.multi
+    def _compute_filename(self):
+        for record in self:
+            if record.attachmentType in {'order_fax','order'}:
+                record.attachmentName = 'Bestellung'
+                if record.CallStart:
+                    record.attachmentName +=  '_%s' % datetime.datetime.strftime(datetime.datetime.strptime(record.CallStart, '%Y-%m-%d %H:%M:%S'), '%Y%m%d')
+                else:
+                    record.attachmentName +=  '_%s' % datetime.datetime.today().strftime('%Y%m%d')
+                if record.DDI2:
+                    record.attachmentName +=  '_%s' % record.DDI2
+                if record.CLI:
+                    if record.CLI.startswith('+'):
+                        record.attachmentName += '_%s' % record.CLI.replace('+', '00', 1)
+                    else:
+                        record.attachmentName += '_%s' % record.CLI
+                if record.CallID:
+                    record.attachmentName +=  '_%s' % record.CallID
+            if record.attachmentType == 'sepa_fax':
+                record.attachmentName = 'SEPA'
+                if record.CallStart:
+                    record.attachmentName +=  '_%s' % datetime.datetime.strftime(datetime.datetime.strptime(record.CallStart, '%Y-%m-%d %H:%M:%S'), '%Y%m%d')
+                else:
+                    record.attachmentName +=  '_%s' % datetime.datetime.today().strftime('%Y%m%d')
+                if record.DDI2:
+                    record.attachmentName +=  '_%s' % record.DDI2
+                if record.CLI:
+                    if record.CLI.startswith('+'):
+                        record.attachmentName += '_%s' % record.CLI.replace('+', '00', 1)
+                    else:
+                        record.attachmentName += '_%s' % record.CLI
+                if record.CallID:
+                    record.attachmentName +=  '_%s' % record.CallID
+                
     
     # Onchange Methode neue API
     @api.onchange('CLI')
@@ -160,6 +220,43 @@ class ama_website_crm(models.Model):
         return {'value': values}
     '''
     
+    @api.multi
+    def rename_attachments(self):
+        for record in self:
+            counter = 0
+            for attachment in record.attachments:
+                extension = attachment.mimetype.rsplit('/',1)
+                if extension[1]:
+                    ext = extension[1]
+                if record.attachmentName:
+                    new_name = record.attachmentName
+                    if counter > 0:
+                        new_name += ' (%s)' % counter
+                    if ext:
+                        new_name += '.%s' % ext
+                    attachment.name = new_name
+                    attachment.datas_fname = new_name
+                    counter += 1
+                attachment.partner_id = record.partner_id
+                    
+    @api.multi
+    def move_to_partner(self):
+        message = self.env['mail.message']
+        for record in self:
+            for history in record.message_ids:
+                if history.type != 'notification':
+                    if history.attachment_ids:
+                        for attachment in history.attachment_ids:
+                            values = {'res_id': record.partner_id.id, 'res_model': 'res.partner', 'partner_id': record.partner_id.id}
+                            attachment.write(values)
+                    msg = message.browse(history.id)
+                    vals = {'res_id': record.partner_id.id, 'model': 'res.partner', 'subject' : _("Message moved from Lead %s : %s") % (record.id, history.subject)}
+                    msg.write(vals)
+            for attachment in record.attachments:
+                values = {'res_id': record.partner_id.id, 'res_model': 'res.partner', 'partner_id': record.partner_id.id}
+                attachment.write(values)
+            record.partner_id.message_post(body=re.sub(r"\r|\n|(\r\n)", "<br />", record.description), subject=_("Description from Lead %s") % (record.id), type='comment')
+    
     @api.depends('ACDGroup', 'DDI2')
     @api.multi
     def _search_acd_ddi(self):
@@ -185,11 +282,13 @@ class ama_website_crm(models.Model):
             defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
-
+        
         if defaults['name'].startswith('Fax an'):
             defaults['description'] = 'Automatically generated from fax'
             defaults['medium_id'] = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'ama_website_crm.crm_t_m_fax')
             error_description = []
+            
+            # error_description.append(str(msg))
             
             for line in mail.html2plaintext(msg.get('body', '')).split('\n'):
                 line = line.strip()
@@ -356,9 +455,174 @@ class ama_website_crm(models.Model):
                     defaults['description'] += '\nDatatype Mismatch (Parse Fax): '
                     for l in error_description:
                         defaults['description'] += '\n' + l
-
+                        
+            if msg.get('attachments'):
+                defaults['attachmentType'] = 'order_fax'
+                defaults['attachmentName'] = 'Bestellung'
+                if defaults['CallStart']:
+                    defaults['attachmentName'] +=  '_%s' % datetime.datetime.strftime(datetime.datetime.strptime(defaults['CallStart'], '%Y-%m-%d %H:%M'), '%Y%m%d')
+                else:
+                    defaults['attachmentName'] +=  '_%s' % datetime.datetime.today().strftime('%Y%m%d')
+                if defaults['DDI2']:
+                    defaults['attachmentName'] +=  '_%s' % defaults['DDI2']
+                if defaults['CLI']:
+                    if defaults['CLI'].startswith('+'):
+                        defaults['attachmentName'] += '_%s' % defaults['CLI'].replace('+', '00', 1)
+                    else:
+                        defaults['attachmentName'] += '_%s' % defaults['CLI']
+                if defaults['CallID']:
+                    defaults['attachmentName'] +=  '_%s' % defaults['CallID']
+                
+            
+            '''if msg.get('attachments'):
+                for attachment in msg.get('attachments'):
+                    defaults['description'] += '\nALT: ' + str(attachment)
+                    attachment = list(attachment)
+                    if attachment[0]:
+                        attachment[0] = 'Fax'
+                        if defaults['CallStart']:
+                            attachment[0] += '_%s' % defaults['CallStart']
+                            attachment[0] += '_%s' % datetime.strftime(datetime.strptime(defaults['CallStart'], '%Y-%m-%d %H:%M:%S'), '%Y%m%d')
+                        else:
+                            attachment[0] += '_%s' % datetime.now()
+                        attachment[0] += '.pdf'
+                    attachment = tuple(attachment)
+                    defaults['description'] += '\nNEU: ' + str(attachment)    '''
+                        
+                        
         defaults.update(custom_values)
         return super(ama_website_crm, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        
+class ama_crm_lead2opportunity_partner(models.TransientModel):
+    _inherit = ['crm.lead2opportunity.partner']
+    
+    def default_get(self, cr, uid, fields, context=None):
+        lead_obj = self.pool.get('crm.lead')
+
+        res = super(ama_crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
+        if context.get('active_id'):
+            tomerge = [int(context['active_id'])]
+
+            partner_id = res.get('partner_id')
+            lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
+            email = lead.partner_id and lead.partner_id.email or lead.email_from
+
+            tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email, include_lost=True, context=context))
+            tomerge = list(set(tomerge))
+
+            if 'action' in fields and not res.get('action'):
+                res.update({'action' : partner_id and 'exist' or 'create'})
+            if 'partner_id' in fields:
+                res.update({'partner_id' : partner_id})
+            if 'name' in fields:
+                res.update({'name' : 'convert'})
+            if 'opportunity_ids' in fields and len(tomerge) >= 2:
+                res.update({'opportunity_ids': tomerge})
+            if lead.user_id:
+                res.update({'user_id': lead.user_id.id})
+            if lead.section_id:
+                res.update({'section_id': lead.section_id.id})
+        return res
+        
+class ama_mail_thread(models.Model):
+    _inherit = ['mail.thread']
+
+    def message_parse(self, cr, uid, message, save_original=False, context=None):
+        """Parses a string or email.message.Message representing an
+           RFC-2822 email, and returns a generic dict holding the
+           message details.
+
+           :param message: the message to parse
+           :type message: email.message.Message | string | unicode
+           :param bool save_original: whether the returned dict
+               should include an ``original`` attachment containing
+               the source of the message
+           :rtype: dict
+           :return: A dict with the following structure, where each
+                    field may not be present if missing in original
+                    message::
+
+                    { 'message_id': msg_id,
+                      'subject': subject,
+                      'from': from,
+                      'to': to,
+                      'cc': cc,
+                      'body': unified_body,
+                      'attachments': [('file1', 'bytes'),
+                                      ('file2', 'bytes')}
+                    }
+        """
+        msg_dict = {
+            'type': 'email',
+        }
+        if not isinstance(message, Message):
+            if isinstance(message, unicode):
+                # Warning: message_from_string doesn't always work correctly on unicode,
+                # we must use utf-8 strings here :-(
+                message = message.encode('utf-8')
+            message = email.message_from_string(message)
+
+        message_id = message['message-id']
+        if not message_id:
+            # Very unusual situation, be we should be fault-tolerant here
+            message_id = "<%s@localhost>" % time.time()
+            _logger.debug('Parsing Message without message-id, generating a random one: %s', message_id)
+        msg_dict['message_id'] = message_id
+
+        if message.get('Subject'):
+            msg_dict['subject'] = decode(message.get('Subject'))
+
+        # Envelope fields not stored in mail.message but made available for message_new()
+        msg_dict['from'] = decode(message.get('from'))
+        msg_dict['to'] = decode(message.get('to'))
+        msg_dict['cc'] = decode(message.get('cc'))
+        msg_dict['email_from'] = decode(message.get('from'))
+        partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
+        msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
+
+        if message.get('Date'):
+            try:
+                date_hdr = decode(message.get('Date'))
+                parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
+                if parsed_date.utcoffset() is None:
+                    # naive datetime, so we arbitrarily decide to make it
+                    # UTC, there's no better choice. Should not happen,
+                    # as RFC2822 requires timezone offset in Date headers.
+                    stored_date = parsed_date.replace(tzinfo=pytz.utc)
+                else:
+                    stored_date = parsed_date.astimezone(tz=pytz.utc)
+            except Exception:
+                _logger.warning('Failed to parse Date header %r in incoming mail '
+                                'with message-id %r, assuming current date/time.',
+                                message.get('Date'), message_id)
+                stored_date = datetime.datetime.now()
+            msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+
+        if message.get('In-Reply-To'):
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To'].strip()))])
+            if parent_ids:
+                msg_dict['parent_id'] = parent_ids[0]
+
+        if message.get('References') and 'parent_id' not in msg_dict:
+            msg_list =  mail_header_msgid_re.findall(decode(message['References']))
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in', [x.strip() for x in msg_list])])
+            if parent_ids:
+                msg_dict['parent_id'] = parent_ids[0]
+
+        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
+        
+        #need to check why old name stays and why parameter files with date
+        '''if msg_dict['attachments']:
+            if msg_dict['subject'] and msg_dict['subject'].startswith('Fax an'):
+                for attachment in msg_dict['attachments']:
+                    attachment = list(attachment)
+                    if attachment[0]:
+                        # if msg_dict['date']:
+                        #     attachment[0] = 'Fax_%s_%s' % datetime.datetime.strftime(datetime.datetime.strptime(msg_dict['date'], '%Y-%m-%d %H:%M:%S'), '%Y%m%d'), attachment[0]
+                        # else:
+                            attachment[0] = 'Fax_%s' % attachment[0]
+                    attachment = tuple(attachment)'''
+        return msg_dict
 
 
 class ama_acd_ddi(models.Model):
@@ -381,3 +645,8 @@ class ama_acd_ddi(models.Model):
     def _compute_name(self):
         for record in self:
             record.name = record.medium_nr
+            
+class ama_attachment_partner(models.Model):
+    _inherit = ['res.partner']
+    
+    attachments = fields.One2many('ir.attachment', 'partner_id')

@@ -52,7 +52,8 @@ class AmaWebsiteCrm(http.Controller):
             values["name"] = 'CallID: ' + values.get("CallID")
         else:
             values["name"] = "Call to Callcenter"
-                
+        
+        values['attachmentType'] = 'order'
         values['description'] = "Automatically generated from phone call"
         # description is required, so it is always already initialized
         if error_description:
@@ -64,6 +65,20 @@ class AmaWebsiteCrm(http.Controller):
         values.update(lead_id=lead_id)
         
         lead = request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, lead_id)
+        
+        lead.attachmentType = 'order'
+        lead.attachmentName = 'Bestellung'
+        lead.attachmentName +=  '_%s' % datetime.datetime.today().strftime('%Y%m%d')
+        if lead.DDI2:
+            lead.attachmentName +=  '_%s' % lead.DDI2
+        if lead.CLI:
+            if lead.CLI.startswith('+'):
+                lead.attachmentName += '_%s' % lead.CLI.replace('+', '00', 1)
+            else:
+                lead.attachmentName += '_%s' % lead.CLI
+        if lead.CallID:
+            lead.attachmentName +=  '_%s' % lead.CallID
+        
         cli = lead.CLI
         if cli:
             lead.name = "Call from " + cli
@@ -209,6 +224,7 @@ class AmaWebsiteCrm2(http.Controller):
                         error_description.append("%s: %s" % ('CallStart', values['CallStart']))
                 if values.get('TotalSec'):
                     lead.TotalSec = values['TotalSec']
+
                 if error_description:
                     lead.description += dict_to_str(_("Datatype Mismatch (Update): "), error_description)
                 if post_description:

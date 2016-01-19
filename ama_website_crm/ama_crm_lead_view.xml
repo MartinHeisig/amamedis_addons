@@ -8,39 +8,63 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
             <field name="arch" type="xml">
+                <field name="stage_id" position="before">
+                    <button name="move_to_partner" string="Alle Nachrichten und Anhänge zum Kunden verschieben" type="object" help="Move messages to partner" attrs="{'invisible':[('partner_id','=',False),]}"/>
+                </field>
                 <field name="partner_id" position="replace">
                     <field name="partner_id" string="Customer"
                            on_change="on_change_partner_id(partner_id)"
                            options='{"create_name_field": "name"}'
                            domain="[('is_company', '=', True)]"
                            context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
+                    <field name="attachmentType"/>
+                    <div>
+                        <label for="attachmentName" style="font-weight:bold;" class="oe_inline" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
+                        <button name="rename_attachments" type="object" icon="STOCK_FLOPPY" readonly="0" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
+                    </div>
+                    <div>
+                        <field name="attachmentName" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
+                    </div>
                 </field>    
                 <field name="medium_id" position="after">
                     <field name="medium_nr"/>
                 </field>
                 <group string="Misc" position="before">
                     <group string="Inbound" colspan="4">
-                    <group>
-                        <field name="DestCLI"/>
-                        <field name="CLI" widget="phone"/>
-                        <!-- Aufruf für Onchange alte API: field name="CLI" widget="phone" on_change="on_change_cli(CLI)"/-->
-                        <field name="ACDGroup"/>
-                        <field name="DDI2"/>
-                        <field name="CallID"/>
-                        <field name="AgentSec"/>
-                        <field name="SNR" widget="phone"/>
-                    </group>
-                    <group string=" ">
-                        <field name="CallStart"/>
-                        <field name="CallID2"/>
-                        <field name="CallID3"/>
-                        <field name="DialoutStart"/>
-                        <field name="DialoutDest" widget="phone"/>
-                        <field name="DialoutSec"/>
-                        <field name="TotalSec"/>
-                    </group>
+                        <group>
+                            <field name="DestCLI"/>
+                            <field name="CLI" widget="phone"/>
+                            <!-- Aufruf für Onchange alte API: field name="CLI" widget="phone" on_change="on_change_cli(CLI)"/-->
+                            <field name="ACDGroup"/>
+                            <field name="DDI2"/>
+                            <field name="CallID"/>
+                            <field name="AgentSec"/>
+                            <field name="SNR" widget="phone"/>
+                        </group>
+                        <group string=" ">
+                            <field name="CallStart"/>
+                            <field name="CallID2"/>
+                            <field name="CallID3"/>
+                            <field name="DialoutStart"/>
+                            <field name="DialoutDest" widget="phone"/>
+                            <field name="DialoutSec"/>
+                            <field name="TotalSec"/>
+                        </group>
                     </group>
                 </group>
+                <page string="Extra Info" position="after">
+                    <page string="Attachments">
+                        <field name="attachments">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="datas_fname"/>
+                                <field name="create_uid" readonly="True"/>
+                                <field name="create_date" readonly="True"/>
+                                <field name="partner_id" readonly="True"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
             </field>
         </record>
 
@@ -50,39 +74,95 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
+                <field name="stage_id" position="before">
+                    <button name="move_to_partner" string="Alle Nachrichten und Anhänge zum Kunden verschieben" type="object" help="Move messages to partner" attrs="{'invisible':[('partner_id','=',False),]}"/>
+                </field>
                 <field name="partner_id" position="replace">
-                    <field name="partner_id"
-                        on_change="on_change_partner_id(partner_id)"
-                        string="Customer"
-                        domain="[('is_company', '=', True)]"
-                        context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
-                </field>    
+                    <field name="partner_id" on_change="on_change_partner_id(partner_id)" string="Customer" domain="[('is_company', '=', True)]" context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
+                    <field name="attachmentType"/>
+                    <div>
+                        <label for="attachmentName" style="font-weight:bold;" class="oe_inline" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
+                        <button name="rename_attachments" type="object" icon="STOCK_FLOPPY" readonly="0" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
+                    </div>
+                    <div>
+                        <field name="attachmentName" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
+                    </div>
+                </field>  
                 <field name="medium_id" position="after">
                     <field name="medium_nr"/>
                 </field>
                 <group string="Misc" position="before">
                     <group string="Inbound" colspan="4">
-                    <group>
-                        <field name="DestCLI"/>
-                        <field name="CLI" widget="phone"/>
-                        <!-- Aufruf für Onchange alte API: field name="CLI" widget="phone" on_change="on_change_cli(CLI)"/-->
-                        <field name="ACDGroup"/>
-                        <field name="DDI2"/>
-                        <field name="CallID"/>
-                        <field name="AgentSec"/>
-                        <field name="SNR" widget="phone"/>
-                    </group>
-                    <group string=" ">
-                        <field name="CallStart"/>
-                        <field name="CallID2"/>
-                        <field name="CallID3"/>
-                        <field name="DialoutStart"/>
-                        <field name="DialoutDest" widget="phone"/>
-                        <field name="DialoutSec"/>
-                        <field name="TotalSec"/>
-                    </group>
+                        <group>
+                            <field name="DestCLI"/>
+                            <field name="CLI" widget="phone"/>
+                            <!-- Aufruf für Onchange alte API: field name="CLI" widget="phone" on_change="on_change_cli(CLI)"/-->
+                            <field name="ACDGroup"/>
+                            <field name="DDI2"/>
+                            <field name="CallID"/>
+                            <field name="AgentSec"/>
+                            <field name="SNR" widget="phone"/>
+                        </group>
+                        <group string=" ">
+                            <field name="CallStart"/>
+                            <field name="CallID2"/>
+                            <field name="CallID3"/>
+                            <field name="DialoutStart"/>
+                            <field name="DialoutDest" widget="phone"/>
+                            <field name="DialoutSec"/>
+                            <field name="TotalSec"/>
+                        </group>
                     </group>
                 </group>
+                <page string="Lead" position="after">
+                    <page string="Attachments">
+                        <field name="attachments">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="datas_fname"/>
+                                <field name="create_uid" readonly="True"/>
+                                <field name="create_date" readonly="True"/>
+                                <field name="partner_id" readonly="True"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+            </field>
+        </record>
+        
+        <record id="ama_attachments_form" model="ir.ui.view">
+            <field name="name">attachment.ama.form</field>
+            <field name="model">ir.attachment</field>
+            <field name="priority">17</field>
+            <field name="inherit_id" ref="base.view_attachment_form"/>
+            <field name="arch" type="xml">
+                <field name="datas_fname" position="replace">
+                    <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                    <!--field name="datas_fname" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/-->
+                </field>
+            </field>
+        </record>
+        
+        <record id="ama_attachment_partner_form" model="ir.ui.view">
+            <field name="name">attachment.ama.form</field>
+            <field name="model">res.partner</field>
+            <field name="priority">99</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page string="Profiling" position="after">
+                    <page string="Attachments">
+                        <field name="attachments">
+                            <tree>
+                                <field name="name"/>
+                                <field name="datas_fname"/>
+                                <field name="res_model" readonly="True"/>
+                                <field name="res_id" readonly="True"/>
+                                <field name="create_uid" readonly="True"/>
+                                <field name="create_date" readonly="True"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
             </field>
         </record>
 
