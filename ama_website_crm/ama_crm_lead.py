@@ -19,6 +19,8 @@ import urllib
 
 _logger = logging.getLogger(__name__)
 
+mail_header_msgid_re = re.compile('<[^<>]+>')
+
 class ama_website_crm(models.Model):
     _inherit = ['crm.lead']
     _phone_fields = ['phone', 'mobile', 'fax', 'CLI', 'SNR', 'DialoutDest']
@@ -459,18 +461,18 @@ class ama_website_crm(models.Model):
             if msg.get('attachments'):
                 defaults['attachmentType'] = 'order_fax'
                 defaults['attachmentName'] = 'Bestellung'
-                if defaults['CallStart']:
+                if defaults.get('CallStart'):
                     defaults['attachmentName'] +=  '_%s' % datetime.datetime.strftime(datetime.datetime.strptime(defaults['CallStart'], '%Y-%m-%d %H:%M'), '%Y%m%d')
                 else:
                     defaults['attachmentName'] +=  '_%s' % datetime.datetime.today().strftime('%Y%m%d')
-                if defaults['DDI2']:
+                if defaults.get('DDI2'):
                     defaults['attachmentName'] +=  '_%s' % defaults['DDI2']
-                if defaults['CLI']:
+                if defaults.get('CLI'):
                     if defaults['CLI'].startswith('+'):
                         defaults['attachmentName'] += '_%s' % defaults['CLI'].replace('+', '00', 1)
                     else:
                         defaults['attachmentName'] += '_%s' % defaults['CLI']
-                if defaults['CallID']:
+                if defaults.get('CallID'):
                     defaults['attachmentName'] +=  '_%s' % defaults['CallID']
                 
             
