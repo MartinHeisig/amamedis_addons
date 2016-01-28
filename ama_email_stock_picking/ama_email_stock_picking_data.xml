@@ -27,7 +27,7 @@
 
 <p>bitte versenden Sie die Ware laut Lieferschein ${object.name} ${object.move_lines[0].partner_id.is_company and '('+object.move_lines[0].partner_id.name+', '+object.move_lines[0].partner_id.city+')' | safe or object.move_lines[0].partner_id.parent_id and '('+object.move_lines[0].partner_id.parent_id.name+', '+object.move_lines[0].partner_id.parent_id.city+')' | safe}.</p>
 
-<p>(Bitte melden Sie Verz&ouml;gerungen oder sonstige Probleme an service@amamedis.de.)</p>
+<p>Bitte melden Sie Verz&ouml;gerungen oder sonstige Probleme an service@amamedis.de.</p>
 
 <p>${user.name and '('+user.name+')'|safe}</p>
 
