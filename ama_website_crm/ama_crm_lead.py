@@ -50,7 +50,7 @@ class ama_website_crm(models.Model):
         ('info_chance', "Info Chance"),
         ('info_order', "Info Auftrag"),
         ('info_company', "Info Firma"),
-    ], required=True, string='Nachricht-/Ereignisart')
+    ], required=True, string='Nachricht-/Ereignisart', default='info_chance')
     attachmentName = fields.Char('Name Anhang')
     
     '''@api.onchange('partner_id')

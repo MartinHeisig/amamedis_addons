@@ -53,7 +53,7 @@ class AmaWebsiteCrm(http.Controller):
         else:
             values["name"] = "Call to Callcenter"
         
-        values['attachmentType'] = 'order'
+        # values['attachmentType'] = 'order'
         values['description'] = "Automatically generated from phone call"
         # description is required, so it is always already initialized
         if error_description:
@@ -66,7 +66,7 @@ class AmaWebsiteCrm(http.Controller):
         
         lead = request.registry['crm.lead'].browse(request.cr, SUPERUSER_ID, lead_id)
         
-        lead.attachmentType = 'order'
+        # lead.attachmentType = 'order'
         lead.attachmentName = 'Bestellung'
         lead.attachmentName +=  '_%s' % datetime.datetime.today().strftime('%Y%m%d')
         if lead.DDI2:
