@@ -10,6 +10,7 @@ from openerp.tools.translate import _
 
 import openerp.addons.crm.crm as crm
 import datetime
+import dateutil
 import logging
 import math
 import phonenumbers
