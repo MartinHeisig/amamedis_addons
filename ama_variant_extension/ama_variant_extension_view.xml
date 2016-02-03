@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <record model="ir.ui.view" id="view_tree_ama_attribute_extra">
+            <field name="name">view.tree.ama.attribute.extra</field>
+            <field name="model">ama.product.attribute.extra</field>
+            <field name="arch" type="xml">
+                <tree default_order="attribute_id,res_model,name">
+                    <field name="attribute_id"/>
+                    <field name="res_model"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_value_extra">
+            <field name="name">view.tree.ama.value.extra</field>
+            <field name="model">ama.product.attribute.extra.value</field>
+            <field name="arch" type="xml">
+                <tree default_order="attribute_extra_id,res_id,name">
+                    <field name="attribute_extra_id"/>
+                    <field name="res_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_size">
+            <field name="name">view.tree.ama.size</field>
+            <field name="model">ama.product.attribute.size</field>
+            <field name="arch" type="xml">
+                <tree default_order="height,width,depth">
+                    <field name="name"/>
+                    <field name="height"/>
+                    <field name="width"/>
+                    <field name="depth"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_color">
+            <field name="name">view.tree.ama.color</field>
+            <field name="model">ama.product.attribute.color</field>
+            <field name="arch" type="xml">
+                <tree default_order="name">
+                    <field name="name"/>
+                    <field name="value"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_layout_carrier_bag">
+            <field name="name">view.tree.ama.layout.carrier_bag</field>
+            <field name="model">ama.product.layout.carrier_bag</field>
+            <field name="arch" type="xml">
+                <tree default_order="name">
+                    <field name="name"/>
+                    <field name="color_count"/>
+                    <field name="color_ids"/>
+                    <field name="attachment_ids"/>
+                    <field name="partner_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_ama_attribute_extra">
+            <field name="name">Attributserweiterungen</field>
+            <field name="res_model">ama.product.attribute.extra</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle die erste Attributserweiterung</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_value_extra">
+            <field name="name">Attributswerterweiterungen</field>
+            <field name="res_model">ama.product.attribute.extra.value</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle die erste Attributswerterweiterung</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_size">
+            <field name="name">Größe</field>
+            <field name="res_model">ama.product.attribute.size</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle die erste Größe</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_color">
+            <field name="name">Farbe</field>
+            <field name="res_model">ama.product.attribute.color</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle die erste Farbe</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_layout_carrier_bag">
+            <field name="name">Layout Tragetaschen</field>
+            <field name="res_model">ama.product.layout.carrier_bag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle das erste Tragetaschenlayout</p>
+            </field>
+        </record>
+        
+        <menuitem id="menu_ama_attribute_extra" name="Attributserweiterungen" parent="product.prod_config_main" sequence="15" action="action_ama_attribute_extra"/>
+        <menuitem id="menu_ama_value_extra" name="Attributswerterweiterungen" parent="product.prod_config_main" sequence="16" action="action_ama_value_extra"/>
+        <menuitem id="menu_ama_size" name="Größe" parent="product.prod_config_main" sequence="17" action="action_ama_size"/>
+        <menuitem id="menu_ama_color" name="Farbe" parent="product.prod_config_main" sequence="18" action="action_ama_color"/>
+        <menuitem id="menu_ama_layout_carrier_bag" name="Layout Tragetaschen" parent="product.prod_config_main" sequence="19" action="action_ama_layout_carrier_bag"/>
+        
+    </data>
+</openerp>
