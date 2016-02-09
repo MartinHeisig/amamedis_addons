@@ -23,7 +23,7 @@
             <field name="arch" type="xml">
                 <page name="sales" position="after">
                     <page name="variant_extra" string="Attributserweiterungen" attrs="{'invisible': [('is_product_variant', '=', False)]}">
-                        <field name="attribute_extra_line_ids" widget="one2many_list">
+                        <field name="attribute_extra_line_ids" widget="one2many_list" domain="[('attribute_extra_id.attribute_id', 'in', product_product_id.attribute_line_ids.attribute_id)]" context="{'default_product_product_id': active_id}">
                             <tree string="Attributserweiterungen" editable="bottom">
                                 <field name="attribute_extra_id"/>
                                 <field name="value_extra_id" domain="[('attribute_extra_id', '=', attribute_extra_id)]" context="{'default_attribute_extra_id': attribute_extra_id}"/>
@@ -167,8 +167,8 @@
                             <field name="res_model"/>
                         </group>
                         <notebook>
-                            <page>
-                                <field name="value_extra_ids"/>
+                            <page string="Zugewiesene Attributswerterweiterungen">
+                                <field name="value_extra_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -192,8 +192,8 @@
                             <field name="res_id"/>
                         </group>
                         <notebook>
-                            <page>
-                                <field name="attribute_value_ids"/>
+                            <page string="Zugewiesen zu Attributwert">
+                                <field name="attribute_value_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -258,7 +258,7 @@
                                 <field name="color_ids"/>
                             </page>
                             <page string="Anhänge">
-                                <field name="attachment_ids" widget="many2many" options="{'no_create': True}" domain="[('is_bag_layout','=',True)]">
+                                <field name="attachment_ids" widget="many2many" options="{'no_create': True}" domain="['|', ('is_bag_layout','=',True), '&amp;', ('res_model', '=', active_model), ('res_id', '=', active_id)]">
                                     <tree string="Anhänge">
                                         <field name="name"/>
                                         <field name="bag_layout_id" context="{'default_bag_layout_id': active_id}"/>
@@ -330,12 +330,26 @@
             </field>
         </record>
         
+        <record model="ir.actions.act_window" id="action_ama_ir_attachments">
+            <field name="name">Dateianhänge AE</field>
+            <field name="res_model">ir.attachment</field>
+            <!--field name="domain">['|', ('is_bag_layout','=',True), ('res_model', '=', '')]</field-->
+            <field name="domain">[('is_bag_layout','=',True)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Kein Anhang vorhanden</p>
+            </field>
+        </record>
+        
         <!--Menu Entries-->
-        <menuitem id="menu_ama_attribute_extra" name="Attributserweiterungen" parent="product.prod_config_main" sequence="15" action="action_ama_attribute_extra"/>
-        <menuitem id="menu_ama_value_extra" name="Attributswerterweiterungen" parent="product.prod_config_main" sequence="16" action="action_ama_value_extra"/>
-        <menuitem id="menu_ama_size" name="Größe" parent="product.prod_config_main" sequence="17" action="action_ama_size"/>
-        <menuitem id="menu_ama_color" name="Farbe" parent="product.prod_config_main" sequence="18" action="action_ama_color"/>
-        <menuitem id="menu_ama_layout_carrier_bag" name="Layout Tragetaschen" parent="product.prod_config_main" sequence="19" action="action_ama_layout_carrier_bag"/>
+        <menuitem id="menu_ama_attribute_extra_header" name="Attribut (Erweiterung)" parent="product.prod_config_main" sequence="15"/>
+        <menuitem id="menu_ama_attribute_extra" name="AE-Attribute" parent="menu_ama_attribute_extra_header" sequence="10" action="action_ama_attribute_extra"/>
+        <menuitem id="menu_ama_value_extra" name="AE-Attributwerte" parent="menu_ama_attribute_extra_header" sequence="11" action="action_ama_value_extra"/>
+        <menuitem id="menu_ama_size" name="Größe" parent="menu_ama_attribute_extra_header" sequence="20" action="action_ama_size"/>
+        <menuitem id="menu_ama_color" name="Farbe" parent="menu_ama_attribute_extra_header" sequence="21" action="action_ama_color"/>
+        <menuitem id="menu_ama_layout_carrier_bag" name="Layout Tragetaschen" parent="menu_ama_attribute_extra_header" sequence="30" action="action_ama_layout_carrier_bag"/>
+        <menuitem id="menu_ama_ir_attachments" name="Anhänge Datei" parent="menu_ama_attribute_extra_header" sequence="40" action="action_ama_ir_attachments"/>
         
     </data>
 </openerp>

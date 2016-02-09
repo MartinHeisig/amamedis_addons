@@ -24,6 +24,14 @@ class ama_carrier_bag_layout_ir_attachment(models.Model):
     bag_layout_description = fields.Char('Motivbezeichnung')
     bag_layout_number = fields.Char('Motivnummer')
     
+    @api.multi
+    @api.onchange('bag_layout_id')
+    def _set_ressource(self):
+        for record in self:
+            record.res_model = 'ama.product.layout.carrier_bag'
+            record.res_id = record.bag_layout_id.id
+            record.res_name = record.bag_layout_id.name
+    
 class ama_product_layout_carrier_bag(models.Model):
     _name = 'ama.product.layout.carrier_bag'
     _description = 'Layout Tragetasche'
@@ -75,7 +83,7 @@ class ama_product_attribute_extra(models.Model):
     description = fields.Char('Bezeichnung', required=True)
     res_model = fields.Many2one('ir.model', 'Model der Attributserweiterung', required=True)
     attribute_id = fields.Many2one('product.attribute', 'Elternattribut', required=True)
-    value_extra_ids = fields.One2many('ama.product.attribute.extra.value', 'attribute_extra_id', 'Werte')
+    value_extra_ids = fields.One2many('ama.product.attribute.extra.value', 'attribute_extra_id', 'Werte', readonly=True)
     
     @api.multi
     @api.depends('attribute_id', 'description')
@@ -91,7 +99,7 @@ class ama_product_attribute_extra_value(models.Model):
     description = fields.Char('Bezeichnung')
     res_id = fields.Integer('ID des Datensatzes aus dem in der Attributserweiterung hinterlegten Models', required=True)
     attribute_extra_id = fields.Many2one('ama.product.attribute.extra', 'zugehörige Attributserweiterung', required=True)
-    attribute_value_ids = fields.Many2many(comodel_name='product.attribute.value', relation='ama_attribute_extra_value_attribute_value_rel', column1='value_extra_id', column2='value_id', string='Elternwerte')
+    attribute_value_ids = fields.Many2many(comodel_name='product.attribute.value', relation='ama_attribute_extra_value_attribute_value_rel', column1='value_extra_id', column2='value_id', string='Elternwerte', readonly=True)
     
     @api.multi
     @api.depends('attribute_extra_id', 'description')
