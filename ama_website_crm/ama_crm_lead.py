@@ -145,7 +145,7 @@ class ama_website_crm(models.Model):
                             if tmp_partner_id.is_company:
                                 if tmp_partner_id.parent_id:
                                     tmp_parent = tmp_partner_id.parent_id
-                                    if tmp_parent.phone.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.mobile.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.fax.startswith(cli[:len(cli)-(i-1)]):
+                                    if tmp_parent.phone and tmp_parent.phone.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.mobile and tmp_parent.mobile.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.fax and tmp_parent.fax.startswith(cli[:len(cli)-(i-1)]):
                                         tmp_partner_ids.add(tmp_parent)
                                     else:
                                         tmp_partner_ids.add(tmp_partner_id)
@@ -281,6 +281,7 @@ class ama_website_crm(models.Model):
             'partner_id': msg.get('author_id', False),
             'user_id': False,
         }
+        
         if msg.get('author_id'):
             defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
@@ -386,7 +387,7 @@ class ama_website_crm(models.Model):
                                     if tmp_partner.is_company:
                                         if tmp_partner.parent_id:
                                             tmp_parent = tmp_partner.parent_id
-                                            if tmp_parent.phone.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.mobile.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.fax.startswith(cli[:len(cli)-(i-1)]):
+                                            if tmp_parent.phone and tmp_parent.phone.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.mobile and tmp_parent.mobile.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.fax and tmp_parent.fax.startswith(cli[:len(cli)-(i-1)]):
                                                 tmp_partner_ids.add(tmp_parent)
                                             else:
                                                 tmp_partner_ids.add(tmp_partner)

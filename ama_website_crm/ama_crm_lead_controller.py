@@ -103,7 +103,7 @@ class AmaWebsiteCrm(http.Controller):
                         if tmp_partner.is_company:
                             if tmp_partner.parent_id:
                                 tmp_parent = tmp_partner.parent_id
-                                if tmp_parent.phone.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.mobile.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.fax.startswith(cli[:len(cli)-(i-1)]):
+                                if tmp_parent.phone and tmp_parent.phone.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.mobile and tmp_parent.mobile.startswith(cli[:len(cli)-(i-1)]) or tmp_parent.fax and tmp_parent.fax.startswith(cli[:len(cli)-(i-1)]):
                                     tmp_partner_ids.add(tmp_parent)
                                 else:
                                     tmp_partner_ids.add(tmp_partner)
