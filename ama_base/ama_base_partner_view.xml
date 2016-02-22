@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+     
+    <!-- Add debit reference and bga to financial tab --> 
+    <record id="partner_account_form" model="ir.ui.view">
+      <field name="name">ama.account.partner.form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="account.view_partner_property_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='debit']" position="after">
+                <field name="debit_ref"/>
+        </xpath>
+        <xpath expr="//field[@name='bank_name']" position="replace">
+                <field name="bank_bic"/>
+        </xpath>
+        <!--field name="debit" position="after">
+          <field name="debit_ref"/>
+        </field>
+        <field name="bank_name" position="replace">
+          <field name="bank_bic"/>
+        </field-->
+      </field>
+    </record>
+    
+    <!-- Add additional fields in standard partner view -->
+    <record id="partner_form" model="ir.ui.view">
+      <field name="name">ama.res.partner.form</field>
+      <field name="model">res.partner</field>
+      <field name="priority">100</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <field name="parent_id" position="before">
+          <field name="first_name" 
+            placeholder="Vorname / Firmenzusatz" 
+            />
+        </field>
+        <field name="title" position="replace">
+        </field>
+        <label for="street" position="before">
+            <field name="title"/>
+            <field name="gender" attrs="{'invisible':[('is_company','=', True)]}"/>
+        </label>
+        <!--field name="title" position="after">
+          <field name="gender" attrs="{'invisible':[('is_company','=', True)]}"/>
+        </field-->
+        <field name="website" position="replace">
+        </field>
+        <field name="email" position="after">
+            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+        </field>
+        <page name="internal_notes" position="after">
+          <page string="Weiteres">
+            <group>
+              <field name="oc_folder" widget="url"/>
+            </group>
+          </page>
+        </page>
+        <field name="ref" position="after">
+          <field name="bga"/>
+        </field>
+        <field name="debit" position="after">
+          <field name="debit_ref"/>
+        </field>
+        <xpath expr="//field[@name='bank_ids']/tree/field[@name='bank_name']" position="replace">
+            <field name="bank_bic"/>
+        </xpath>
+        <!-- branch_ids -->
+        <page name="internal_notes" position="before">
+          <page string="Filialen" attrs="{'invisible':[('is_company','=', True)]}">
+            <field name="branch_ids">
+              <tree string="Filiale Details">
+                <field name="name"/>
+                <field name="city"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="fax"/>
+              </tree>
+            </field>
+          </page>
+        </page>
+        <field name="child_ids" position="before">
+            <group col="4">
+                <div>
+                    <label for="contact_add" style="font-weight:bold;"/>
+                    <field name="contact_add" class="oe_inline"/>
+                    <button name="add_contact" string="Add" type="object" attrs="{'invisible':[('contact_add','=',False)]}" context="{'contact_add': contact_add}"/>
+                </div>
+                <div>
+                    <label for="contact_remove" style="font-weight:bold;"/>
+                    <field name="contact_remove" class="oe_inline" domain="[('active','=',True),('parent_id','=',active_id)]"/>
+                    <button name="remove_contact" string="Remove" type="object" attrs="{'invisible':[('contact_remove','=',False)]}" context="{'contact_remove': contact_remove}"/>
+                </div>
+            </group>
+        </field>
+        <!-- first name on partner contacts kanban view -->
+        <xpath expr="//h4//a//field[@name='name']" position="after">
+          <t t-if="record.first_name.raw_value"><br/><field name="first_name"/></t>
+          <t t-if="record.category_id.raw_value"><br/><field name="category_id"/></t>
+        </xpath>
+        <!-- City and street -->
+        <xpath expr="//td[@class='oe_kanban_title1']//i" position="before">
+          <div><field name="street"/></div>
+          <div><field name="city"/></div>
+        </xpath>
+        <!-- remove fax -->
+        <xpath expr="//td[@class='oe_kanban_title1']//div[@t-if='record.fax.raw_value']" position="replace">
+          <div/>
+        </xpath>
+        <!-- first name, title and gender on pop-up -->
+        <xpath expr="//form[@string='Contact']//field[@name='category_id']" position="before">
+          <field name="first_name" placeholder="Vorname / Firmenzusatz" style="width: 70%"/>
+        </xpath>
+        <!--IMPORTANT: This is only a hack, should be replaced with inheriting the modules that add the buttons to original form-->
+        <xpath expr="//form[@string='Contact']//div[@class='oe_title']" position="after">
+          <div class="oe_right oe_button_box" name="buttons">
+            <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible': [('customer', '=', False)]}" name="335" icon="fa-star" context="{'search_default_partner_id': active_id}" modifiers="{'invisible': [['customer', '=', false]]}" readonly="0">
+                <field string="Opportunities" name="opportunity_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button class="oe_inline oe_stat_button" type="object" name="schedule_meeting" icon="fa-calendar" context="{'partner_id': active_id}">
+                <field string="Meetings" name="meeting_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button class="oe_inline oe_stat_button" type="action" name="326" icon="fa-phone" context="{'search_default_partner_id': active_id, 'default_duration': 1.0}">
+                <field string="Calls" name="phonecall_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button type="action" class="oe_stat_button" id="invoice_button" icon="fa-pencil-square-o" name="753" attrs="{'invisible': [('customer', '=', False)]}" context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" modifiers="{'invisible': [['customer', '=', false]]}" readonly="0">
+                        <div><strong><field name="total_invoiced" widget="monetary" modifiers="{'readonly': true}"/></strong><br/>Invoiced</div>
+            </button>
+            <button class="oe_inline oe_stat_button" type="action" name="440" attrs="{'invisible': [('customer', '=', False)]}" icon="fa-strikethrough" modifiers="{'invisible': [['customer', '=', false]]}" readonly="0">
+                <field string="Sales" name="sale_order_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button class="oe_inline oe_stat_button" name="635" type="action" attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Supplier Invoices" modifiers="{'invisible': [['customer', '=', false]]}" readonly="0">
+                <field string="Supplier Inv." name="supplier_invoice_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button class="oe_inline oe_stat_button" name="634" type="action" attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-shopping-cart" modifiers="{'invisible': [['supplier', '=', false]]}" readonly="0">
+                <field string="Purchases" name="purchase_order_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button type="action" class="oe_stat_button" name="176" icon="fa-list" readonly="0">
+                <field string="Journal Items" name="journal_item_count" widget="statinfo" modifiers="{'readonly': true}"/>                        
+            </button>
+            <button class="oe_inline oe_stat_button" type="action" name="276" icon="fa-book" modifiers="{'invisible': [['supplier', '=', false]]}" readonly="0">
+                <field string="Contracts" name="contracts_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button class="oe_inline oe_stat_button" type="action" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" name="693" icon="fa-comments" readonly="0">
+                <field string="Claims" name="claim_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button class="oe_inline oe_stat_button" type="action" name="366" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" attrs="{'invisible': [('customer', '=', False)]}" icon="fa-bug" modifiers="{'invisible': [['customer', '=', false]]}" readonly="0">
+                <field string="Issues" name="issue_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>
+            <button class="oe_inline oe_stat_button" type="action" name="354" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" icon="fa-tasks" readonly="0">
+                <field string="Tasks" name="task_count" widget="statinfo" modifiers="{'readonly': true}"/>
+            </button>     
+          </div>
+        </xpath>
+        <!--Need to change the calls of the topic to only left side-->
+        <xpath expr="//form[@string='Contact']//div[@class='oe_title']" position="attributes">
+            <attribute name="class">oe_title oe_left</attribute>
+        </xpath>
+        <xpath expr="//form[@string='Contact']//field[@name='function']" position="before">
+          <field name="title"/>
+          <field name="gender"/>
+        </xpath>
+        <!-- fax on pop-up -->
+        <xpath expr="//form[@string='Contact']//field[@name='mobile']" position="after">
+          <field name="fax" widget="fax"/>
+        </xpath>
+        <!-- branch ids in pop-up -->
+        <xpath expr="//form[@string='Contact']//field[@name='supplier']" position="before">
+          <h3>Zugehörige Filialen</h3>
+          <field name="branch_ids">
+            <tree string="Filiale Details">
+              <field name="name"/>
+              <field name="city"/>
+              <field name="phone"/>
+              <field name="email"/>
+              <field name="fax"/>
+            </tree>
+          </field>
+          <field name="comment" placeholder="Put an internal note..."/>
+        </xpath>
+        <!-- Copy email, fax, phone, mobil to child partners -->
+        <xpath expr="//field[@name='child_ids']" position="attributes">
+          <attribute name="context">{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': False, 'default_use_parent_address': True, 'default_phone': phone, 'default_email': email, 'default_mobile': mobile}</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- Add first name to simplified form view -->
+    <record id="partner_simple_form" model="ir.ui.view">
+      <field name="name">ama.res.partner.simple.form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_simple_form"/>
+      <field name="arch" type="xml">
+        <field name="parent_id" position="before">
+          <field name="first_name" placeholder="Vorname"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- Enhance tree view -->
+    <record id="partner_tree_view" model="ir.ui.view">
+      <field name="name">res.partner.tree.view.city</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_tree"/>
+      <field name="arch" type="xml">
+        <field name="display_name" position="after">
+          <field name="zip"/>
+          <field name="city"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- Add zip and city to search view -->
+    <record id="partner_search_view" model="ir.ui.view">
+      <field name="name">res.partner.search.view.city</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_res_partner_filter"/>
+      <field name="arch" type="xml">
+        <field name="category_id" position="before">
+          <field name="city"/>
+          <field name="zip"/>
+          <field name="email"/>
+        </field>
+        <!-- Enable group by city -->
+        <filter string="Country" position="after">
+          <filter string="City" context="{'group_by':'city'}"/>
+        </filter>
+      </field>
+    </record>
+    
+    <record model="ir.ui.view" id="ama_bank_search_view">
+        <field name="name">ama.bank.search</field>
+        <field name="model">res.bank</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="bic"/>
+            </search>
+        </field>
+    </record>
+  
+  </data>
+</openerp>

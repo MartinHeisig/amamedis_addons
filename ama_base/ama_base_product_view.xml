@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="partner_account_form" model="ir.ui.view">
+            <field name="name">product.template.common.form.ama</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="description_sale" position="after">
+                    <separator string="Beschreibung für Bestellscheine"/>
+                    <field name="description_orderslip" placeholder="Anmerkungen, die auf den Bestellscheinen ausgegeben werden ..."/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="form_view_ama_prod_tmpl_o">
+            <field name="name">view.form.ama.prod.tmpl_o</field>
+            <field name="model">product.template</field>
+            <field name="priority">100</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <field name="value_ids" position="attributes">
+                    <attribute name="widget">many2many_checkboxes</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_form_view">
+            <field name="name">product.form.view</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <field name="type" position="before">
+                    <field name="min_quantity"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_packaging_tree_view_product">
+            <field name="name">product.packaging.tree.view.product</field>
+            <field name="model">product.packaging</field>
+            <field name="inherit_id" ref="product.product_packaging_tree_view_product" />
+            <field name="arch" type="xml">
+                <field name="qty" position="before">
+                    <field name="sequence"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_packaging_form_view_without_product">
+            <field name="name">product.packaging.form.view.without.product</field>
+            <field name="model">product.packaging</field>
+            <field name="inherit_id" ref="product.product_packaging_form_view_without_product" />
+            <field name="arch" type="xml">
+                <field name="sequence" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_packaging_form_view">
+            <field name="name">product.packaging.form.view</field>
+            <field name="model">product.packaging</field>
+            <field name="inherit_id" ref="product.product_packaging_form_view" />
+            <field name="arch" type="xml">
+                <field name="sequence" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+            </field>
+        </record>
+    
+    </data>
+</openerp>
