@@ -14,7 +14,7 @@
         <record id="email_template_stock_picking_default" model="email.template">
             <field name="name">Lieferschein Default</field>
             <field name="email_from">ELAC Service AMAMEDIS &lt;service.elac@amamedis.de&gt;</field>
-            <field name="subject">Versandauftrag Lieferschein ${object.name} ${object.move_lines[0].partner_id.is_company and '('+object.move_lines[0].partner_id.name+', '+object.move_lines[0].partner_id.city+')' | safe or object.move_lines[0].partner_id.parent_id and '('+object.move_lines[0].partner_id.parent_id.name+', '+object.move_lines[0].partner_id.parent_id.city+')' | safe}</field>
+            <field name="subject">Versandauftrag Lieferschein ${object.name} ${object.delivery_address_id.is_company and '('+object.delivery_address_id.name+', '+object.delivery_address_id.city+')' | safe or object.delivery_address_id.parent_id and '('+object.delivery_address_id.parent_id.name+', '+object.delivery_address_id.parent_id.city+')' | safe}</field>
             <field name="email_to">service@amamedis.de</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="auto_delete" eval="False"/>
@@ -25,14 +25,14 @@
 <div style="color: rgb(0, 0, 0); font-family: Arial, Verdana, sans-serif; font-size: 0.8em;">
 <p>Sehr geehrte Damen und Herren,</p>
 
-<p>bitte versenden Sie die Ware laut Lieferschein ${object.name} ${object.move_lines[0].partner_id.is_company and '('+object.move_lines[0].partner_id.name+', '+object.move_lines[0].partner_id.city+')' | safe or object.move_lines[0].partner_id.parent_id and '('+object.move_lines[0].partner_id.parent_id.name+', '+object.move_lines[0].partner_id.parent_id.city+')' | safe}.</p>
+<p>bitte versenden Sie die Ware laut Lieferschein ${object.name} ${object.delivery_address_id.is_company and '('+object.delivery_address_id.name+', '+object.delivery_address_id.city+')' | safe or object.delivery_address_id.parent_id and '('+object.delivery_address_id.parent_id.name+', '+object.delivery_address_id.parent_id.city+')' | safe}.</p>
 
 <p>Bitte melden Sie Verz&ouml;gerungen oder sonstige Probleme an service@amamedis.de.</p>
 
 <p>${user.name and '('+user.name+')'|safe}</p>
 
 <p>${object.company_id.rml_footer | safe}</p>
-<!--p>${object.move_lines[0].partner_id.section_id and object.move_lines[0].partner_id.section_id.signature | safe or object.move_lines[0].partner_id.parent_id.section_id and object.move_lines[0].partner_id.parent_id.section_id.signature | safe or object.company_id.rml_footer | safe}</p--></div>
+<!--p>${object.delivery_address_id.section_id and object.delivery_address_id.section_id.signature | safe or object.delivery_address_id.parent_id.section_id and object.delivery_address_id.parent_id.section_id.signature | safe or object.company_id.rml_footer | safe}</p--></div>
             ]]></field>
         </record>
         

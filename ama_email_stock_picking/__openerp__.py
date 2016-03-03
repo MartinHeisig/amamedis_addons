@@ -21,7 +21,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'email_template', 'stock', 'stock_dropshipping'],
+    'depends': ['base', 'email_template', 'stock', 'stock_dropshipping', 'purchase_transport_multi_address'],
 
     # always loaded
     'data': [
