@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <!--Inherited views-->
+        <!--record model="ir.ui.view" id="form_view_ama_prod_tmpl_o">
+            <field name="name">view.form.ama.prod.tmpl_o</field>
+            <field name="model">product.template</field>
+            <field name="priority">100</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <field name="value_ids" position="attributes">
+                    <attribute name="widget">many2many_checkboxes</attribute>
+                </field>
+            </field>
+        </record-->
+        
+        <record model="ir.ui.view" id="form_view_ama_prod_tmpl">
+            <field name="name">view.form.ama.prod.tmpl</field>
+            <field name="model">product.template</field>
+            <field name="priority">100</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="weight_net" position="after">
+                    <field name="size"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="form_view_ama_prod_prod">
+            <field name="name">view.form.ama.prod.prod</field>
+            <field name="model">product.product</field>
+            <field name="priority">100</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <page name="sales" position="after">
+                    <page name="variant_extra" string="Attributserweiterungen" attrs="{'invisible': [('is_product_variant', '=', False)]}">
+                        <field name="attribute_extra_line_ids" widget="one2many_list" domain="[('attribute_extra_id.id', 'in', attribute_line_ids.attribute_id.attribute_extra_ids.id)]" context="{'default_product_product_id': active_id}">
+                            <tree string="Attributserweiterungen" editable="bottom">
+                                <field name="attribute_extra_id"/>
+                                <field name="value_extra_id" domain="[('attribute_extra_id', '=', attribute_extra_id)]" context="{'default_attribute_extra_id': attribute_extra_id}"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="form_view_ama_ir_attachment">
+            <field name="name">form.view.ama.ir.attachment</field>
+            <field name="model">ir.attachment</field>
+            <field name="priority">100</field>
+            <field name="inherit_id" ref="base.view_attachment_form"/>
+            <field name="arch" type="xml">
+                <field name="url" position="after">
+                    <field name="is_bag_layout"/>
+                </field>
+                <field name="user_id" position="after">
+                    <field name="dir_google"/>
+                    <field name="dir_owncloud"/>
+                </field>
+                <group string="History" position="before">
+                    <group string="Motiveigenschaften" attrs="{'invisible':[('is_bag_layout','=',False)]}" colspan="4">
+                        <field name="is_valid"/>
+                        <field name="bag_layout_number"/>
+                        <field name="bag_layout_description"/>
+                        <field name="bag_layout_size"/>
+                        <field name="bag_layout_id"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="form_view_ama_res_partner">
+            <field name="name">form.view.ama.res.partner</field>
+            <field name="model">res.partner</field>
+            <field name="priority">100</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page name="sales_purchases" position="after">
+                    <page string="Layouts">
+                        <field name="layout_ids"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+    
+        <!--List Views-->
+        <record model="ir.ui.view" id="view_tree_ama_attribute_extra">
+            <field name="name">view.tree.ama.attribute.extra</field>
+            <field name="model">ama.product.attribute.extra</field>
+            <field name="arch" type="xml">
+                <tree default_order="attribute_id,description,res_model">
+                    <field name="name"/>
+                    <field name="attribute_id"/>
+                    <field name="description"/>
+                    <field name="res_model"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_value_extra">
+            <field name="name">view.tree.ama.value.extra</field>
+            <field name="model">ama.product.attribute.extra.value</field>
+            <field name="arch" type="xml">
+                <tree default_order="attribute_extra_id,description,res_id">
+                    <field name="name"/>
+                    <field name="attribute_extra_id"/>
+                    <field name="description"/>
+                    <field name="res_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_size">
+            <field name="name">view.tree.ama.size</field>
+            <field name="model">ama.product.attribute.size</field>
+            <field name="arch" type="xml">
+                <tree default_order="height,width,depth">
+                    <field name="name"/>
+                    <field name="height"/>
+                    <field name="width"/>
+                    <field name="depth"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_color">
+            <field name="name">view.tree.ama.color</field>
+            <field name="model">ama.product.attribute.color</field>
+            <field name="arch" type="xml">
+                <tree default_order="name">
+                    <field name="name"/>
+                    <field name="value"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_layout_carrier_bag">
+            <field name="name">view.tree.ama.layout.carrier_bag</field>
+            <field name="model">ama.product.layout.carrier_bag</field>
+            <field name="arch" type="xml">
+                <tree default_order="name">
+                    <field name="name"/>
+                    <field name="is_valid"/>
+                    <field name="color_count"/>
+                    <field name="color_ids"/>
+                    <field name="attachment_ids"/>
+                    <field name="partner_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tree_ama_line">
+            <field name="name">view.tree.ama.line</field>
+            <field name="model">ama.product.attribute.extra.line</field>
+            <field name="arch" type="xml">
+                <tree default_order="name">
+                    <field name="attribute_extra_id"/>
+                    <field name="value_extra_id"/>
+                    <field name="product_product_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!--Form Views-->
+        <record model="ir.ui.view" id="view_form_ama_attribute_extra">
+            <field name="name">view.form.ama.attribute.extra</field>
+            <field name="model">ama.product.attribute.extra</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <field name="description"/>
+                            <field name="attribute_id"/>
+                            <field name="res_model"/>
+                        </group>
+                        <notebook>
+                            <page string="Zugewiesene Attributswerterweiterungen">
+                                <field name="value_extra_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_form_ama_value_extra">
+            <field name="name">view.form.ama.value.extra</field>
+            <field name="model">ama.product.attribute.extra.value</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <field name="description"/>
+                            <field name="attribute_extra_id"/>
+                            <field name="res_id"/>
+                        </group>
+                        <notebook>
+                            <page string="Zugewiesen zu Attributwert">
+                                <field name="attribute_value_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_form_ama_size">
+            <field name="name">view.form.ama.size</field>
+            <field name="model">ama.product.attribute.size</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <field name="height"/>
+                            <field name="width"/>
+                            <field name="depth"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_form_ama_color">
+            <field name="name">view.form.ama.color</field>
+            <field name="model">ama.product.attribute.color</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <field name="value"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_form_ama_layout_carrier_bag">
+            <field name="name">view.form.ama.layout.carrier_bag</field>
+            <field name="model">ama.product.layout.carrier_bag</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <field name="is_valid"/>
+                            <field name="color_count"/>
+                        </group>
+                        <notebook>
+                            <page string="Farben">
+                                <field name="color_ids"/>
+                            </page>
+                            <page string="Anhänge">
+                                <field name="attachment_ids" widget="many2many" options="{'no_create': True}" domain="['|', ('is_bag_layout','=',True), '&amp;', ('res_model', '=', active_model), ('res_id', '=', active_id)]">
+                                    <tree string="Anhänge">
+                                        <field name="name"/>
+                                        <field name="is_valid"/>
+                                        <field name="bag_layout_id" context="{'default_bag_layout_id': active_id}"/>
+                                        <field name="bag_layout_size"/>
+                                        <field name="bag_layout_description"/>
+                                        <field name="bag_layout_number"/>
+                                        <field name="create_uid"/>
+                                        <field name="write_uid"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Partner">
+                                <field name="partner_ids" domain="[('is_company','=',True)]"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--Menu Actions-->
+        <record model="ir.actions.act_window" id="action_ama_attribute_extra">
+            <field name="name">Attributserweiterungen</field>
+            <field name="res_model">ama.product.attribute.extra</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle die erste Attributserweiterung</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_value_extra">
+            <field name="name">Attributswerterweiterungen</field>
+            <field name="res_model">ama.product.attribute.extra.value</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle die erste Attributswerterweiterung</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_size">
+            <field name="name">Größe</field>
+            <field name="res_model">ama.product.attribute.size</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle die erste Größe</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_color">
+            <field name="name">Farbe</field>
+            <field name="res_model">ama.product.attribute.color</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle die erste Farbe</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_layout_carrier_bag">
+            <field name="name">Layout Tragetaschen</field>
+            <field name="res_model">ama.product.layout.carrier_bag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle das erste Tragetaschenlayout</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ama_ir_attachments">
+            <field name="name">Dateianhänge AE</field>
+            <field name="res_model">ir.attachment</field>
+            <!--field name="domain">['|', ('is_bag_layout','=',True), ('res_model', '=', '')]</field-->
+            <field name="domain">[('is_bag_layout','=',True)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Kein Anhang vorhanden</p>
+            </field>
+        </record>
+        
+        <!--Menu Entries-->
+        <menuitem id="menu_ama_attribute_extra_header" name="Attribut (Erweiterung)" parent="product.prod_config_main" sequence="15"/>
+        <menuitem id="menu_ama_attribute_extra" name="AE-Attribute" parent="menu_ama_attribute_extra_header" sequence="10" action="action_ama_attribute_extra"/>
+        <menuitem id="menu_ama_value_extra" name="AE-Attributwerte" parent="menu_ama_attribute_extra_header" sequence="11" action="action_ama_value_extra"/>
+        <menuitem id="menu_ama_size" name="Größe" parent="menu_ama_attribute_extra_header" sequence="20" action="action_ama_size"/>
+        <menuitem id="menu_ama_color" name="Farbe" parent="menu_ama_attribute_extra_header" sequence="21" action="action_ama_color"/>
+        <menuitem id="menu_ama_layout_carrier_bag" name="Layout Tragetaschen" parent="menu_ama_attribute_extra_header" sequence="30" action="action_ama_layout_carrier_bag"/>
+        <menuitem id="menu_ama_ir_attachments" name="Anhänge Datei" parent="menu_ama_attribute_extra_header" sequence="40" action="action_ama_ir_attachments"/>
+        
+    </data>
+</openerp>
