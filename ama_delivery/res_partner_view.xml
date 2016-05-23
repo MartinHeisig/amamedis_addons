@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="partner_form" model="ir.ui.view">
+            <field name="name">res.partner.dhl.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page string="Contacts" position="after">
+                    <page string="DHL">
+                        <group>
+                            <field name="dhl_name1"/>
+                            <field name="dhl_name2"/>
+                            <field name="dhl_streetName" attrs="{'invisible':[('use_parent_address', '!=', False)]}"/>
+                            <field name="dhl_streetNumber" attrs="{'invisible':[('use_parent_address', '!=', False)]}"/>
+                            <field name="dhl_zip" attrs="{'invisible':[('use_parent_address', '!=', False)]}"/>
+                            <field name="dhl_city" attrs="{'invisible':[('use_parent_address', '!=', False)]}"/>
+                            <!--field name="dhl_streetName"/>
+                            <field name="dhl_streetNumber"/>
+                            <field name="dhl_zip"/>
+                            <field name="dhl_city"/-->
+                            <field name="dhl_phone" widget="phone"/>
+                            <field name="dhl_email"/>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

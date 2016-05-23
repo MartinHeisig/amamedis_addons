@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+        <record model="ir.ui.view" id="delivery_model_ext_form_view">
+            <field name="name">delivery.model.ext.form</field>
+            <field name="model">delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="after">
+                    <field name="res_model"/>
+                </field>
+            </field>
+        </record>
+
+        <menuitem action="delivery.action_delivery_carrier_form" id="delivery.menu_action_delivery_carrier_form" parent="delivery.menu_delivery" sequence="10"/>
+        
+        <menuitem action="delivery.action_delivery_grid_form" id="delivery.menu_action_delivery_grid_form" parent="delivery.menu_delivery" sequence="20"/>
+        
+    </data>
+</openerp>

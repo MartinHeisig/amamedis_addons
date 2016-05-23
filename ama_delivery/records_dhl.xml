@@ -1,0 +1,3421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- stock.dm.state -->
+        <record model="stock.dm.state" id="dms10">
+            <field name="name_en">Shipment Preparation</field>
+            <field name="name_de">Versandvorbereitung</field>
+            <field name="sequence">10</field>
+        </record>
+        <record model="stock.dm.state" id="dms20">
+            <field name="name_en">Ready for Shipment</field>
+            <field name="name_de">Versandbereit</field>
+            <field name="sequence">20</field>
+        </record>
+        <record model="stock.dm.state" id="dms30">
+            <field name="name_en">Logistics Company</field>
+            <field name="name_de">Logistiker</field>
+            <field name="sequence">30</field>
+        </record>
+        <record model="stock.dm.state" id="dms40">
+            <field name="name_en">On Delivery</field>
+            <field name="name_de">Wird zugestellt</field>
+            <field name="sequence">40</field>
+        </record>
+        <record model="stock.dm.state" id="dms50">
+            <field name="name_en">Delivered</field>
+            <field name="name_de">Ausgeliefert</field>
+            <field name="sequence">50</field>
+        </record>
+        <record model="stock.dm.state" id="dms60">
+            <field name="name_en">Return of Goods</field>
+            <field name="name_de">Retour</field>
+            <field name="sequence">60</field>
+        </record>
+        <record model="stock.dm.state" id="dms70">
+            <field name="name_en">Error</field>
+            <field name="name_de">Fehler</field>
+            <field name="sequence">70</field>
+        </record>
+        <record model="stock.dm.state" id="dms80">
+            <field name="name_en">Cancelled</field>
+            <field name="name_de">Storniert</field>
+            <field name="sequence">80</field>
+        </record>
+
+        <!-- stock.dhl.ric -->
+        <record model="stock.dhl.ric" id="ric1">
+            <field name="code">ACCCS</field>
+            <field name="text_en">Accepted - contents short</field>
+            <field name="text_de">Erfolgreiche Zustellung - Inhaltsschmälerung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric2">
+            <field name="code">ACCDM</field>
+            <field name="text_en">Accepted - damaged</field>
+            <field name="text_de">Erfolgreiche Zustellung - Beschädigt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric3">
+            <field name="code">ACCPK</field>
+            <field name="text_en">Collected from automated site</field>
+            <field name="text_de">Sendung aus Packstation entnommen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric4">
+            <field name="code">ACCPT</field>
+            <field name="text_en">Accepted</field>
+            <field name="text_de">Erfolgreiche Zustellung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric5">
+            <field name="code">ACCSI</field>
+            <field name="text_en">Accepted - Shipment incomplete</field>
+            <field name="text_de">Erfolgreiche Zustellung - Sendung unvollständig</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric6">
+            <field name="code">AGENT</field>
+            <field name="text_en">Hand over/delivery to Agent</field>
+            <field name="text_de">Übergabe/Zustellung an Bevollmächtigten</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric7">
+            <field name="code">AGNEG</field>
+            <field name="text_en">Age-Check negativ</field>
+            <field name="text_de">Altersprüfung negativ</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric8">
+            <field name="code">BDADD</field>
+            <field name="text_en">Bad address</field>
+            <field name="text_de">Adresse fehlerhaft</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric9">
+            <field name="code">BKHCR</field>
+            <field name="text_en">Bulk pick up</field>
+            <field name="text_de">Sperrgut-Abholung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric10">
+            <field name="code">BOOKN</field>
+            <field name="text_en">Booking</field>
+            <field name="text_de">Buchung erfolgt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric11">
+            <field name="code">CCXRI</field>
+            <field name="text_en">Content Check - X Ray inspection</field>
+            <field name="text_de">Inhaltkontrolle - Durchleuchtung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric12">
+            <field name="code">CFBCT</field>
+            <field name="text_en">Confiscated by customs</field>
+            <field name="text_de">Konfisziert durch Zollbehörde</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric13">
+            <field name="code">CLOSD</field>
+            <field name="text_en">Closed</field>
+            <field name="text_de">Geschlossen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric14">
+            <field name="code">CLREF</field>
+            <field name="text_en">Clearance refused</field>
+            <field name="text_de">Die Zollabfertigung wurde abgelehnt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric15">
+            <field name="code">CNCNR</field>
+            <field name="text_en">Consignee could not be reached</field>
+            <field name="text_de">Empfänger nicht erreicht</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric16">
+            <field name="code">CNRFW</field>
+            <field name="text_en">Consignee request: Forward to an other address.</field>
+            <field name="text_de">Empfängerverfügung: Nachsendung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric17">
+            <field name="code">CODAR</field>
+            <field name="text_en">Electronic shipment advise received</field>
+            <field name="text_de">Auftrag zur NN-Betrag-Überweisung von Bank bestätigt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric18">
+            <field name="code">CODRP</field>
+            <field name="text_en">COD remittance processed</field>
+            <field name="text_de">NN-Betrag-Überweisung durch Bank ist erfolgt.</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric19">
+            <field name="code">CPUNK</field>
+            <field name="text_en">Company dissolved / unknown</field>
+            <field name="text_de">Empfänger unbekannt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric20">
+            <field name="code">CROAT</field>
+            <field name="text_en">DHL arrived outside agreed time</field>
+            <field name="text_de">Kurier unpünktlich</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric21">
+            <field name="code">CRQST</field>
+            <field name="text_en">Customer request</field>
+            <field name="text_de">Sendung wurde auf Kundenwunsch vernichtet</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric22">
+            <field name="code">CRRCS</field>
+            <field name="text_en">Correct Routing information but delivered to wRong</field>
+            <field name="text_de">Falscher Empfänger bei Firmenzustellung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric23">
+            <field name="code">CRRFN</field>
+            <field name="text_en">Correct routing information but at the wrong facil</field>
+            <field name="text_de">Sortierfehler - richtiger Routing-Code / Sendung in falscher Lokation</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric24">
+            <field name="code">CRROT</field>
+            <field name="text_en">Courier out of time</field>
+            <field name="text_de">Kurier zu spät / Schicht zuende</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric25">
+            <field name="code">CSREQ</field>
+            <field name="text_en">ConSignee REQuest</field>
+            <field name="text_de">Empfänger-Verfügung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric26">
+            <field name="code">CSTBA</field>
+            <field name="text_en">Customs bonded area</field>
+            <field name="text_de">Zollverschluss</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric27">
+            <field name="code">CTCNI</field>
+            <field name="text_en">Customer could not identify themselves</field>
+            <field name="text_de">Identitätsprüfung negativ</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric28">
+            <field name="code">CUSBR</field>
+            <field name="text_en">Customs broker</field>
+            <field name="text_de">Übergabe an einen Agenten, der die Zollabfertigung &amp; Zustellung durchführt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric29">
+            <field name="code">CUSTM</field>
+            <field name="text_en">Customs</field>
+            <field name="text_de">Übergabe an Zoll zur Prüfung und Zustellung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric30">
+            <field name="code">DIDLV</field>
+            <field name="text_en">Direct delivery at hub/delivery depot</field>
+            <field name="text_de">Vereinfachte Zustellung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric31">
+            <field name="code">DLVRY</field>
+            <field name="text_en">Delivery</field>
+            <field name="text_de">Im Zustellprozess</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric32">
+            <field name="code">DMGED</field>
+            <field name="text_en">Damage under investigation</field>
+            <field name="text_de">Keine Übernahme wegen Beschädigung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric33">
+            <field name="code">DMGPC</field>
+            <field name="text_en">Damaged in process</field>
+            <field name="text_de">Beschädigt bei der Bearbeitung vorgefunden</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric34">
+            <field name="code">DMPHD</field>
+            <field name="text_en">Damaged by poor handling</field>
+            <field name="text_de">Nachverpackung wg. unsachgemäßer Behandlung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric35">
+            <field name="code">EXAMX</field>
+            <field name="text_en">Customs examination - Status code EXAM</field>
+            <field name="text_de">Zoll-Klassifizierung als EXAM</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric36">
+            <field name="code">FAMLY</field>
+            <field name="text_en">Delivery to a family member</field>
+            <field name="text_de">Zustellung an Familienmitglied</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric37">
+            <field name="code">FDGCH</field>
+            <field name="text_en">Failed security check</field>
+            <field name="text_de">Sicherheitsprüfung negativ</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric38">
+            <field name="code">FFTCH</field>
+            <field name="text_en">Failed product feature validation</field>
+            <field name="text_de">Produkteigenschaften-Prüfung negativ</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric39">
+            <field name="code">FRMJR</field>
+            <field name="text_en">Force majeur</field>
+            <field name="text_de">Verzögerung wegen höherer Gewalt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric40">
+            <field name="code">FWAPS</field>
+            <field name="text_en">ForWarded for Army Postal Service</field>
+            <field name="text_de">Weiterleitung für die Feldpost-Bearbeitung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric41">
+            <field name="code">FWDCR</field>
+            <field name="text_en">ForWardeD on Customer Request</field>
+            <field name="text_de">Nachsendung auf Kundenwunsch</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric42">
+            <field name="code">FWEXH</field>
+            <field name="text_en">ForWarded for Export Handling</field>
+            <field name="text_de">Weiterleitung zur Exportbearbeitung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric43">
+            <field name="code">FWEXP</field>
+            <field name="text_en">ForWarded for EXPress handling</field>
+            <field name="text_de">Weiterleitung zum Transport im Express-Netzwerk</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric44">
+            <field name="code">GDNMS</field>
+            <field name="text_en">Goods / packaging not meet standard</field>
+            <field name="text_de">Sendung entspricht nicht den DHL-Standards</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric45">
+            <field name="code">GDNRD</field>
+            <field name="text_en">Goods not ready</field>
+            <field name="text_de">Sendung war nicht versandfertig</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric46">
+            <field name="code">GHSTP</field>
+            <field name="text_en">Ghost piece</field>
+            <field name="text_de">Daten ohne Sendung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric47">
+            <field name="code">HDFCT</field>
+            <field name="text_en">Held at DHL facility</field>
+            <field name="text_de">Lagerung wegen Selbstabholung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric48">
+            <field name="code">HLDAY</field>
+            <field name="text_en">HoLiDAY</field>
+            <field name="text_de">Lagerung wegen Ferien, Betriebsferien oder Feiertagen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric49">
+            <field name="code">HLDSR</field>
+            <field name="text_en">HeLD on Shipper Request</field>
+            <field name="text_de">Lagerung aufgrund einer Absenderverfügung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric50">
+            <field name="code">HNDCA</field>
+            <field name="text_en">Held for Next working Day delivery on</field>
+            <field name="text_de">Rückstellung für eine Zustellung am nächsten Werktag aufgrund einer Empfängervereinbarung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric51">
+            <field name="code">HNDOC</field>
+            <field name="text_en">Handover to other carrier at customer request</field>
+            <field name="text_de">Absenderverfügung: Übergabe an anderen Dienstleister</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric52">
+            <field name="code">ICRRT</field>
+            <field name="text_en">Incorrect routing information</field>
+            <field name="text_de">Fehlrouting wg. falschem Routingcode</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric53">
+            <field name="code">IDDMG</field>
+            <field name="text_en">ID damaged or not readable</field>
+            <field name="text_de">Prüf-ID beschädigt oder nicht lesbar</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric54">
+            <field name="code">IDNEG</field>
+            <field name="text_en">Identitycheck negativ</field>
+            <field name="text_de">Identitätsprüfung Negativ</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric55">
+            <field name="code">INCSH</field>
+            <field name="text_en">Incomplete shipment</field>
+            <field name="text_de">Mehrteilige Sendung unvollständig</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric56">
+            <field name="code">INSPF</field>
+            <field name="text_en">Inspection failed</field>
+            <field name="text_de">Zollprüfung negativ</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric57">
+            <field name="code">INSPT</field>
+            <field name="text_en">Inspection</field>
+            <field name="text_de">Es besteht der Verdacht auf Beraubung. Die Sendung wird inspiziert.</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric58">
+            <field name="code">LDPCK</field>
+            <field name="text_en">Held in automated collection site</field>
+            <field name="text_de">Zustellung an Packstation / Einlieferung in Packstation</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric59">
+            <field name="code">LEGAT</field>
+            <field name="text_en">LEGal AuThority</field>
+            <field name="text_de">Übergabe der Sendung an Bevollmächtigten</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric60">
+            <field name="code">LOSTX</field>
+            <field name="text_en">Lost</field>
+            <field name="text_de">Verlust</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric61">
+            <field name="code">MOVED</field>
+            <field name="text_en">Moved</field>
+            <field name="text_de">Empfänger verzogen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric62">
+            <field name="code">MSDLA</field>
+            <field name="text_en">Missed delivery cycle - Received after cut off</field>
+            <field name="text_de">Sendung zu spät in Station für Zustellung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric63">
+            <field name="code">MSDOC</field>
+            <field name="text_en">Missing Document</field>
+            <field name="text_de">Fehlendes Dokument</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric64">
+            <field name="code">MSLBL</field>
+            <field name="text_en">Missing Label</field>
+            <field name="text_de">Fehlendes Label</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric65">
+            <field name="code">MSSDT</field>
+            <field name="text_en">Missing data</field>
+            <field name="text_de">fehlende Daten</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric66">
+            <field name="code">MVMTV</field>
+            <field name="text_en">Movement / tour vehicle</field>
+            <field name="text_de">Beladung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric67">
+            <field name="code">NAGTB</field>
+            <field name="text_en">Not According to General Terms of Business</field>
+            <field name="text_de">Sendung nicht AGB-konform - Rücksendung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric68">
+            <field name="code">NDRFC</field>
+            <field name="text_en">No data received from customer</field>
+            <field name="text_de">Fehlende EDI-Daten vom Kunden</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric69">
+            <field name="code">NDRFN</field>
+            <field name="text_en">No data received from network</field>
+            <field name="text_de">Fehlende EDI-Daten vom Netzwerk</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric70">
+            <field name="code">NEXCH</field>
+            <field name="text_en">No exchange unit</field>
+            <field name="text_de">Fehlende Wechselbehälter</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric71">
+            <field name="code">NGHBR</field>
+            <field name="text_en">Delivery to neighbor</field>
+            <field name="text_de">Zustellung an Nachbarn</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric72">
+            <field name="code">NHOME</field>
+            <field name="text_en">Not home</field>
+            <field name="text_de">Benachrichtigt: Empfänger nicht angetroffen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric73">
+            <field name="code">NORSN</field>
+            <field name="text_en">No reason</field>
+            <field name="text_de">Keine weitere Begründung durch Zoll</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric74">
+            <field name="code">NPRPF</field>
+            <field name="text_en">No piece received from previous facility</field>
+            <field name="text_de">Erwartete Sendung nicht eingetroffen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric75">
+            <field name="code">NPYMT</field>
+            <field name="text_en">No payment</field>
+            <field name="text_de">Keine Abholung wg. Zahlungsproblemen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric76">
+            <field name="code">NRQRD</field>
+            <field name="text_en">ICE Details</field>
+            <field name="text_de">Keine weiteren Details erforderlich</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric77">
+            <field name="code">NTCCN</field>
+            <field name="text_en">Not collected by consignee</field>
+            <field name="text_de">Keine Abholung durch Kunden zum Ablauf der Lagerfrist</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric78">
+            <field name="code">NTCLM</field>
+            <field name="text_en">Not claimed</field>
+            <field name="text_de">Vernichtung wg. Nichtabholung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric79">
+            <field name="code">NTHND</field>
+            <field name="text_en">Customer refused to hand over the shipment to DHL</field>
+            <field name="text_de">Die Herausgabe der Sendung wurde verweigert</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric80">
+            <field name="code">NTHNG</field>
+            <field name="text_en">Nothing to collect</field>
+            <field name="text_de">Keine Sendung zur Abholung vorhanden</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric81">
+            <field name="code">NTIHU</field>
+            <field name="text_en">Not in Handling Unit</field>
+            <field name="text_de">Sendung fehlt in Transporteinheit (Postbox)</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric82">
+            <field name="code">NTORD</field>
+            <field name="text_en">Not ordered</field>
+            <field name="text_de">Annahmeverweigerung - nicht bestellt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric83">
+            <field name="code">OARRV</field>
+            <field name="text_en">On arrival</field>
+            <field name="text_de">Zollfreigabe</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric84">
+            <field name="code">OTHER</field>
+            <field name="text_en">Other / Delivery to an other person</field>
+            <field name="text_de">Andere Gründe / Zustellung an andere anwesende Person</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric85">
+            <field name="code">OVRLD</field>
+            <field name="text_en">Overload</field>
+            <field name="text_de">Abladung wg. Überladung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric86">
+            <field name="code">PCCHR</field>
+            <field name="text_en">Piece characteristics</field>
+            <field name="text_de">Gewichtserfassung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric87">
+            <field name="code">PCKAD</field>
+            <field name="text_en">PaCKstation – Alternate Delivery</field>
+            <field name="text_de">Packstation auf Firmengelände voll - Zustellung an Hauspoststelle</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric88">
+            <field name="code">PCKST</field>
+            <field name="text_en">Packstation</field>
+            <field name="text_de">Packstation</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric89">
+            <field name="code">PKBOX</field>
+            <field name="text_en">Delivery to Packetbox</field>
+            <field name="text_de">Zustellung an Paketkasten</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric90">
+            <field name="code">PUBCR</field>
+            <field name="text_en">Piece pick up</field>
+            <field name="text_de">Erfolgreich abgeholt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric91">
+            <field name="code">PUDMG</field>
+            <field name="text_en">Picked up damaged</field>
+            <field name="text_de">Erfolgreich abgeholt - Sendung beschädigt übernommen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric92">
+            <field name="code">PWMFD</field>
+            <field name="text_en">Paperwork missing</field>
+            <field name="text_de">Fehlende Zolldokumente</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric93">
+            <field name="code">RDRCR</field>
+            <field name="text_en">Redirected by customer request</field>
+            <field name="text_de">Absender-/Empfängerverfügung: Zustellung an andere Adresse</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric94">
+            <field name="code">RDRDO</field>
+            <field name="text_en">Redirected by redirection order</field>
+            <field name="text_de">Absender-/Empfängerverfügung: Zustellung an andere Adresse</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric95">
+            <field name="code">RFUSD</field>
+            <field name="text_en">Refused</field>
+            <field name="text_de">Annahme Verweigert</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric96">
+            <field name="code">ROUCR</field>
+            <field name="text_en">reROUted on Customer Request</field>
+            <field name="text_de">Weiterleitung auf Kundenwunsch</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric97">
+            <field name="code">RSEXW</field>
+            <field name="text_en">Return to Shipper EXWorks error</field>
+            <field name="text_de">Rücksendung - Empfänger ist nicht berechtigt "Ab Werk"-Sendungen zu erhalten</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric98">
+            <field name="code">RTSCR</field>
+            <field name="text_en">Return to shipper at customer request</field>
+            <field name="text_de">Rücksendung aufgrund von Kundenwunsch</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric99">
+            <field name="code">RTSSA</field>
+            <field name="text_en">Return to shipper by customer standard agreement</field>
+            <field name="text_de">Rücksendung aufgrund Vereinbarung mit Absender</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric100">
+            <field name="code">RTTSP</field>
+            <field name="text_en">Return to shipper</field>
+            <field name="text_de">Rücksendung, ggf. mit neuem Label</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric101">
+            <field name="code">SECDA</field>
+            <field name="text_en">SECond Delivery Attempt</field>
+            <field name="text_de">Zweiter Zustellversuch</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric102">
+            <field name="code">SECPL</field>
+            <field name="text_en">Secure Place</field>
+            <field name="text_de">Zustellung an vereinbartem, gesicherten Ort</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric103">
+            <field name="code">SERPT</field>
+            <field name="text_en">Service Point</field>
+            <field name="text_de">Filiale / Agentur</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric104">
+            <field name="code">SHINF</field>
+            <field name="text_en">SHipper INFormation</field>
+            <field name="text_de">Unzustellbarkeitsanzeige</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric105">
+            <field name="code">SHNCP</field>
+            <field name="text_en">Shipment not complete</field>
+            <field name="text_de">Sendung nicht vollständig</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric106">
+            <field name="code">SPCNR</field>
+            <field name="text_en">Shipper cannot be reached</field>
+            <field name="text_de">Versender wurde nicht angetroffen</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric107">
+            <field name="code">SPOUS</field>
+            <field name="text_en">Delivery to spouse</field>
+            <field name="text_de">Zustellung an Ehegatten</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric108">
+            <field name="code">STBSD</field>
+            <field name="text_en">Stopped by sender</field>
+            <field name="text_de">Absenderverfügung: Sendung anhalten</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric109">
+            <field name="code">STPRB</field>
+            <field name="text_en">Sort problem</field>
+            <field name="text_de">Sortierproblem</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric110">
+            <field name="code">SVCHG</field>
+            <field name="text_en">Product feature check - Service changed</field>
+            <field name="text_de">Produktprüfung - Service geändert</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric111">
+            <field name="code">TCATC</field>
+            <field name="text_en">Traffic Congestion / Air traffic control</field>
+            <field name="text_de">Verkehrsstau</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric112">
+            <field name="code">TCHBD</field>
+            <field name="text_en">Technical / Breakdown</field>
+            <field name="text_de">Technische Probleme</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric113">
+            <field name="code">TRPMT</field>
+            <field name="text_en">Terms of payment</field>
+            <field name="text_de">Zahlungsschwierigkeiten / Zahlungsterminal defekt</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric114">
+            <field name="code">UDFPC</field>
+            <field name="text_en">Unidentifiable piece</field>
+            <field name="text_de">Unidentifizierbares Packstück</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric115">
+            <field name="code">ULDMG</field>
+            <field name="text_en">Unloaded damaged</field>
+            <field name="text_de">Bei Entladung beschädigt vorgefunden</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric116">
+            <field name="code">UNLDD</field>
+            <field name="text_en">Unloaded</field>
+            <field name="text_de">Entladung</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric117">
+            <field name="code">VHARU</field>
+            <field name="text_en">Vehicle / aircraft unavailable</field>
+            <field name="text_de">Fahrzeug nicht bereit</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric118">
+            <field name="code">WRGDT</field>
+            <field name="text_en">Wrong Date</field>
+            <field name="text_de">Falsches Datum</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric119">
+            <field name="code">WRGID</field>
+            <field name="text_en">Wrong Check-ID</field>
+            <field name="text_de">Falsche Prüf-ID</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric120">
+            <field name="code">WRGPN</field>
+            <field name="text_en">Wrong Post-ID</field>
+            <field name="text_de">Falsche Postnummer</field>
+        </record>
+        <record model="stock.dhl.ric" id="ric121">
+            <field name="code">WRGTR</field>
+            <field name="text_en">Wrong tour</field>
+            <field name="text_de">Falsche Tour</field>
+        </record>
+
+        <!-- stock.dhl.ice -->
+        <record model="stock.dhl.ice" id="ice1">
+            <field name="code">ADVIS</field>
+            <field name="text_en">Advise</field>
+            <field name="text_de">Sendungsavise</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice2">
+            <field name="code">ASMVT</field>
+            <field name="text_en">Assigned to movement / tour vehicle</field>
+            <field name="text_de">Transportzuweisung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice3">
+            <field name="code">CHECK</field>
+            <field name="text_en">Checked</field>
+            <field name="text_de">Produktmerkmal-Prüfung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice4">
+            <field name="code">CNFSC</field>
+            <field name="text_en">Confiscation</field>
+            <field name="text_de">Beschlagnahme/Postsperre</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice5">
+            <field name="code">CNRFC</field>
+            <field name="text_en">Consignee notified - Ready for collection</field>
+            <field name="text_de">Benachrichtigt</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice6">
+            <field name="code">CTBRN</field>
+            <field name="text_en">Customer broker notified</field>
+            <field name="text_de">Agent für Zollabfertigung benachrichtigt</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice7">
+            <field name="code">DLVRD</field>
+            <field name="text_en">Delivered</field>
+            <field name="text_de">Ausgeliefert</field>
+            <field name="stock_dm_state_id" ref="dms50"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice8">
+            <field name="code">DLVRF</field>
+            <field name="text_en">Delivery refused</field>
+            <field name="text_de">Annahme verweigert</field>
+            <field name="stock_dm_state_id" ref="dms60"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice9">
+            <field name="code">DMGDS</field>
+            <field name="text_en">Damage discovered</field>
+            <field name="text_de">Beschädigt</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice10">
+            <field name="code">DSPSD</field>
+            <field name="text_en">Disposed of</field>
+            <field name="text_de">Vernichtung</field>
+            <field name="stock_dm_state_id" ref="dms70"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice11">
+            <field name="code">DTNPC</field>
+            <field name="text_en">Data, but no piece</field>
+            <field name="text_de">Daten ohne Sendung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice12">
+            <field name="code">EXPHD</field>
+            <field name="text_en">Exception hold</field>
+            <field name="text_de">Sonderereignis</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice13">
+            <field name="code">HLDCC</field>
+            <field name="text_en">Held for consignee collection</field>
+            <field name="text_de">Sendung liegt zur Abholung bereit</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice14">
+            <field name="code">HLDCP</field>
+            <field name="text_en">Held for clearance purposes</field>
+            <field name="text_de">Bereithaltung zur Zollübergabe</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice15">
+            <field name="code">HLDCU</field>
+            <field name="text_en">Held by Customs</field>
+            <field name="text_de">Zollbearbeitung</field>
+            <field name="stock_dm_state_id" ref="dms40"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice16">
+            <field name="code">HNDDE</field>
+            <field name="text_en">Handover to 3rd party - Delivery details expected</field>
+            <field name="text_de">Übergabe an Servicepartner</field>
+            <field name="stock_dm_state_id" ref="dms40"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice17">
+            <field name="code">HNDND</field>
+            <field name="text_en">Handover to 3rd party - No delivery details expect</field>
+            <field name="text_de">Übergabe an Servicepartner</field>
+            <field name="stock_dm_state_id" ref="dms40"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice18">
+            <field name="code">ICPRC</field>
+            <field name="text_en">Into clearance processing</field>
+            <field name="text_de">Zollabfertigung gestartet</field>
+            <field name="stock_dm_state_id" ref="dms40"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice19">
+            <field name="code">INFCL</field>
+            <field name="text_en">In facility</field>
+            <field name="text_de">Lagerung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice20">
+            <field name="code">ITBAR</field>
+            <field name="text_en">In bonded area</field>
+            <field name="text_de">Lagerung unter Verschluss</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice21">
+            <field name="code">LDEXC</field>
+            <field name="text_en">Loading exception</field>
+            <field name="text_de">Ladungsrückstellung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice22">
+            <field name="code">LDTMV</field>
+            <field name="text_en">Loaded to movement / tour vehicle</field>
+            <field name="text_de">Abgang</field>
+            <field name="stock_dm_state_id" ref="dms30"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice23">
+            <field name="code">MSRTD</field>
+            <field name="text_en">Mis routed</field>
+            <field name="text_de">Routingfehler</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice24">
+            <field name="code">MVARR</field>
+            <field name="text_en">Movement / tour vehicle arrived</field>
+            <field name="text_de">Fahrzeug angekommen</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice25">
+            <field name="code">MVDEX</field>
+            <field name="text_en">Movement / tour vehicle departure exception</field>
+            <field name="text_de">Fahrzeug verspätet</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice26">
+            <field name="code">MVDPT</field>
+            <field name="text_en">Movement / tour vehicle departed</field>
+            <field name="text_de">Fahrzeug hat den Standort verlassen</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice27">
+            <field name="code">MVTEX</field>
+            <field name="text_en">Movement / tour vehicle exception</field>
+            <field name="text_de">Problem beim Transport</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice28">
+            <field name="code">NTDEL</field>
+            <field name="text_en">Not delivered</field>
+            <field name="text_de">Nicht ausgeliefert</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice29">
+            <field name="code">NTPUP</field>
+            <field name="text_en">Not picked up</field>
+            <field name="text_de">Nicht abgeholt</field>
+            <field name="stock_dm_state_id" ref="dms20"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice30">
+            <field name="code">OFWRD</field>
+            <field name="text_en">Onforwarded</field>
+            <field name="text_de">Nachsendung / Rücksendung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice31">
+            <field name="code">OOBAR</field>
+            <field name="text_en">Out of bonded area</field>
+            <field name="text_de">Weiterbearbeitung nach gesicherter Lagerung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice32">
+            <field name="code">OOSTR</field>
+            <field name="text_en">Out of storage</field>
+            <field name="text_de">Weiterbearbeitung nach Lagerung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice33">
+            <field name="code">PARCV</field>
+            <field name="text_en">PAN Received by Carrier</field>
+            <field name="text_de">Elektronische Sendungsdaten liegen vor</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice34">
+            <field name="code">PBNDT</field>
+            <field name="text_en">Piece, but no data</field>
+            <field name="text_de">Sendung ohne Daten</field>
+            <field name="stock_dm_state_id" ref="dms70"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice35">
+            <field name="code">PCKDU</field>
+            <field name="text_en">Picked up</field>
+            <field name="text_de">Abholung</field>
+            <field name="stock_dm_state_id" ref="dms30"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice36">
+            <field name="code">PURCR</field>
+            <field name="text_en">Pick up request created</field>
+            <field name="text_de">Abholauftrag erhalten</field>
+            <field name="stock_dm_state_id" ref="dms30"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice37">
+            <field name="code">RCCLS</field>
+            <field name="text_en">Record closed</field>
+            <field name="text_de">Sendungslauf beendet</field>
+            <field name="stock_dm_state_id" ref="dms80"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice38">
+            <field name="code">REPCK</field>
+            <field name="text_en">Repacked</field>
+            <field name="text_de">Sendung wurde neu verpackt</field>
+            <field name="stock_dm_state_id" ref="dms70"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice39">
+            <field name="code">RETRN</field>
+            <field name="text_en">Shipment will be returned to origin</field>
+            <field name="text_de">Rücksendung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice40">
+            <field name="code">RSDCP</field>
+            <field name="text_en">Released from clearance processing</field>
+            <field name="text_de">Zollfreigabe</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice41">
+            <field name="code">SECHK</field>
+            <field name="text_en">Security checked</field>
+            <field name="text_de">Sicherheitsprüfung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice42">
+            <field name="code">SHRCU</field>
+            <field name="text_en">Shipment Received from customer</field>
+            <field name="text_de">Einlieferung der Sendung durch den Kunden</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice43">
+            <field name="code">SRTED</field>
+            <field name="text_en">Sorted</field>
+            <field name="text_de">Sortierung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice44">
+            <field name="code">TRBCR</field>
+            <field name="text_en">Transferred between carriers</field>
+            <field name="text_de">Übergabe zwischen Transporteuren</field>
+            <field name="stock_dm_state_id" ref="dms40"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice45">
+            <field name="code">UDPFD</field>
+            <field name="text_en">Unidentified piece found</field>
+            <field name="text_de">Sendung ohne Label</field>
+            <field name="stock_dm_state_id" ref="dms70"/>
+        </record>
+        <record model="stock.dhl.ice" id="ice46">
+            <field name="code">ULFMV</field>
+            <field name="text_en">Unloaded from movement / tour vehicle</field>
+            <field name="text_de">Eingang</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+        <record model="stock.dhl.ice" id="ice47">
+            <field name="code">WGDMM</field>
+            <field name="text_en">Weight/Volume/Dimensions measured</field>
+            <field name="text_de">Gewicht/Volumen/Abmessungsermittlung</field>
+            <field name="stock_dm_state_id" ref=""/>
+        </record>
+
+        <!-- stock.dhl.ttpro -->
+        <record model="stock.dhl.ttpro" id="ttpro1">
+            <field name="code">AA</field>
+            <field name="text_en">Dispatch from ...</field>
+            <field name="text_de">Abgang aus ...</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro2">
+            <field name="code">AE</field>
+            <field name="text_en">Pickup from customer successful</field>
+            <field name="text_de">Abholung beim Kunden erfolgreich</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro3">
+            <field name="code">AN</field>
+            <field name="text_en">Pickup from customer not successful</field>
+            <field name="text_de">Abholung beim Kunden nicht erfolgreich</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro4">
+            <field name="code">BV</field>
+            <field name="text_en">Exceptional event</field>
+            <field name="text_de">Besondere Vorkommnisse</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro5">
+            <field name="code">DD</field>
+            <field name="text_en">Data service</field>
+            <field name="text_de">Datendienst</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro6">
+            <field name="code">EE</field>
+            <field name="text_en">Receipt in ...</field>
+            <field name="text_de">Eingang in ...</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro7">
+            <field name="code">ES</field>
+            <field name="text_en">Receipt in shipment progress</field>
+            <field name="text_de">Eingang in Sendungsverlauf</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro8">
+            <field name="code">GT</field>
+            <field name="text_en">Money transfer</field>
+            <field name="text_de">Geld-Transfer</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro9">
+            <field name="code">LA</field>
+            <field name="text_en">Warehousing</field>
+            <field name="text_de">Lagerung</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro10">
+            <field name="code">NB</field>
+            <field name="text_en">Normal processing</field>
+            <field name="text_de">Normale Bearbeitung</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro11">
+            <field name="code">PO</field>
+            <field name="text_en">In delivery process</field>
+            <field name="text_de">Daten ohne Sendung</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro12">
+            <field name="code">VA</field>
+            <field name="text_en">Preannouncement (via EDI)</field>
+            <field name="text_de">Vorankündigung (per EDI)</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro13">
+            <field name="code">ZF</field>
+            <field name="text_en">Delivery at agency</field>
+            <field name="text_de">Zustellung Filiale</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro14">
+            <field name="code">ZN</field>
+            <field name="text_en">Delivery attempt not successful</field>
+            <field name="text_de">Zustellversuch nicht erfolgreich</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro15">
+            <field name="code">ZO</field>
+            <field name="text_en">Customs</field>
+            <field name="text_de">Zoll</field>
+        </record>
+        <record model="stock.dhl.ttpro" id="ttpro16">
+            <field name="code">ZU</field>
+            <field name="text_en">Delivered</field>
+            <field name="text_de">Zugestellt</field>
+        </record>
+
+        <!-- delivery.carrier -->
+        <record model="delivery.carrier" id="dm1">
+            <field name="name">DHL Paket</field>
+            <field name="active">True</field>
+            <field name="partner_id">5299</field>
+            <field name="product_id">12</field>
+            <field name="normal_price">0</field>
+            <field name="res_model" ref="ama_delivery.model_stock_dhl_picking_unit"/>
+        </record>
+        <record model="delivery.carrier" id="dm2">
+            <field name="name">Weltpaket</field>
+            <field name="active">False</field>
+            <field name="partner_id">5299</field>
+            <field name="product_id">12</field>
+            <field name="normal_price">0</field>
+            <field name="res_model" ref="ama_delivery.model_stock_dhl_picking_unit"/>
+        </record>
+        <record model="delivery.carrier" id="dm3">
+            <field name="name">DHL Europaket</field>
+            <field name="active">False</field>
+            <field name="partner_id">5299</field>
+            <field name="product_id">12</field>
+            <field name="normal_price">0</field>
+            <field name="res_model" ref="ama_delivery.model_stock_dhl_picking_unit"/>
+        </record>
+        <record model="delivery.carrier" id="dm4">
+            <field name="name">DHL Express National</field>
+            <field name="active">False</field>
+            <field name="partner_id">5299</field>
+            <field name="product_id">12</field>
+            <field name="normal_price">0</field>
+            <field name="res_model" ref="ama_delivery.model_stock_dhl_picking_unit"/>
+        </record>
+        <record model="delivery.carrier" id="dm5">
+            <field name="name">DHL Express International</field>
+            <field name="active">False</field>
+            <field name="partner_id">5299</field>
+            <field name="product_id">12</field>
+            <field name="normal_price">0</field>
+            <field name="res_model" ref="ama_delivery.model_stock_dhl_picking_unit"/>
+        </record>
+
+        <!-- stock.dhl.combination -->
+        <record model="stock.dhl.combination" id="dmc1">
+            <field name="stock_dhl_ice_id" ref="ice1"/>
+            <field name="stock_dhl_ric_id" ref="ric41"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro5"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc2">
+            <field name="stock_dhl_ice_id" ref="ice1"/>
+            <field name="stock_dhl_ric_id" ref="ric96"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro5"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc3">
+            <field name="stock_dhl_ice_id" ref="ice1"/>
+            <field name="stock_dhl_ric_id" ref="ric98"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro5"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc4">
+            <field name="stock_dhl_ice_id" ref="ice1"/>
+            <field name="stock_dhl_ric_id" ref="ric101"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro5"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc5">
+            <field name="stock_dhl_ice_id" ref="ice2"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc6">
+            <field name="stock_dhl_ice_id" ref="ice3"/>
+            <field name="stock_dhl_ric_id" ref="ric110"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc7">
+            <field name="stock_dhl_ice_id" ref="ice3"/>
+            <field name="stock_dhl_ric_id" ref="ric110"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc8">
+            <field name="stock_dhl_ice_id" ref="ice4"/>
+            <field name="stock_dhl_ric_id" ref="ric12"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc9">
+            <field name="stock_dhl_ice_id" ref="ice4"/>
+            <field name="stock_dhl_ric_id" ref="ric59"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc10">
+            <field name="stock_dhl_ice_id" ref="ice5"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc11">
+            <field name="stock_dhl_ice_id" ref="ice5"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc12">
+            <field name="stock_dhl_ice_id" ref="ice5"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc13">
+            <field name="stock_dhl_ice_id" ref="ice5"/>
+            <field name="stock_dhl_ric_id" ref="ric88"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc14">
+            <field name="stock_dhl_ice_id" ref="ice6"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc15">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric1"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc16">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric2"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc17">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric3"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc18">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric4"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc19">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric4"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc20">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric4"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc21">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric4"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc22">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric4"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc23">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric5"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc24">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric5"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc25">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric6"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc26">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric17"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro8"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc27">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric18"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro8"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc28">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric18"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc29">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric30"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc30">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric36"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc31">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric71"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc32">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc33">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric87"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc34">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric89"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc35">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric102"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc36">
+            <field name="stock_dhl_ice_id" ref="ice7"/>
+            <field name="stock_dhl_ric_id" ref="ric107"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc37">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric20"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc38">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc39">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc40">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc41">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric70"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc42">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric81"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc43">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric82"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc44">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric82"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc45">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric82"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc46">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric82"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc47">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric82"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc48">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc49">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric105"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc50">
+            <field name="stock_dhl_ice_id" ref="ice8"/>
+            <field name="stock_dhl_ric_id" ref="ric113"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc51">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric33"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc52">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric33"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc53">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric33"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc54">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric33"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc55">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric91"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc56">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric91"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc57">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric115"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc58">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric115"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc59">
+            <field name="stock_dhl_ice_id" ref="ice9"/>
+            <field name="stock_dhl_ric_id" ref="ric115"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc60">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric8"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc61">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric14"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc62">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric15"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc63">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric19"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc64">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric21"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc65">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric21"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc66">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc67">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc68">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric39"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc69">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric44"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc70">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric61"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc71">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc72">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric78"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc73">
+            <field name="stock_dhl_ice_id" ref="ice10"/>
+            <field name="stock_dhl_ric_id" ref="ric82"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc74">
+            <field name="stock_dhl_ice_id" ref="ice11"/>
+            <field name="stock_dhl_ric_id" ref="ric74"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc75">
+            <field name="stock_dhl_ice_id" ref="ice11"/>
+            <field name="stock_dhl_ric_id" ref="ric74"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc76">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric8"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc77">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric14"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc78">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric14"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc79">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc80">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc81">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc82">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric34"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc83">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric37"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc84">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric37"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc85">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric37"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc86">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric38"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc87">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric39"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc88">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric44"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc89">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric44"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc90">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric55"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc91">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric57"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc92">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric65"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc93">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric65"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc94">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric65"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc95">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric65"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc96">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc97">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc98">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc99">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc100">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric92"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc101">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric100"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc102">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric100"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc103">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric108"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc104">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric109"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc105">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric114"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc106">
+            <field name="stock_dhl_ice_id" ref="ice12"/>
+            <field name="stock_dhl_ric_id" ref="ric114"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc107">
+            <field name="stock_dhl_ice_id" ref="ice13"/>
+            <field name="stock_dhl_ric_id" ref="ric47"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc108">
+            <field name="stock_dhl_ice_id" ref="ice13"/>
+            <field name="stock_dhl_ric_id" ref="ric47"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc109">
+            <field name="stock_dhl_ice_id" ref="ice13"/>
+            <field name="stock_dhl_ric_id" ref="ric47"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc110">
+            <field name="stock_dhl_ice_id" ref="ice13"/>
+            <field name="stock_dhl_ric_id" ref="ric47"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc111">
+            <field name="stock_dhl_ice_id" ref="ice13"/>
+            <field name="stock_dhl_ric_id" ref="ric47"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc112">
+            <field name="stock_dhl_ice_id" ref="ice13"/>
+            <field name="stock_dhl_ric_id" ref="ric58"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc113">
+            <field name="stock_dhl_ice_id" ref="ice13"/>
+            <field name="stock_dhl_ric_id" ref="ric77"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc114">
+            <field name="stock_dhl_ice_id" ref="ice13"/>
+            <field name="stock_dhl_ric_id" ref="ric103"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc115">
+            <field name="stock_dhl_ice_id" ref="ice14"/>
+            <field name="stock_dhl_ric_id" ref="ric73"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc116">
+            <field name="stock_dhl_ice_id" ref="ice15"/>
+            <field name="stock_dhl_ric_id" ref="ric35"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc117">
+            <field name="stock_dhl_ice_id" ref="ice15"/>
+            <field name="stock_dhl_ric_id" ref="ric73"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc118">
+            <field name="stock_dhl_ice_id" ref="ice16"/>
+            <field name="stock_dhl_ric_id" ref="ric6"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc119">
+            <field name="stock_dhl_ice_id" ref="ice16"/>
+            <field name="stock_dhl_ric_id" ref="ric28"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc120">
+            <field name="stock_dhl_ice_id" ref="ice16"/>
+            <field name="stock_dhl_ric_id" ref="ric103"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc121">
+            <field name="stock_dhl_ice_id" ref="ice17"/>
+            <field name="stock_dhl_ric_id" ref="ric29"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc122">
+            <field name="stock_dhl_ice_id" ref="ice17"/>
+            <field name="stock_dhl_ric_id" ref="ric29"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc123">
+            <field name="stock_dhl_ice_id" ref="ice17"/>
+            <field name="stock_dhl_ric_id" ref="ric51"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro16"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc124">
+            <field name="stock_dhl_ice_id" ref="ice18"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc125">
+            <field name="stock_dhl_ice_id" ref="ice18"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc126">
+            <field name="stock_dhl_ice_id" ref="ice18"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc127">
+            <field name="stock_dhl_ice_id" ref="ice18"/>
+            <field name="stock_dhl_ric_id" ref="ric83"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc128">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric25"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc129">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric25"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc130">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc131">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric48"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc132">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric49"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc133">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric50"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc134">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric50"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc135">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric55"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc136">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric55"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc137">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric55"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc138">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc139">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc140">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc141">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc142">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric83"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc143">
+            <field name="stock_dhl_ice_id" ref="ice19"/>
+            <field name="stock_dhl_ric_id" ref="ric112"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro9"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc144">
+            <field name="stock_dhl_ice_id" ref="ice20"/>
+            <field name="stock_dhl_ric_id" ref="ric26"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc145">
+            <field name="stock_dhl_ice_id" ref="ice20"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc146">
+            <field name="stock_dhl_ice_id" ref="ice20"/>
+            <field name="stock_dhl_ric_id" ref="ric83"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc147">
+            <field name="stock_dhl_ice_id" ref="ice21"/>
+            <field name="stock_dhl_ric_id" ref="ric8"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc148">
+            <field name="stock_dhl_ice_id" ref="ice21"/>
+            <field name="stock_dhl_ric_id" ref="ric62"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc149">
+            <field name="stock_dhl_ice_id" ref="ice21"/>
+            <field name="stock_dhl_ric_id" ref="ric62"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc150">
+            <field name="stock_dhl_ice_id" ref="ice21"/>
+            <field name="stock_dhl_ric_id" ref="ric62"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc151">
+            <field name="stock_dhl_ice_id" ref="ice21"/>
+            <field name="stock_dhl_ric_id" ref="ric85"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc152">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric31"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc153">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc154">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro10"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc155">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric66"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc156">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric66"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc157">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric66"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc158">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric66"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc159">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric66"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc160">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric66"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc161">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric88"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc162">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric101"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc163">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric101"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc164">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric103"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc165">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric103"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc166">
+            <field name="stock_dhl_ice_id" ref="ice22"/>
+            <field name="stock_dhl_ric_id" ref="ric103"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro13"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc167">
+            <field name="stock_dhl_ice_id" ref="ice23"/>
+            <field name="stock_dhl_ric_id" ref="ric22"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc168">
+            <field name="stock_dhl_ice_id" ref="ice23"/>
+            <field name="stock_dhl_ric_id" ref="ric23"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc169">
+            <field name="stock_dhl_ice_id" ref="ice23"/>
+            <field name="stock_dhl_ric_id" ref="ric23"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc170">
+            <field name="stock_dhl_ice_id" ref="ice23"/>
+            <field name="stock_dhl_ric_id" ref="ric23"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc171">
+            <field name="stock_dhl_ice_id" ref="ice23"/>
+            <field name="stock_dhl_ric_id" ref="ric23"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc172">
+            <field name="stock_dhl_ice_id" ref="ice23"/>
+            <field name="stock_dhl_ric_id" ref="ric52"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc173">
+            <field name="stock_dhl_ice_id" ref="ice23"/>
+            <field name="stock_dhl_ric_id" ref="ric52"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc174">
+            <field name="stock_dhl_ice_id" ref="ice23"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc175">
+            <field name="stock_dhl_ice_id" ref="ice24"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc176">
+            <field name="stock_dhl_ice_id" ref="ice24"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc177">
+            <field name="stock_dhl_ice_id" ref="ice24"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc178">
+            <field name="stock_dhl_ice_id" ref="ice25"/>
+            <field name="stock_dhl_ric_id" ref="ric39"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc179">
+            <field name="stock_dhl_ice_id" ref="ice25"/>
+            <field name="stock_dhl_ric_id" ref="ric117"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc180">
+            <field name="stock_dhl_ice_id" ref="ice26"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc181">
+            <field name="stock_dhl_ice_id" ref="ice26"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc182">
+            <field name="stock_dhl_ice_id" ref="ice26"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc183">
+            <field name="stock_dhl_ice_id" ref="ice27"/>
+            <field name="stock_dhl_ric_id" ref="ric39"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc184">
+            <field name="stock_dhl_ice_id" ref="ice27"/>
+            <field name="stock_dhl_ric_id" ref="ric39"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc185">
+            <field name="stock_dhl_ice_id" ref="ice27"/>
+            <field name="stock_dhl_ric_id" ref="ric111"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc186">
+            <field name="stock_dhl_ice_id" ref="ice27"/>
+            <field name="stock_dhl_ric_id" ref="ric112"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc187">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric7"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc188">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric8"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc189">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric8"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc190">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric8"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc191">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric13"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc192">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric13"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc193">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric13"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc194">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric13"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc195">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric15"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc196">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric15"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc197">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric15"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc198">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric15"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc199">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric19"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc200">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric19"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc201">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric19"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc202">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric24"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc203">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric24"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc204">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric24"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc205">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric24"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc206">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric27"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc207">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc208">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric39"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc209">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric48"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc210">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric53"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc211">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric54"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc212">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric61"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc213">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric61"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc214">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric61"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc215">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric63"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc216">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric64"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc217">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric65"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc218">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric67"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc219">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric72"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc220">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric72"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc221">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric72"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc222">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric72"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc223">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric77"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc224">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric81"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc225">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc226">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc227">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric88"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc228">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric88"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc229">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric95"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc230">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric97"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc231">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric101"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc232">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric104"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc233">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric113"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc234">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric113"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc235">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric113"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc236">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric113"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc237">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric120"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc238">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric121"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc239">
+            <field name="stock_dhl_ice_id" ref="ice28"/>
+            <field name="stock_dhl_ric_id" ref="ric121"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc240">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric13"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc241">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric19"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc242">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric24"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc243">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric32"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc244">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric44"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc245">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric45"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc246">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric45"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc247">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric75"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc248">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric79"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc249">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric80"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc250">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric80"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc251">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric84"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc252">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric106"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc253">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric106"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc254">
+            <field name="stock_dhl_ice_id" ref="ice29"/>
+            <field name="stock_dhl_ric_id" ref="ric121"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc255">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric16"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc256">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric23"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc257">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric23"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc258">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric23"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc259">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric25"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc260">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric25"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc261">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc262">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric93"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc263">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric93"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro3"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc264">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric93"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc265">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric93"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc266">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric93"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc267">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric93"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc268">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric94"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc269">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric98"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc270">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric98"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc271">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric98"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc272">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric98"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc273">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric98"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc274">
+            <field name="stock_dhl_ice_id" ref="ice30"/>
+            <field name="stock_dhl_ric_id" ref="ric99"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc275">
+            <field name="stock_dhl_ice_id" ref="ice31"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc276">
+            <field name="stock_dhl_ice_id" ref="ice32"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro10"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc277">
+            <field name="stock_dhl_ice_id" ref="ice33"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro12"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc278">
+            <field name="stock_dhl_ice_id" ref="ice34"/>
+            <field name="stock_dhl_ric_id" ref="ric68"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc279">
+            <field name="stock_dhl_ice_id" ref="ice34"/>
+            <field name="stock_dhl_ric_id" ref="ric69"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc280">
+            <field name="stock_dhl_ice_id" ref="ice34"/>
+            <field name="stock_dhl_ric_id" ref="ric69"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc281">
+            <field name="stock_dhl_ice_id" ref="ice34"/>
+            <field name="stock_dhl_ric_id" ref="ric73"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc282">
+            <field name="stock_dhl_ice_id" ref="ice35"/>
+            <field name="stock_dhl_ric_id" ref="ric9"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro2"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc283">
+            <field name="stock_dhl_ice_id" ref="ice35"/>
+            <field name="stock_dhl_ric_id" ref="ric90"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro2"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc284">
+            <field name="stock_dhl_ice_id" ref="ice35"/>
+            <field name="stock_dhl_ric_id" ref="ric90"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro2"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc285">
+            <field name="stock_dhl_ice_id" ref="ice35"/>
+            <field name="stock_dhl_ric_id" ref="ric90"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro2"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc286">
+            <field name="stock_dhl_ice_id" ref="ice35"/>
+            <field name="stock_dhl_ric_id" ref="ric90"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro2"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc287">
+            <field name="stock_dhl_ice_id" ref="ice35"/>
+            <field name="stock_dhl_ric_id" ref="ric90"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro2"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc288">
+            <field name="stock_dhl_ice_id" ref="ice35"/>
+            <field name="stock_dhl_ric_id" ref="ric90"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc289">
+            <field name="stock_dhl_ice_id" ref="ice36"/>
+            <field name="stock_dhl_ric_id" ref="ric10"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro12"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc290">
+            <field name="stock_dhl_ice_id" ref="ice37"/>
+            <field name="stock_dhl_ric_id" ref="ric46"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc291">
+            <field name="stock_dhl_ice_id" ref="ice37"/>
+            <field name="stock_dhl_ric_id" ref="ric60"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc292">
+            <field name="stock_dhl_ice_id" ref="ice38"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc293">
+            <field name="stock_dhl_ice_id" ref="ice38"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc294">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric8"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc295">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric14"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc296">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric15"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc297">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric33"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc298">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric39"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc299">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric44"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc300">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric56"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc301">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric61"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc302">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric65"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc303">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric67"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc304">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric67"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc305">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric70"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc306">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric72"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc307">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric72"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc308">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric77"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc309">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric77"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc310">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric82"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc311">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric99"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc312">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric99"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc313">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric118"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc314">
+            <field name="stock_dhl_ice_id" ref="ice39"/>
+            <field name="stock_dhl_ric_id" ref="ric119"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro14"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc315">
+            <field name="stock_dhl_ice_id" ref="ice40"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc316">
+            <field name="stock_dhl_ice_id" ref="ice40"/>
+            <field name="stock_dhl_ric_id" ref="ric83"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc317">
+            <field name="stock_dhl_ice_id" ref="ice40"/>
+            <field name="stock_dhl_ric_id" ref="ric83"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc318">
+            <field name="stock_dhl_ice_id" ref="ice41"/>
+            <field name="stock_dhl_ric_id" ref="ric11"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc319">
+            <field name="stock_dhl_ice_id" ref="ice42"/>
+            <field name="stock_dhl_ric_id" ref="ric88"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc320">
+            <field name="stock_dhl_ice_id" ref="ice42"/>
+            <field name="stock_dhl_ric_id" ref="ric103"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc321">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric40"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc322">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric40"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc323">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc324">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc325">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric42"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc326">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric43"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro1"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc327">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric43"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc328">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro10"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc329">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro10"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc330">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro10"/>
+            <field name="delivery_carrier_id" ref="dm3"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc331">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro10"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc332">
+            <field name="stock_dhl_ice_id" ref="ice43"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc333">
+            <field name="stock_dhl_ice_id" ref="ice44"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro4"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc334">
+            <field name="stock_dhl_ice_id" ref="ice45"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc335">
+            <field name="stock_dhl_ice_id" ref="ice45"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc336">
+            <field name="stock_dhl_ice_id" ref="ice45"/>
+            <field name="stock_dhl_ric_id" ref="ric76"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro15"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc337">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric83"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc338">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric83"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro10"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc339">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric112"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc340">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric116"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc341">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric116"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc342">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric116"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm4"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc343">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric116"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro6"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc344">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric116"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro7"/>
+            <field name="delivery_carrier_id" ref="dm1"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc345">
+            <field name="stock_dhl_ice_id" ref="ice46"/>
+            <field name="stock_dhl_ric_id" ref="ric116"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro11"/>
+            <field name="delivery_carrier_id" ref="dm2"/>
+        </record>
+        <record model="stock.dhl.combination" id="dmc346">
+            <field name="stock_dhl_ice_id" ref="ice47"/>
+            <field name="stock_dhl_ric_id" ref="ric86"/>
+            <field name="stock_dhl_ttpro_id" ref="ttpro10"/>
+            <field name="delivery_carrier_id" ref="dm5"/>
+        </record>
+        
+        <!-- stock.dhl.status -->
+        <record model="stock.dhl.status" id="status1">
+            <field name="code">-3</field>
+            <field name="text_en">Unknown request.</field>
+            <field name="text_de">Abfrage unbekannt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status2">
+            <field name="code">-2</field>
+            <field name="text_en">Internal error executing SQL query.</field>
+            <field name="text_de">Interner SQL-Datenbank-Abfrage-Fehler</field>
+        </record>
+        <record model="stock.dhl.status" id="status3">
+            <field name="code">-1</field>
+            <field name="text_en">No database connection.</field>
+            <field name="text_de">Keine Verbindung zur Datenbank.</field>
+        </record>
+        <record model="stock.dhl.status" id="status4">
+            <field name="code">0</field>
+            <field name="text_en">Successfully performed query</field>
+            <field name="text_de">Abfrage erfolgreich durchgeführt</field>
+        </record>
+        <record model="stock.dhl.status" id="status5">
+            <field name="code">1</field>
+            <field name="text_en">Shipment number not in valid range.</field>
+            <field name="text_de">Sendungsnummer nicht im erlaubten Bereich.</field>
+        </record>
+        <record model="stock.dhl.status" id="status6">
+            <field name="code">2</field>
+            <field name="text_en">Access to shipment denied. (EKP-No)</field>
+            <field name="text_de">Zugriff auf diese Sendung verweigert. (EKP-Nr.)</field>
+        </record>
+        <record model="stock.dhl.status" id="status7">
+            <field name="code">3</field>
+            <field name="text_en">Piece-code parameter missing.</field>
+            <field name="text_de">Piece-code Parameter fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status8">
+            <field name="code">5</field>
+            <field name="text_en">Login failed. Not authorized.</field>
+            <field name="text_de">Anmeldung fehlgeschlagen.</field>
+        </record>
+        <record model="stock.dhl.status" id="status9">
+            <field name="code">40</field>
+            <field name="text_en">Too many characters in code</field>
+            <field name="text_de">Zuviele Zeichen im Piece-Code</field>
+        </record>
+        <record model="stock.dhl.status" id="status10">
+            <field name="code">41</field>
+            <field name="text_en">IDC-Checksum invalid</field>
+            <field name="text_de">IDC-Prüfsumme ungültig</field>
+        </record>
+        <record model="stock.dhl.status" id="status11">
+            <field name="code">42</field>
+            <field name="text_en">Code entered is not AWB, IDC or EAN or FACT-Code compliant.</field>
+            <field name="text_de">Weder AWB, IDC noch EAN oder FACT-Code erkannt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status12">
+            <field name="code">43</field>
+            <field name="text_en">Piece-Code-Analysis failed.</field>
+            <field name="text_de">Piece-Code-Analyse fehlgeschlagen.</field>
+        </record>
+        <record model="stock.dhl.status" id="status13">
+            <field name="code">44</field>
+            <field name="text_en">Piece-Code must not be null.</field>
+            <field name="text_de">Piece-Code darf nicht null sein.</field>
+        </record>
+        <record model="stock.dhl.status" id="status14">
+            <field name="code">45</field>
+            <field name="text_en">No Piece-Code supplied.</field>
+            <field name="text_de">Kein Piece-Code eingegeben.</field>
+        </record>
+        <record model="stock.dhl.status" id="status15">
+            <field name="code">46</field>
+            <field name="text_en">Parameter piece-code-range-id missing.</field>
+            <field name="text_de">Parameter piece-code-range-id fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status16">
+            <field name="code">47</field>
+            <field name="text_en">Parameter time-frame-id missing.</field>
+            <field name="text_de">Parameter time-frame-id fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status17">
+            <field name="code">48</field>
+            <field name="text_en">Parameter piece-id missing.</field>
+            <field name="text_de">Parameter piece-id fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status18">
+            <field name="code">49</field>
+            <field name="text_en">Parameter range-type missing.</field>
+            <field name="text_de">Parameter range-type fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status19">
+            <field name="code">50</field>
+            <field name="text_en">Parameter application-name missing.</field>
+            <field name="text_de">Parameter application-name fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status20">
+            <field name="code">51</field>
+            <field name="text_en">Parameter last-name missing.</field>
+            <field name="text_de">Parameter last-name fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status21">
+            <field name="code">52</field>
+            <field name="text_en">Parameter company-name missing.</field>
+            <field name="text_de">Parameter company-name fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status22">
+            <field name="code">53</field>
+            <field name="text_en">Parameter street-name missing.</field>
+            <field name="text_de">Parameter street-name fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status23">
+            <field name="code">54</field>
+            <field name="text_en">Parameter house-number missing.</field>
+            <field name="text_de">Parameter house-number fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status24">
+            <field name="code">55</field>
+            <field name="text_en">Parameter zip-code missing.</field>
+            <field name="text_de">Parameter zip-code fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status25">
+            <field name="code">56</field>
+            <field name="text_en">Parameter city-name missing.</field>
+            <field name="text_de">Parameter city-name fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status26">
+            <field name="code">57</field>
+            <field name="text_en">No information available using the specified ZIP-code</field>
+            <field name="text_de">Zur vorgegebenen PLZ sind keine Informationen verfügbar</field>
+        </record>
+        <record model="stock.dhl.status" id="status27">
+            <field name="code">58</field>
+            <field name="text_en">Parameter ekp-no missing</field>
+            <field name="text_de">Parameter ekp-no fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status28">
+            <field name="code">59</field>
+            <field name="text_en">Neither parameter piece-code nor tas-order-no specified.</field>
+            <field name="text_de">Weder Parameter piece-code noch Parameter tas-order-no spezifiziert.</field>
+        </record>
+        <record model="stock.dhl.status" id="status29">
+            <field name="code">60</field>
+            <field name="text_en">Only one parameter piece-code or tas-order-no allowed.</field>
+            <field name="text_de">Nur ein Parameter piece-code oder tas-order-no erlaubt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status30">
+            <field name="code">61</field>
+            <field name="text_en">No piece data to TAS order found.</field>
+            <field name="text_de">Keine Sendungsdaten zur TAS-Auftragsnummer gefunden.</field>
+        </record>
+        <record model="stock.dhl.status" id="status31">
+            <field name="code">62</field>
+            <field name="text_en">Missing access right while processing servlet request.</field>
+            <field name="text_de">Bearbeitung wegen fehlender Berechtigung abgebrochen (Servlet-Request).</field>
+        </record>
+        <record model="stock.dhl.status" id="status32">
+            <field name="code">63</field>
+            <field name="text_en">Signatures not available (no connection to archive server)</field>
+            <field name="text_de">Unterschriften sind wegen fehlender Verbindung zum Archiv-Server nicht verfügbar</field>
+        </record>
+        <record model="stock.dhl.status" id="status33">
+            <field name="code">64</field>
+            <field name="text_en">Illegal Request (missing checksum error)</field>
+            <field name="text_de">Keine Bearbeitung möglich: Recht zur Anfrage ohne Prüfziffer fehlt.</field>
+        </record>
+        <record model="stock.dhl.status" id="status34">
+            <field name="code">65</field>
+            <field name="text_en">Error while processing request.</field>
+            <field name="text_de">Fehler bei der Verarbeitung oder dem Zugriff auf die Datenbank</field>
+        </record>
+        <record model="stock.dhl.status" id="status35">
+            <field name="code">66</field>
+            <field name="text_en">Unable to store request (request may already exist).</field>
+            <field name="text_de">Nachweisanforderung kann nicht gespeichert werden (evtl. existiert die Anforderung schon)</field>
+        </record>
+        <record model="stock.dhl.status" id="status36">
+            <field name="code">67</field>
+            <field name="text_en">Proccessing stopped, because frequency of requests with current user-id to high</field>
+            <field name="text_de">Bearbeitung wegen zu hoher Abfragefrequenz mit der Benutzerkennung abgebrochen</field>
+        </record>
+        <record model="stock.dhl.status" id="status37">
+            <field name="code">70</field>
+            <field name="text_en">No foreign shipment found for entered shipment number</field>
+            <field name="text_de">Für den eingegebenen Sendungscode liegt keine Auslandssendung vor</field>
+        </record>
+        <record model="stock.dhl.status" id="status38">
+            <field name="code">71</field>
+            <field name="text_en">Zip code has to be a five digit number</field>
+            <field name="text_de">Die Postleitzahl muss eine 5-stellige Zahl sein</field>
+        </record>
+        <record model="stock.dhl.status" id="status39">
+            <field name="code">72</field>
+            <field name="text_en">Shipment number for national search not allowed</field>
+            <field name="text_de">Sendungscode für nationale Suche nicht zugelassen</field>
+        </record>
+        <record model="stock.dhl.status" id="status40">
+            <field name="code">73</field>
+            <field name="text_en">Shipment number not allowed</field>
+            <field name="text_de">Sendungscode nicht zugelassen</field>
+        </record>
+        <record model="stock.dhl.status" id="status41">
+            <field name="code">74</field>
+            <field name="text_en">Please do not enter zip codes for foreign shipments</field>
+            <field name="text_de">Bitte lassen Sie zur Suche nach Sendungen in das Ausland das PLZ-Feld leer</field>
+        </record>
+        <record model="stock.dhl.status" id="status42">
+            <field name="code">75</field>
+            <field name="text_en">Please enter the five digit receiver-zip code and set the foreign shipment flag for inbound shipments</field>
+            <field name="text_de">Bitte geben Sie bei Sendungen aus dem Ausland die 5-stellige Empfänger-Postleitzahl ein und setzen Sie das Häkchen für &quot;Auslandssendung&quot;</field>
+        </record>
+        <record model="stock.dhl.status" id="status43">
+            <field name="code">76</field>
+            <field name="text_en">No data found.</field>
+            <field name="text_de">Keine Daten gefunden.</field>
+        </record>
+        <record model="stock.dhl.status" id="status44">
+            <field name="code">77</field>
+            <field name="text_en">Please enter a valid zip code.</field>
+            <field name="text_de">Bitte geben Sie eine gültige Postleitzahl ein</field>
+        </record>
+        <record model="stock.dhl.status" id="status45">
+            <field name="code">78</field>
+            <field name="text_en">There is no distinct national shipment</field>
+            <field name="text_de">Es liegen keine eindeutigen nationalen Sendungen vor</field>
+        </record>
+        <record model="stock.dhl.status" id="status46">
+            <field name="code">79</field>
+            <field name="text_en">There is no disctinct national shipment and international shipment</field>
+            <field name="text_de">Es liegen nicht eindeutig nationale und internationale Sendungen vor</field>
+        </record>
+        <record model="stock.dhl.status" id="status47">
+            <field name="code">80</field>
+            <field name="text_en">There is no distinct international shipment</field>
+            <field name="text_de">Es liegen keine eindeutigen internationalen Sendungen vor</field>
+        </record>
+        <record model="stock.dhl.status" id="status48">
+            <field name="code">100</field>
+            <field name="text_en">No data found.</field>
+            <field name="text_de">Keine Daten gefunden.</field>
+        </record>
+        <record model="stock.dhl.status" id="status49">
+            <field name="code">146</field>
+            <field name="text_en">Parameter date-from missing or incorrect.</field>
+            <field name="text_de">Parameter date-from fehlt oder ist fehlerhaft.</field>
+        </record>
+        <record model="stock.dhl.status" id="status50">
+            <field name="code">147</field>
+            <field name="text_en">Parameter date-to is missing or invalid.</field>
+            <field name="text_de">Parameter date-to fehlt oder ist fehlerhaft.</field>
+        </record>
+        <record model="stock.dhl.status" id="status51">
+            <field name="code">148</field>
+            <field name="text_en">Parameter date-to missing or incorrect.</field>
+            <field name="text_de">Parameter date-to fehlt oder ist fehlerhaft.</field>
+        </record>
+        <record model="stock.dhl.status" id="status52">
+            <field name="code">149</field>
+            <field name="text_en">The address is not registered. The direction code could not be determined.</field>
+            <field name="text_de">Die eingegebene Adresse ist nicht registriert. Es konnte kein Leitcode ermittelt werden.</field>
+        </record>
+        <record model="stock.dhl.status" id="status53">
+            <field name="code">150</field>
+            <field name="text_en">Instruction could not be created. Please try again. In case of further problems, please contact your Help Desk. Further information for error analysis: instruction could noch be created, because a row with the same key already exists in the database.</field>
+            <field name="text_de">Die Erfassung des Auftrags konnte nicht durchgeführt werden. Bitte versuchen Sie erneut einen Auftrag zu erfassen. Sollte das Problem wiederholt auftreten, kontaktieren Sie bitte den zuständigen Help-Desk. Weitere Hinweise in diesem Fall: Erfassung des Auftrags fehlgeschlagen, da Datensatz bereits in der Datenbank existiert.</field>
+        </record>
+        <record model="stock.dhl.status" id="status54">
+            <field name="code">151</field>
+            <field name="text_en">Instruction could not be edited. Please try again. In case of further problems, please contact your Help Desk. Further information for error analysis: Instruction could not be edited because a row with this key could NOT be found in the database.</field>
+            <field name="text_de">Die Änderung des Auftrags konnte nicht durchgeführt werden. Bitte versuchen Sie erneut einen Auftrag zu erfassen. Sollte das Problem wiederholt auftreten, kontaktieren Sie bitte den zuständigen Help-Desk. Weitere Hinweise in diesem Fall: Änderung des Auftrags fehlgeschlagen, da Datensatz in der Datenbank nicht gefunden wurde.</field>
+        </record>
+        <record model="stock.dhl.status" id="status55">
+            <field name="code">152</field>
+            <field name="text_en">Instruction could not be edited. Please try again. In case of further problems, please contact your Help Desk. Further information for error analysis: Instruction could not be edited because more than one row with this key could be found in the database.</field>
+            <field name="text_de">Die Änderung des Auftrags konnte nicht durchgeführt werden. Bitte versuchen Sie erneut einen Auftrag zu erfassen. Sollte das Problem wiederholt auftreten, kontaktieren Sie bitte den zuständigen Help-Desk. Weitere Hinweise in diesem Fall: Änderung des Auftrags fehlgeschlagen, da mehrere Datensätze gefunden wurden.</field>
+        </record>
+        <record model="stock.dhl.status" id="status56">
+            <field name="code">153</field>
+            <field name="text_en">The request cannot be edited. The request is probably already exported for processing.</field>
+            <field name="text_de">Die Änderung des Auftrags kann nicht durchgeführt werden. Der Auftrag wurde ggf. bereits zur Verarbeitung weitergeleitet.</field>
+        </record>
+    </data>
+</openerp>

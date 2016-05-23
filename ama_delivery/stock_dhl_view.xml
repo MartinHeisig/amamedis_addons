@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+        <record model="ir.ui.view" id="stock_dhl_ice_tree_view">
+            <field name="name">stock.dhl.ice.tree</field>
+            <field name="model">stock.dhl.ice</field>
+            <field name="arch" type="xml">
+                <tree string="DHL ICE Events">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="text"/>
+                    <field name="text_en"/>
+                    <field name="text_de"/>
+                    <field name="stock_dm_state_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_ice_form_view">
+            <field name="name">stock.dhl.ice.form</field>
+            <field name="model">stock.dhl.ice</field>
+            <field name="arch" type="xml">
+                <form string="DHL ICE Events">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="text"/>
+                            <field name="text_en"/>
+                            <field name="text_de"/>
+                            <field name="stock_dm_state_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_ric_tree_view">
+            <field name="name">stock.dhl.ric.tree</field>
+            <field name="model">stock.dhl.ric</field>
+            <field name="arch" type="xml">
+                <tree string="DHL RIC Events">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="text"/>
+                    <field name="text_en"/>
+                    <field name="text_de"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_ric_form_view">
+            <field name="name">stock.dhl.ric.form</field>
+            <field name="model">stock.dhl.ric</field>
+            <field name="arch" type="xml">
+                <form string="DHL RIC Events">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="text"/>
+                            <field name="text_en"/>
+                            <field name="text_de"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_ttpro_tree_view">
+            <field name="name">stock.dhl.ttpro.tree</field>
+            <field name="model">stock.dhl.ttpro</field>
+            <field name="arch" type="xml">
+                <tree string="DHL TTpro Events">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="text"/>
+                    <field name="text_en"/>
+                    <field name="text_de"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_ttpro_form_view">
+            <field name="name">stock.dhl.ttpro.form</field>
+            <field name="model">stock.dhl.ttpro</field>
+            <field name="arch" type="xml">
+                <form string="DHL TTpro Events">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="text"/>
+                            <field name="text_en"/>
+                            <field name="text_de"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    
+        <record model="ir.ui.view" id="stock_dhl_combination_tree_view">
+            <field name="name">stock.dhl.combination.tree</field>
+            <field name="model">stock.dhl.combination</field>
+            <field name="arch" type="xml">
+                <tree string="DHL Kombinationen">
+                    <field name="stock_dhl_ice_id"/>
+                    <field name="stock_dhl_ric_id"/>
+                    <field name="stock_dhl_ttpro_id"/>
+                    <field name="delivery_carrier_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_combination_form_view">
+            <field name="name">stock.dhl.combination.form</field>
+            <field name="model">stock.dhl.combination</field>
+            <field name="arch" type="xml">
+                <form string="DHL Kombinationen">
+                    <sheet>
+                        <group>
+                            <field name="stock_dhl_ice_id"/>
+                            <field name="stock_dhl_ric_id"/>
+                            <field name="stock_dhl_ttpro_id"/>
+                            <field name="delivery_carrier_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_status_tree_view">
+            <field name="name">stock.dhl.status.tree</field>
+            <field name="model">stock.dhl.status</field>
+            <field name="arch" type="xml">
+                <tree string="DHL Statuscodes">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="text"/>
+                    <field name="text_en"/>
+                    <field name="text_de"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_status_form_view">
+            <field name="name">stock.dhl.status.form</field>
+            <field name="model">stock.dhl.status</field>
+            <field name="arch" type="xml">
+                <form string="DHL Statuscodes">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="text"/>
+                            <field name="text_en"/>
+                            <field name="text_de"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_event_list_view">
+            <field name="name">stock.dhl.event.list</field>
+            <field name="model">stock.dhl.event</field>
+            <field name="arch" type="xml">
+                <tree string="Shipment List">
+                    <field name="stock_dhl_picking_unit_id"/>
+                    <field name="name"/>
+                    <field name="stock_dm_state_id"/>
+                    <field name="stock_dhl_ice_id"/>
+                    <field name="stock_dhl_ric_id"/>
+                    <field name="stock_dhl_ttpro_id"/>
+                    <field name="event_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="stock_dhl_event_form_view">
+            <field name="name">stock.dhl.event.form</field>
+            <field name="model">stock.dhl.event</field>
+            <field name="arch" type="xml">
+                <form string="Shipment Events Form">
+                    <sheet>
+                        <group string="Informationen">
+                            <field name="stock_dhl_picking_unit_id"/>
+                            <field name="name"/>
+                            <field name="stock_dm_state_id"/>
+                            <field name="stock_dhl_ice_id"/>
+                            <field name="stock_dhl_ric_id"/>
+                            <field name="stock_dhl_ttpro_id"/>
+                            <field name="event_date"/>
+                            <field name="dhl_event_country"/>
+                            <field name="dhl_event_location"/>
+                            <field name="dhl_event_status"/>
+                            <field name="dhl_event_text"/>
+                            <field name="dhl_event_timestamp"/>
+                            <field name="dhl_ice"/>
+                            <field name="dhl_ric"/>
+                            <field name="dhl_ruecksendung"/>
+                            <field name="dhl_standard_event_code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dhl_pickung_unit_list_view">
+            <field name="name">stock.dhl.picking.unit.list</field>
+            <field name="model">stock.dhl.picking.unit</field>
+            <field name="arch" type="xml">
+                <!--tree string="Shipment List" colors="red:error_occurred=='True'"-->
+                <tree string="Shipment List" colors="red:error_occurred==True">
+                    <field name="name"/>
+                    <field name="stock_dm_picking_unit_id"/>
+                    <field name="partner_id"/>
+                    <field name="stock_dhl_ice_text"/>
+                    <field name="error"/>
+                    <field name="error_occurred"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="stock_dhl_picking_unit_form_view">
+            <field name="name">stock.dhl.picking.unit.form</field>
+            <field name="model">stock.dhl.picking.unit</field>
+            <field name="arch" type="xml">
+                <form string="Shipment Form">
+                    <header>
+                        <button name="tracking" type="object"
+                                string="Track&amp;Trace"/>
+                        <button name="action_delete" type="object"
+                                string="Stornieren"/>
+                        <field name="stock_dm_state_id" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group string="Details">
+                            <field name="name"/>
+                            <label for="stock_dm_picking_unit_id"/>
+                            <div>        
+                                <button class="oe_read_only oe_inline" name="raise_id" type="object"
+                                string="Raise ID" attrs="{'invisible': [('stock_dm_picking_unit_id', '=', False)]}"/>                    
+                                <field class="oe_inline" name="stock_dm_picking_unit_id"/>
+                            </div>
+                            <field name="partner_id"/>
+                            <!--field name="res_company_id"/-->
+                        </group>
+                        <group string="States">
+                            <field name="stock_dhl_status_id"/>
+                            <field name="stock_dhl_status_text"/>
+                            <field name="error"/>
+                            <field name="error_occurred"/>
+                            <!--field name="stock_dm_id"/-->
+                            <!--field name="stock_dm_state_id"/-->
+                            <field name="stock_dhl_ice_id"/>
+                            <field name="stock_dhl_ice_code"/>
+                            <field name="stock_dhl_ice_text"/>
+                            <field name="stock_dhl_ric_id"/>
+                            <field name="stock_dhl_ric_code"/>
+                            <field name="stock_dhl_ric_text"/>
+                            <field name="stock_dhl_ttpro_id"/>
+                            <field name="stock_dhl_ttpro_code"/>
+                            <field name="stock_dhl_ttpro_text"/>
+                        </group>
+                        <group string="Signature">
+                            <field name="new_image_received"/>
+                            <field name="image" widget="image" class="oe_avatar oe_right"/>
+                        </group>
+                        <notebook>
+                            <page string="Events">
+                                <field name="stock_dhl_event_ids">
+                                    <tree string="Completed events" default_order="event_date desc">
+                                        <!-- displayed columns -->
+                                        <field name="event_date"/>
+                                        <field name="name"/>
+                                        <field name="stock_dm_state_id"/>
+                                        <field name="stock_dhl_ice_id"/>
+                                        <field name="stock_dhl_ric_id"/>
+                                        <field name="stock_dhl_ttpro_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="DHL events">
+                                <field name="stock_dhl_event_ids_2">
+                                    <tree string="Completed DHL events" default_order="dhl_event_timestamp desc">
+                                        <!-- not displayed columns -->
+                                        <field name="dhl_event_country"/>
+                                        <field name="dhl_event_location"/>
+                                        <field name="dhl_event_status"/>
+                                        <field name="dhl_event_text"/>
+                                        <field name="dhl_event_timestamp"/>
+                                        <field name="dhl_ice"/>
+                                        <field name="dhl_ric"/>
+                                        <field name="dhl_ruecksendung"/>
+                                        <field name="dhl_standard_event_code"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="DHL response">
+                                <group col='4'>
+                                    <field name="dhl_airway_bill_number"/>
+                                    <field name="dhl_delivery_event_flag"/>
+                                    <field name="dhl_dest_country"/>
+                                    <field name="dhl_division"/>
+                                    <field name="dhl_domestic_id"/>
+                                    <field name="dhl_error_status"/>
+                                    <field name="dhl_event_country"/>
+                                    <field name="dhl_event_location"/>
+                                    <field name="dhl_ice"/>
+                                    <field name="dhl_identifier_type"/>
+                                    <field name="dhl_international_flag"/>
+                                    <field name="dhl_leitcode"/>
+                                    <field name="dhl_matchcode"/>
+                                    <field name="dhl_order_preferred_delivery_date"/>
+                                    <field name="dhl_origin_country"/>
+                                    <field name="dhl_pan_recipient_address"/>
+                                    <field name="dhl_pan_recipient_city"/>
+                                    <field name="dhl_pan_recipient_name"/>
+                                    <field name="dhl_pan_recipient_postalcode"/>
+                                    <field name="dhl_pan_recipient_street"/>
+                                    <field name="dhl_piece_code"/>
+                                    <field name="dhl_piece_customer_reference"/>
+                                    <field name="dhl_piece_id"/>
+                                    <field name="dhl_piece_identifier"/>
+                                    <field name="dhl_product_code"/>
+                                    <field name="dhl_product_key"/>
+                                    <field name="dhl_product_name"/>
+                                    <field name="dhl_pslz_nr"/>
+                                    <field name="dhl_recipient_city"/>
+                                    <field name="dhl_recipient_id"/>
+                                    <field name="dhl_recipient_id_text"/>
+                                    <field name="dhl_recipient_name"/>
+                                    <field name="dhl_recipient_street"/>
+                                    <field name="dhl_ric"/>
+                                    <field name="dhl_routing_code_ean"/>
+                                    <field name="dhl_ruecksendung"/>
+                                    <field name="dhl_searched_piece_code"/>
+                                    <field name="dhl_searched_ref_no"/>
+                                    <field name="dhl_shipment_code"/>
+                                    <field name="dhl_shipment_customer_reference"/>
+                                    <field name="dhl_shipment_height"/>
+                                    <field name="dhl_shipment_length"/>
+                                    <field name="dhl_shipment_weight"/>
+                                    <field name="dhl_shipment_width"/>
+                                    <field name="dhl_shipper_address"/>
+                                    <field name="dhl_shipper_city"/>
+                                    <field name="dhl_shipper_name"/>
+                                    <field name="dhl_shipper_street"/>
+                                    <field name="dhl_short_status"/>
+                                    <field name="dhl_standard_event_code"/>
+                                    <field name="dhl_status"/>
+                                    <field name="dhl_status_liste"/>
+                                    <field name="dhl_status_timestamp"/>
+                                    <field name="dhl_upu"/>
+                                </group>
+                            </page>
+                            <page string="Signature">
+                                <group>
+                                    <field name="dhl_image_event_date"/>
+                                    <field name="dhl_image_mime_type"/>
+                                    <field name="dhl_image"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stock_dhl_combination_list_action">
+            <field name="name">stock.dhl.combination.list.action</field>
+            <field name="res_model">stock.dhl.combination</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle eine neue Statuskombination fuer DHL.</p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stock_dhl_ice_list_action">
+            <field name="name">stock.dhl.ice.list.action</field>
+            <field name="res_model">stock.dhl.ice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle einen neuen DHL ICE-Status.</p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stock_dhl_ric_list_action">
+            <field name="name">stock.dhl.ric.list.action</field>
+            <field name="res_model">stock.dhl.ric</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle einen neuen DHL RIC-Status.</p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stock_dhl_ttpro_list_action">
+            <field name="name">stock.dhl.ttpro.list.action</field>
+            <field name="res_model">stock.dhl.ttpro</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle einen neuen DHL TTpro-Status.</p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stock_dhl_status_list_action">
+            <field name="name">stock.dhl.status.list.action</field>
+            <field name="res_model">stock.dhl.status</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle einen neuen DHL Statuscode.</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="stock_dhl_picking_unit_list_action">
+            <field name="name">stock.dhl.picking.unit.list.action</field>
+            <field name="res_model">stock.dhl.picking.unit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle eine neue DHL Sendung</p>
+            </field>
+        </record>
+        
+        <menuitem id="stock_dhl_main_menu" name="DHL"
+            parent="delivery.menu_delivery" sequence="50"/>
+        
+        <menuitem id="stock_dhl_combination_menu" name="ICE-RIC-Liste"
+            parent="stock_dhl_main_menu" action="stock_dhl_combination_list_action"
+            sequence="10"/>
+
+        <menuitem id="stock_dhl_ice_menu" name="ICE"
+            parent="stock_dhl_main_menu" action="stock_dhl_ice_list_action"
+            sequence="20"/>
+
+        <menuitem id="stock_dhl_ric_menu" name="RIC"
+            parent="stock_dhl_main_menu" action="stock_dhl_ric_list_action"
+            sequence="30"/>
+
+        <menuitem id="stock_dhl_ttpro_menu" name="TTpro"
+            parent="stock_dhl_main_menu" action="stock_dhl_ttpro_list_action"
+            sequence="40"/>
+
+        <menuitem id="stock_dhl_status_menu" name="Statuscodes"
+            parent="stock_dhl_main_menu" action="stock_dhl_status_list_action"
+            sequence="50"/>
+            
+        <menuitem id="stock_dhl_picking_unit_menu" name="DHL Sendungen"
+            parent="stock_dhl_main_menu" action="stock_dhl_picking_unit_list_action"
+            sequence="5"/>
+    </data>
+</openerp>

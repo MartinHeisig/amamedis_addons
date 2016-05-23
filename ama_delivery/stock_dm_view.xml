@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+        <record model="ir.ui.view" id="stock_dm_picking_form">
+            <field name="name">stock.dm.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">17</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <page string="Additional Info" position="after">
+                    <page string="Sendungen">
+                        <field name="stock_dm_picking_unit_ids"/>
+                    </page>
+                </page>
+            </field>    
+        </record>
+
+        <record model="ir.ui.view" id="stock_dm_state_tree_view">
+            <field name="name">stock.dm.state.tree</field>
+            <field name="model">stock.dm.state</field>
+            <field name="arch" type="xml">
+                <tree string="Auslieferungsstatus">
+                    <field name="name"/>
+                    <field name="name_en"/>
+                    <field name="name_de"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="stock_dm_state_form_view">
+            <field name="name">stock.dm.state.form</field>
+            <field name="model">stock.dm.state</field>
+            <field name="arch" type="xml">
+                <form string="Auslieferungsstatus">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="name_en"/>
+                            <field name="name_de"/>
+                            <field name="sequence"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_dm_pickung_unit_list_view">
+            <field name="name">stock.dm.picking.unit.list</field>
+            <field name="model">stock.dm.picking.unit</field>
+            <field name="arch" type="xml">
+                <tree string="Sendungen">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="stock_picking_id"/>
+                    <field name="delivery_carrier_id"/>
+                    <field name="partner_id"/>
+                    <field name="delivery_carrier_res_model"/>
+                    <field name="delivery_carrier_res_id"/>
+                    <field name="stock_dm_state_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="stock_dm_picking_unit_form_view">
+            <field name="name">stock.dm.picking.unit.form</field>
+            <field name="model">stock.dm.picking.unit</field>
+            <field name="arch" type="xml">
+                <form string="Shipment Events Form">
+                    <header>
+                        <button name="tracking" type="object"
+                                string="Track&amp;Trace" attrs="{'invisible': ['|',('delivery_carrier_res_model', '=', False),'|',('delivery_carrier_res_id', '=', False, 0),('delivery_carrier_res_id', '&lt;', 1)]}"/>
+                        <button name="open_carrier_picking_unit" type="object"
+                                string="Open" attrs="{'invisible': ['|',('delivery_carrier_res_model', '=', False),'|',('delivery_carrier_res_id', '=', False, 0),('delivery_carrier_res_id', '&lt;', 1)]}"/>
+                        <field name="stock_dm_state_id" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group string="Informationen">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="stock_picking_id"/>
+                            <field name="partner_id"/>
+                            <field name="delivery_carrier_id"/>
+                            <field name="delivery_carrier_res_model"/>
+                            <field name="delivery_carrier_res_id"/>
+                            <!--field name="stock_dm_state_id"/-->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stock_dm_state_list_action">
+            <field name="name">stock.dm.state.list.action</field>
+            <field name="res_model">stock.dm.state</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle einen neuen Auslieferungstatus.</p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="stock_dm_picking_unit_list_action">
+            <field name="name">stock.dm.picking.unit.list.action</field>
+            <field name="res_model">stock.dm.picking.unit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle eine neue Sendung</p>
+            </field>
+        </record>
+
+        <!-- child menu stock.dm.states -->
+        <menuitem id="stock_dm_state_menu" name="Auslieferungsstatus"
+            parent="delivery.menu_delivery" action="stock_dm_state_list_action"
+            sequence="30"/>
+        <menuitem id="stock_dm_picking_unit_menu" name="Sendungen"
+            parent="stock.menu_traceability" action="stock_dm_picking_unit_list_action"/>
+
+
+    </data>
+</openerp>

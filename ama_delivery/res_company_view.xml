@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="company_form" model="ir.ui.view">
+            <field name="name">res.company.access.data.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <page string="Report Configuration" position="after">
+                    <page string="Cloud">
+                        <group string="OwnCloud">
+                            <group>
+                                <field name="oc_user"/>
+                                <field name="oc_password" password="True"/>
+                            </group>
+                            <group>
+                                <field name="oc_local_dir"/>
+                                <field name="oc_remote_dir"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="DHL">
+                        <group string="Produktionsbetrieb" col="4">
+                            <group string="DHL Geschäftskundenversand">
+                                <group>
+                                    <field name="dhl_order_endpoint"/>
+                                    <field name="dhl_order_ekp"/>
+                                    <field name="dhl_order_partner_id"/>
+                                    <field name="dhl_order_intraship_user"/>
+                                    <!--field name="dhl_order_intraship_password" password="True"/-->
+                                    <field name="dhl_order_intraship_password"/>
+                                </group>
+                            </group>
+                            <group string="DHL Sendungsverfolgung">
+                                <group>
+                                    <field name="dhl_track_endpoint"/>
+                                    <field name="dhl_track_appname"/>
+                                    <!--field name="dhl_track_password" password="True"/-->
+                                    <field name="dhl_track_password"/>
+                                    <field name="dhl_track_cig_user"/>
+                                    <field name="dhl_track_cig_pass"/>
+                                </group>
+                            </group>
+                        </group>
+                        <group string="Testbetrieb" col="4">
+                            <group string="DHL Geschäftskundenversand">
+                                <group>
+                                    <field name="dhl_order_endpoint_test"/>
+                                    <field name="dhl_order_ekp_test"/>
+                                    <field name="dhl_order_partner_id_test"/>
+                                    <field name="dhl_order_intraship_user_test"/>
+                                    <!--field name="dhl_order_intraship_password_test" password="True"/-->
+                                    <field name="dhl_order_intraship_password_test"/>
+                                    <field name="dhl_test"/>
+                                </group>
+                            </group>
+                            <group string="DHL Sendungsverfolgung">
+                                <group>
+                                    <field name="dhl_track_endpoint_test"/>
+                                    <field name="dhl_track_appname_test"/>
+                                    <field name="dhl_track_password_test"/>
+                                    <field name="dhl_track_cig_user_test"/>
+                                    <!--field name="dhl_track_cig_pass_test" password="True"/-->
+                                    <field name="dhl_track_cig_pass_test"/>
+                                </group>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

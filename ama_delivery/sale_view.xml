@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="ama_del_sale_order_form" model="ir.ui.view">
+            <field name="name">ama_del.sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="priority">17</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/field[@name='state']" position="before">
+                    <button name="action_handle_order" string="Auftrag abwickeln" states="draft,sent" class="oe_highlight" groups="base.group_user" type="object"/>
+                </xpath>
+                <page string="Other Information" position="after">
+                    <page string="Automation">
+                        <group>
+                            <group>
+                                <field name="auto_sale"/>
+                                <field name="auto_purchase"/>
+                                <field name="auto_invoice"/>
+                            </group>
+                            <group>
+                                <field name="auto_stock"/>
+                                <field name="auto_stock_carrier"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+                <field name="note" position="before">
+                    <field name="dhl_check" invisible="1"/>
+                    <field name="del_is_company" invisible="1"/>
+                    <field name="del_use_parent_address" invisible="1"/>
+                    <group attrs="{'invisible':[('dhl_check', '!=', True)]}">
+                        <group string="Adressdaten aus Lieferkontakt">
+                            <div>
+                                <field name="del_name1_company" attrs="{'invisible':[('del_is_company', '!=', True)]}"/>
+                                <field name="del_name1_person" attrs="{'invisible':[('del_is_company', '=', True)]}"/>
+                                <field name="del_name2_company" attrs="{'invisible':[('del_is_company', '!=', True)]}"/>
+                                <div attrs="{'invisible':[('del_is_company', '=', True)]}">
+                                    <field name="del_name2_person_first_name" class="oe_inline"/>
+                                    <field name="del_name2_person_name" class="oe_inline"/>
+                                </div>
+                                <div>
+                                    <field name="del_streetName" class="oe_inline"/>
+                                    <field name="del_streetNumber" class="oe_inline"/>
+                                </div>
+                                <div>
+                                    <field name="del_zip" class="oe_inline"/>
+                                    <field name="del_city" class="oe_inline"/>
+                                </div>
+                                <field name="del_phone"/>
+                                <field name="del_email"/>
+                            </div>
+                        </group>
+                        <group string="DHL-formatierte Adresse">
+                            <div>
+                                <field name="dhl_name1"/>
+                                <field name="dhl_name2"/>
+                                <div>
+                                    <!--field name="dhl_streetName" class="oe_inline" colors="green:dhl_streetName==del_streetName"/>
+                                    <field name="dhl_streetNumber" class="oe_inline" colors="red:dhl_streetNumber!=del_streetNumber"/-->
+                                    <field name="dhl_streetName" class="oe_inline" attrs="{'invisible':['&amp;',('del_is_company', '=', False),('del_use_parent_address', '=', True)]}"/>
+                                    <field name="dhl_streetNumber" class="oe_inline" attrs="{'invisible':['&amp;',('del_is_company', '=', False),('del_use_parent_address', '=', True)]}"/>
+                                    <field name="dhl_streetName_parent" class="oe_inline" attrs="{'invisible':['|',('del_is_company', '=', True),('del_use_parent_address', '=', False)]}"/>
+                                    <field name="dhl_streetNumber_parent" class="oe_inline" attrs="{'invisible':['|',('del_is_company', '=', True),('del_use_parent_address', '=', False)]}"/>
+                                </div>
+                                <div>
+                                    <field name="dhl_zip" class="oe_inline" attrs="{'invisible':['&amp;',('del_is_company', '=', False),('del_use_parent_address', '=', True)]}"/>
+                                    <field name="dhl_city" class="oe_inline" attrs="{'invisible':['&amp;',('del_is_company', '=', False),('del_use_parent_address', '=', True)]}"/>
+                                    <field name="dhl_zip_parent" class="oe_inline" attrs="{'invisible':['|',('del_is_company', '=', True),('del_use_parent_address', '=', False)]}"/>
+                                    <field name="dhl_city_parent" class="oe_inline" attrs="{'invisible':['|',('del_is_company', '=', True),('del_use_parent_address', '=', False)]}"/>
+                                </div>
+                                <field name="dhl_phone"/>
+                                <field name="dhl_email"/>
+                            </div>
+                        </group>
+                    </group>
+                </field>
+            </field>    
+        </record>
+  </data>
+</openerp>
