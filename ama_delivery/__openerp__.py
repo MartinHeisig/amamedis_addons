@@ -19,7 +19,15 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','stock','delivery','partner_street_number'],
+    'depends': [
+        'base',
+        'base_phone',
+        'delivery',
+        'partner_street_number',
+        'purchase_transport_multi_address',
+        'sale_stock',
+        'stock',
+    ],
 
     # always loaded
     'data': [

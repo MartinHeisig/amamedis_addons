@@ -28,6 +28,20 @@ class ama_stock_location_route(models.Model):
     auto_stock_carrier = fields.Boolean(string='Auto Bestellung Logistiker', help='Automatische Bestellung der Paketlabels beim verknüpften Logistiker')
     auto_invoice = fields.Boolean(string='Auto E-Mail Rechnung', help='Automatische Rechnungserstellung und Versendung nach Lieferung', default=False)
 
+class ama_rq_stock_move(models.Model):
+    _inherit = 'stock.move'
+    
+    '''@api.multi
+    @api.depends('backorder_id')
+    def _compute_backorder_check(self):
+        for record in self:
+            record.backorder_check = record.backorder_id and True
+
+    backorder_check = fields.Boolean('Ist Rueckstellung', compute=_compute_backorder_check)'''
+    release_quantity_value = fields.Float('Abrufmenge', help="Anzahl der Produkte für einzelnen Lagerabrufe in der gleichen Einheit, wie die Standardmengeneinheit.")
+    release_quantity_check = fields.Boolean('Abrufmenge aktivieren', help="Nur wenn dieser Schalter gesetzt ist, wird die Abrufmenge geliefert, sonst die komplette Bestellmenge.")
+
+    
 class ama_del_stock_picking(models.Model):
     _inherit = ['stock.picking']
     
@@ -107,6 +121,46 @@ class ama_del_stock_picking(models.Model):
     
 class ama_del_stock_transfer_details(models.TransientModel):
     _inherit = 'stock.transfer_details'
+    
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None: context = {}
+        res = super(ama_del_stock_transfer_details, self).default_get(cr, uid, fields, context=context)
+        picking_ids = context.get('active_ids', [])
+        active_model = context.get('active_model')
+
+        if not picking_ids or len(picking_ids) != 1:
+            # Partial Picking Processing may only be done for one picking at a time
+            return res
+        assert active_model in ('stock.picking'), 'Bad context propagation'
+        picking_id, = picking_ids
+        picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
+        items = []
+        packs = []
+        if not picking.pack_operation_ids:
+            picking.do_prepare_partial()
+        for op in picking.pack_operation_ids:
+            # _logger.info(str(op.product_qty) + " und " + str(op.linked_move_operation_ids.move_id.release_quantity_value))
+            item = {
+                'packop_id': op.id,
+                'product_id': op.product_id.id,
+                'product_uom_id': op.product_uom_id.id,
+                # 'quantity': op.product_qty,
+                'quantity': (not picking.backorder_id and op.linked_move_operation_ids.move_id.release_quantity_check and (op.linked_move_operation_ids.move_id.release_quantity_value or '0')) or op.product_qty,
+                'package_id': op.package_id.id,
+                'lot_id': op.lot_id.id,
+                'sourceloc_id': op.location_id.id,
+                'destinationloc_id': op.location_dest_id.id,
+                'result_package_id': op.result_package_id.id,
+                'date': op.date, 
+                'owner_id': op.owner_id.id,
+            }
+            if op.product_id:
+                items.append(item)
+            elif op.package_id:
+                packs.append(item)
+        res.update(item_ids=items)
+        res.update(packop_ids=packs)
+        return res
 
     '''
     Helper function that converts a dictionary of the shipment arguments to a string
@@ -117,14 +171,6 @@ class ama_del_stock_transfer_details(models.TransientModel):
         res = []
         for key, value in vals.iteritems():
           if value and value.strip() != '':
-            # argument = [key + '=' + value.encode('utf-8').strip()]
-            '''str(value).replace("ä", "ae")
-            str(value).replace("ö", "oe")
-            str(value).replace("ü", "ue")
-            str(value).replace("Ä", "Ae")
-            str(value).replace("Ö", "Oe")
-            str(value).replace("Ü", "Ue")
-            str(value).replace("ß", "ss")'''
             argument = [key + '=' + value.encode('iso-8859-1').strip()]
             res.extend(argument)
         return res
@@ -187,65 +233,6 @@ class ama_del_stock_transfer_details(models.TransientModel):
                     _logger.error(('DHL Versand'), ('Lieferadresse ist unvollstaendig.')) 
 
                 # Prepare call of Java tool
-                # Divide street and street number for sender and reciever
-                '''try:
-                    if sender.street_name and sender.street_number:
-                        sh_street = sender.street_name.strip()
-                        sh_street_nr = sender.street_number.strip()
-                    else:
-                        street_as_list = sender.street.split(' ')
-                        sh_street = ' '.join(street_as_list[:-1]).strip()
-                        sh_street_nr = street_as_list[-1].strip()
-                    if receiver.street_name and receiver.street_number:
-                        rc_street = receiver.street_name.strip()
-                        rc_street_nr = receiver.street_number.strip()
-                    else:
-                        street_as_list = receiver.street.split(' ')
-                        rc_street = ' '.join(street_as_list[:-1]).strip()
-                        rc_street_nr = street_as_list[-1].strip()
-                except:
-                    raise osv.except_osv(('Fehler'), ('Beim Auslesen und gegebenenfalls Aufsplitten trat ein Fehler auf. Möglicher Grund könnte sein, dass das Modul "partner_street_number", welches die Adresszeile in Straße und Hausnummer aufsplittet nicht installiert ist.'))
-                company = record.picking_id.company_id'''
-                
-                # minimal first check for usage of DHL field lengths
-                '''if receiver.name and len(receiver.name) > 30:
-                    raise osv.except_osv(('Fehler'), ('Feld Name beim Empfänger übersteigt die maximale Länge von 30 Zeichen'))
-                if receiver.first_name and len(receiver.first_name) > 30:
-                    raise osv.except_osv(('Fehler'), ('Feld Vorname/Firmenzusatz beim Empfänger übersteigt die maximale Länge von 30 Zeichen'))
-                if rc_street and len(rc_street) > 40:
-                    raise osv.except_osv(('Fehler'), ('Feld Strasse beim Empfänger übersteigt die maximale Länge von 40 Zeichen'))
-                if rc_street_nr and len(rc_street_nr) > 7:
-                    # need to test with 10
-                    raise osv.except_osv(('Fehler'), ('Feld Hausnummer beim Empfänger übersteigt die maximale Länge von 7 Zeichen'))
-                if receiver.zip and len(receiver.zip) > 5:
-                    # need to be raised to 10 for international shipment
-                    raise osv.except_osv(('Fehler'), ('Feld PLZ beim Empfänger übersteigt die maximale Länge von 5 Zeichen (da Deutschland voreingestellt)'))
-                if receiver.city and len(receiver.city) > 50:
-                    # maybe only 20 based on use of district?
-                    raise osv.except_osv(('Fehler'), ('Feld Stadt beim Empfänger übersteigt die maximale Länge von 50 Zeichen'))
-                if not receiver.is_company and not receiver.parent_id:
-                    # check if parent_id is set for a non company
-                    raise osv.except_osv(('Fehler'), ('Lieferadresse ist kein Unternehmen und ist auch keinem Unternehmen zugeordnet'))
-                if not receiver.email and not receiver.phone:
-                    # one of them have to be set
-                    raise osv.except_osv(('Fehler'), ('Lieferkontakt hat weder E-Mail noch Telefonnummer. Eins davon muss aber mindestens gesetzt sein.'))
-                    
-                if sender.name and len(sender.name) > 30:
-                    raise osv.except_osv(('Fehler'), ('Feld Name beim Sender übersteigt die maximale Länge von 30 Zeichen'))
-                if sh_street and len(sh_street) > 40:
-                    raise osv.except_osv(('Fehler'), ('Feld Strasse beim Sender übersteigt die maximale Länge von 40 Zeichen'))
-                if sh_street_nr and len(sh_street_nr) > 7:
-                    # need to test with 10
-                    raise osv.except_osv(('Fehler'), ('Feld Hausnummer beim Sender übersteigt die maximale Länge von 7 Zeichen'))
-                if sender.zip and len(sender.zip) > 5:
-                    # need to be raised to 10 for intenational shipment
-                    raise osv.except_osv(('Fehler'), ('Feld PLZ beim Sender übersteigt die maximale Länge von 5 Zeichen (da Deutschland voreingestellt)'))
-                if sender.city and len(sender.city) > 50:
-                    # maybe only 20 based on use of district?
-                    raise osv.except_osv(('Fehler'), ('Feld Stadt beim Sender übersteigt die maximale Länge von 50 Zeichen'))
-                if not sender.email and not sender.phone:
-                    # one of them have to be set
-                    raise osv.except_osv(('Fehler'), ('Sender hat weder E-Mail noch Telefonnummer. Eins davon muss aber mindestens gesetzt sein.'))'''
                 
                 # Set arguments
                 vals = {
@@ -316,14 +303,6 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             picking_unit.update({
                                 'delivery_carrier_res_id' : dhl_picking_unit.id
                                 })
-                            '''dhl_delivery = record.env['dhl.delivery'].create({
-                                'name' : shipment_number,
-                                'delivery_order' : record.picking_id.id,
-                                # uncomment after adding field url to the model
-                                # 'url' : shipment_url,
-                                })'''
-                            # Assign dhl delivery to delivery order
-                            # record.picking_id.dhl_deliveries |= dhl_delivery
                             # Download PDF and merge
                             path = "/opt/dhl/pdf/" + shipment_number + ".pdf"
                             try:

@@ -4,11 +4,22 @@
         <record id="ama_del_sale_order_form" model="ir.ui.view">
             <field name="name">ama_del.sale.order.form</field>
             <field name="model">sale.order</field>
-            <field name="priority">17</field>
+            <field name="priority">16</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form/header/field[@name='state']" position="before">
                     <button name="action_handle_order" string="Auftrag abwickeln" states="draft,sent" class="oe_highlight" groups="base.group_user" type="object"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="before">
+                    <label for="release_quantity_value"/>
+                    <div>
+                        <field name="release_quantity_check" class="oe_inline"/>
+                        <field name="release_quantity_value" class="oe_inline" attrs="{'readonly':[('release_quantity_check','=',False)]}"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">
+                    <field name="release_quantity_check" invisible="1"/>
+                    <field name="release_quantity_value" attrs="{'readonly':[('release_quantity_check','=',False)]}"/>
                 </xpath>
                 <page string="Other Information" position="after">
                     <page string="Automation">
@@ -77,5 +88,5 @@
                 </field>
             </field>    
         </record>
-  </data>
+    </data>
 </openerp>

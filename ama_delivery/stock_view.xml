@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <record id="ama_stock_location_route_form_view" model="ir.ui.view">
+        <record id="ama_del_stock_location_route_form_view" model="ir.ui.view">
             <field name="name">ama.stock.location.route.form</field>
             <field name="model">stock.location.route</field>
             <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
@@ -19,6 +19,35 @@
                         </group>
                     </group>
                 </group>
+            </field>
+        </record>
+        
+        <record id="ama_del_stock_move_form_view" model="ir.ui.view">
+            <field name="name">ama_del.stock.move.form</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <label for="release_quantity_value"/>
+                    <div>
+                        <field name="release_quantity_check" class="oe_inline"/>
+                        <field name="release_quantity_value" class="oe_inline" attrs="{'readonly':[('release_quantity_check','=',False)]}"/>
+                    </div>
+                </field>
+            </field>
+        </record>
+        
+        <record id="ama_del_stock_move_tree_view" model="ir.ui.view">
+            <field name="name">ama_del.stock.move.tree</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <field name="product_uom_qty" position="before">
+                    <field name="backorder_id" invisible="1"/>
+                    <field name="release_quantity_check" invisible="1"/>
+                    <!-- only hides values in the column not the whole column. its not possible in tree view -->
+                    <field name="release_quantity_value" attrs="{'invisible':[('backorder_id','!=',False)], 'readonly':[('release_quantity_check','=',False)]}"/>
+                </field>
             </field>
         </record>
         

@@ -133,8 +133,6 @@ class ama_sale_order(models.Model):
                 if not record.dhl_phone and not record.dhl_email:
                     raise except_orm('Fehler DHL-Daten','Es wurde weder eine Kontakttelefonnummer, noch eine Kontaktemail bei den DHL-formatierten Daten angegeben. Mindestens eins der beiden Felder muss ausgefüllt werden')
             
-            
-            # record.action_button_confirm(context=dict(context, send_email=True))
             record.action_button_confirm()
             
             if record.auto_sale:
@@ -176,44 +174,42 @@ class ama_sale_order(models.Model):
                 if po_ids:
                     sp_ids = self.env['stock.picking'].search(['|',('origin', '=', record.name),('origin', '=', po_ids.name)])
                 for sp in sp_ids:
-                    _logger.info(sp.name + ' ' + sp.origin)
+                    # _logger.info(sp.name + ' ' + sp.origin)
                     sp.auto_stock_carrier = record.auto_stock_carrier and sp.move_lines and sp.move_lines[0] and sp.move_lines.product_id.categ_id.route_ids and sp.move_lines.product_id.categ_id.route_ids[0].auto_stock_carrier
                     ids = sp.id
                     if not isinstance(ids, list): ids = [ids]
                     ctx = self.env.context.copy()
-                    _logger.info(self._name + ' ' + record._name + ' ' + sp._name)
+                    # _logger.info(self._name + ' ' + record._name + ' ' + sp._name)
                     ctx.update({
                         'active_model': sp._name,
                         'active_ids': ids,
                         'active_id': ids and ids[0] or False
                         })
                     sp_transfer = self.env['stock.transfer_details'].with_context(ctx).create({'picking_id': ids and ids[0] or False})
-                    '''sp_transfer.update({
-                        'active_model': sp._name,
-                        'active_id': sp.id or False
-                        })'''
-                    # return self.pool['stock.transfer_details'].wizard_view(sp_transfer)
-                    # sp_transfer.do_detailed_transfer()
                     
-                    # sp_transfer = sp.do_enter_transfer_details()
-                    # _logger.info(str(sp_transfer))
                     sp_transfer.do_detailed_transfer()
-                    
-                    '''@api.cr_uid_ids_context
-                    def do_enter_transfer_details(self, cr, uid, picking, context=None):
-                        if not context:
-                            context = {}
 
-                        context.update({
-                            'active_model': self._name,
-                            'active_ids': picking,
-                            'active_id': len(picking) and picking[0] or False
-                        })
 
-                        created_id = self.pool['stock.transfer_details'].create(cr, uid, {'picking_id': len(picking) and picking[0] or False}, context)
-                        return self.pool['stock.transfer_details'].wizard_view(cr, uid, created_id, context)
-                    '''
+class ama_rq_sale_order_line(models.Model):
+    _inherit = 'sale.order.line'
 
+    release_quantity_value = fields.Float('Abrufmenge', help="Anzahl der Produkte für einzelnen Lagerabrufe in der gleichen Einheit, wie die Standardmengeneinheit.")
+    release_quantity_check = fields.Boolean('Abrufmenge aktivieren', help="Nur wenn dieser Schalter gesetzt ist, wird die Abrufmenge geliefert, sonst die komplette Bestellmenge.")
+    
                 
-                    
+class ama_rq_procurement_order(models.Model):
+    _inherit = 'procurement.order'
+
+    '''release_quantity = fields.Float('Abrufmenge',
+      help="Anzahl der Produkte für einzelnen Lagerabrufe in der gleichen "
+           "Einheit, wie die Standardmengeneinheit.")'''
+           
+    @api.v7
+    def _run_move_create(self, cr, uid, procurement, context=None):
+        vals = super(ama_rq_procurement_order, self)._run_move_create(cr, uid, procurement, context)
+        vals.update({
+            'release_quantity_value': procurement.sale_line_id and procurement.sale_line_id.release_quantity_value,
+            'release_quantity_check': procurement.sale_line_id and procurement.sale_line_id.release_quantity_check
+            })
+        return vals
                     
