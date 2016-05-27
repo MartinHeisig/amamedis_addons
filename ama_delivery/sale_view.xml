@@ -10,12 +10,19 @@
                 <xpath expr="//form/header/field[@name='state']" position="before">
                     <button name="action_handle_order" string="Auftrag abwickeln" states="draft,sent" class="oe_highlight" groups="base.group_user" type="object"/>
                 </xpath>
+                <!--field name="order_line" position="attributes">
+                    <attribute name="options">{'always_reload': true}</attribute>
+                </field-->
                 <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="before">
                     <label for="release_quantity_value"/>
                     <div>
+                        <field name="release_quantity_value"/>
                         <field name="release_quantity_check" class="oe_inline"/>
-                        <field name="release_quantity_value" class="oe_inline" attrs="{'readonly':[('release_quantity_check','=',False)]}"/>
+                        <field name="release_quantity_input" class="oe_inline" attrs="{'readonly':[('release_quantity_check','=',False)]}"/>
                     </div>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                    <attribute name="colors">red:release_quantity_check and (release_quantity_value&gt;product_uom_qty or release_quantity_value&lt;0);</attribute>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">
                     <field name="release_quantity_check" invisible="1"/>

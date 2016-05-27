@@ -30,8 +30,9 @@
                 <field name="name" position="before">
                     <label for="release_quantity_value"/>
                     <div>
+                        <field name="release_quantity_value"/>
                         <field name="release_quantity_check" class="oe_inline"/>
-                        <field name="release_quantity_value" class="oe_inline" attrs="{'readonly':[('release_quantity_check','=',False)]}"/>
+                        <field name="release_quantity_input" class="oe_inline" attrs="{'readonly':[('release_quantity_check','=',False)]}"/>
                     </div>
                 </field>
             </field>
@@ -42,6 +43,9 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_picking_tree"/>
             <field name="arch" type="xml">
+                <tree string="Stock Moves" position="attributes">
+                    <attribute name="colors">grey:scrapped;red:(backorder_id==False) and release_quantity_check and (release_quantity_value&gt;product_uom_qty or release_quantity_value&lt;0);</attribute>
+                </tree>
                 <field name="product_uom_qty" position="before">
                     <field name="backorder_id" invisible="1"/>
                     <field name="release_quantity_check" invisible="1"/>
@@ -65,6 +69,14 @@
                         </group>
                     </page>
                 </page>
+                <field name="move_lines" position="after">
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="stock_total">
+                        <button name="button_dummy" states="draft,waiting,confirmed,partially_available,assigned" string="(Aktualisieren)" type="object" class="oe_edit_only oe_link"/>
+                    </group>
+                </field>
+                <field name="carrier_tracking_ref" position="after">
+                    <field name="carrier_label"/>
+                </field>
                 <field name="note" position="before">
                     <field name="dhl_check" invisible="1"/>
                     <field name="del_is_company" invisible="1"/>

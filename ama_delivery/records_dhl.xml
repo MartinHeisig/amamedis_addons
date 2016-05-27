@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+        <!-- Cron job for DHL Track&Trace -->
+        <record forcecreate="True" id="ir_cron_dhl_tracking" model="ir.cron">
+            <field name="name">DHL Track&amp;Trace</field> <!-- name of the cron job -->
+            <field eval="True" name="active" /> <!-- cron job active or not -->
+            <field name="user_id" ref="base.user_root" /> <!-- userID for the cron job, here set to administrator -->
+            <field name="interval_number">2</field> <!-- integer number for the interval -->
+            <field name="interval_type">minutes</field> <!-- type of the interval: minutes, hours, days, weeks, months (default) -->
+            <field name="numbercall">-1</field> <!-- times the job should be repeated; negative value means no limit -->
+            <field eval="False" name="doall" /> <!-- execute missed occurrences when server restarts -->
+            <field eval="'stock.dhl.picking.unit'" name="model" /> <!-- model name of the cron job method -->
+            <field eval="'synchronize_cron'" name="function" /> <!-- method name that should be executed -->
+            <field eval="'()'" name="args" /> <!-- arguments needed for this method -->
+        </record>
+        
         <!-- stock.dm.state -->
         <record model="stock.dm.state" id="dms10">
             <field name="name_en">Shipment Preparation</field>

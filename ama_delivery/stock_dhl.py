@@ -177,6 +177,26 @@ class stock_dhl_picking_unit(models.Model):
         for record in self:
             if record.stock_dm_picking_unit_id:
                 record.stock_dm_picking_unit_id.delivery_carrier_res_id = record.id
+                
+    @api.model
+    def synchronize_cron(self):
+        _logger.info('Ich bins der CronJob')
+        uncompleted = self.search([('dhl_delivery_event_flag', '!=', '1')])
+        _logger.info('Tracking fuer: ' + str(uncompleted))
+        uncompleted.tracking()
+        
+        unimaged = self.search([('dhl_image','=',False),('dhl_delivery_event_flag','=','1'),('dhl_dest_country','=','DE')])
+        _logger.info('Tracking fuer: ' + str(unimaged))
+        unimaged.tracking()
+        
+        # dhl_pu_ids = self.search([('|',('dhl_delivery_event_flag', '!=', '1'),(('dhl_image','=',False),('dhl_delivery_event_flag','=','1'),('dhl_dest_country','=','DE')))])
+        # dhl_pu_ids = self.search([('|',('dhl_delivery_event_flag', '!=', '1'),(('dhl_image','=',False),('dhl_delivery_event_flag','=','1'),('dhl_dest_country','=','DE')))])
+        # dhl_pu_ids = self.search([('|',('dhl_delivery_event_flag', '!=', '1'),('&amp;',('dhl_image','=',False),('&amp;',('dhl_delivery_event_flag','=','1'),('dhl_dest_country','=','DE'))))])
+        # _logger.info('Tracking fuer: ' + str(dhl_pu_ids))
+        # dhl_pu_ids.tracking()
+        '''for dhl_pu in dhl_pu_ids:
+            dhl_pu.tracking()'''
+            
     
     @api.multi
     def tracking(self):
@@ -352,11 +372,10 @@ class stock_dhl_picking_unit(models.Model):
                     record.error = "Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response)
                     _logger.error("Abfragefehler Tracking(Details) für DHL-Sendung '" + str(record.name) + "'. Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response))
                     
-                    
+            time.sleep(10)
+            
             record.new_image_received = False
             if not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE':
-                time.sleep(10)
-
                 method = 'd-get-signature'
                 xml_response = ''
                 xml_response_dict = ''
@@ -408,6 +427,8 @@ class stock_dhl_picking_unit(models.Model):
                         _logger.error("Abfragefehler Tracking(POD)für DHL-Sendung '" + str(record.name) + "'. Server sendet unübliche Fehlermeldung: " + str(xml_response))
                 else:
                     _logger.error("Abfragefehler Tracking(POD) für DHL-Sendung '" + str(record.name) + "'. Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response))
+                    
+                time.sleep(10)
     
     @api.multi
     def action_delete(self):

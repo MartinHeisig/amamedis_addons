@@ -54,13 +54,45 @@ class ama_sale_order(models.Model):
                     record.dhl_city = (record.partner_shipping_id.dhl_city and record.partner_shipping_id.dhl_city.strip()) or (record.partner_shipping_id.city and record.partner_shipping_id.city.strip()[0:50])
                 else:
                     # delivery address is a person and uses companys address
-                    # get presaved dhl-fields from
-                    record.dhl_streetName = (record.partner_shipping_id.dhl_streetName and record.partner_shipping_id.dhl_streetName.strip()) or (record.partner_shipping_id.parent_id and ((record.partner_shipping_id.parent_id.dhl_streetName and record.partner_shipping_id.parent_id.dhl_streetName.strip()[0:30]) or (record.partner_shipping_id.parent_id.street_name and record.partner_shipping_id.parent_id.street_name.strip()[0:30])))
-                    record.dhl_streetNumber = (record.partner_shipping_id.dhl_streetNumber and record.partner_shipping_id.dhl_streetNumber.strip()) or (record.partner_shipping_id.parent_id and ((record.partner_shipping_id.parent_id.dhl_streetNumber and record.partner_shipping_id.parent_id.dhl_streetNumber.strip()[0:7]) or (record.partner_shipping_id.parent_id.street_number and record.partner_shipping_id.parent_id.street_number.strip()[0:7])))
-                    record.dhl_zip = (record.partner_shipping_id.dhl_zip and record.partner_shipping_id.dhl_zip.strip()) or (record.partner_shipping_id.parent_id and ((record.partner_shipping_id.parent_id.dhl_zip and record.partner_shipping_id.parent_id.dhl_zip.strip()[0:5]) or (record.partner_shipping_id.parent_id.zip and record.partner_shipping_id.parent_id.zip.strip()[0:5])))
-                    record.dhl_city = (record.partner_shipping_id.dhl_city and record.partner_shipping_id.dhl_city.strip()) or (record.partner_shipping_id.parent_id and ((record.partner_shipping_id.parent_id.dhl_city and record.partner_shipping_id.parent_id.dhl_city.strip()[0:50]) or (record.partner_shipping_id.parent_id.city and record.partner_shipping_id.parent_id.city.strip()[0:50])))
+                    # get presaved dhl-fields from partner
+                    record.dhl_streetName_parent = (record.partner_shipping_id.parent_id and ((record.partner_shipping_id.parent_id.dhl_streetName and record.partner_shipping_id.parent_id.dhl_streetName.strip()[0:30]) or (record.partner_shipping_id.parent_id.street_name and record.partner_shipping_id.parent_id.street_name.strip()[0:30])))
+                    record.dhl_streetNumber_parent = (record.partner_shipping_id.parent_id and ((record.partner_shipping_id.parent_id.dhl_streetNumber and record.partner_shipping_id.parent_id.dhl_streetNumber.strip()[0:7]) or (record.partner_shipping_id.parent_id.street_number and record.partner_shipping_id.parent_id.street_number.strip()[0:7])))
+                    record.dhl_zip_parent = (record.partner_shipping_id.parent_id and ((record.partner_shipping_id.parent_id.dhl_zip and record.partner_shipping_id.parent_id.dhl_zip.strip()[0:5]) or (record.partner_shipping_id.parent_id.zip and record.partner_shipping_id.parent_id.zip.strip()[0:5])))
+                    record.dhl_city_parent = (record.partner_shipping_id.parent_id and ((record.partner_shipping_id.parent_id.dhl_city and record.partner_shipping_id.parent_id.dhl_city.strip()[0:50]) or (record.partner_shipping_id.parent_id.city and record.partner_shipping_id.parent_id.city.strip()[0:50])))
                 record.dhl_phone = (record.partner_shipping_id.dhl_phone and record.partner_shipping_id.dhl_phone.strip()) or (record.partner_shipping_id.phone and record.partner_shipping_id.phone.strip()[0:20])
                 record.dhl_email = (record.partner_shipping_id.dhl_email and record.partner_shipping_id.dhl_email.strip()) or (record.partner_shipping_id.email and record.partner_shipping_id.email.strip()[0:30])
+    
+    @api.multi
+    @api.constrains('dhl_name1','dhl_name2','dhl_streetName','dhl_streetNumber','dhl_zip','dhl_city','dhl_streetName_parent','dhl_streetNumber_parent','dhl_zip_parent','dhl_city_parent','dhl_phone','dhl_email')
+    def _check_dhl_address(self):
+        for record in self:
+            if record.dhl_check:
+                if not record.dhl_name1:
+                    if record.dhl_name2:
+                        record.dhl_name1 = record.dhl_name2
+                        record.dhl_name2 = ''
+                    else:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde kein Empfängername bei den DHL-formatierten Daten angegeben')
+                if record.del_is_company:
+                    if not record.dhl_streetName:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde kein Strassenname bei den DHL-formatierten Daten angegeben')
+                    if not record.dhl_streetNumber:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde keine Hausnummer bei den DHL-formatierten Daten angegeben')
+                    if not record.dhl_zip:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde keine Postleitzahl bei den DHL-formatierten Daten angegeben')
+                    if not record.dhl_city:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde kein Ort bei den DHL-formatierten Daten angegeben')
+                if not record.del_is_company:
+                    if not record.dhl_streetName_parent:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde kein Strassenname bei den DHL-formatierten Daten angegeben')
+                    if not record.dhl_streetNumber_parent:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde keine Hausnummer bei den DHL-formatierten Daten angegeben')
+                    if not record.dhl_zip_parent:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde keine Postleitzahl bei den DHL-formatierten Daten angegeben')
+                    if not record.dhl_city_parent:
+                        raise Warning('Fehlerhafte DHL-Daten','Es wurde kein Ort bei den DHL-formatierten Daten angegeben')
+                if not record.dhl_phone and not record.dhl_email:
+                    raise Warning('Fehlerhafte DHL-Daten','Es wurde weder eine Kontakttelefonnummer, noch eine Kontaktemail bei den DHL-formatierten Daten angegeben. Mindestens eins der beiden Felder muss ausgefüllt werden')
     
     auto_sale = fields.Boolean(string='Auto E-Mail Auftragsbestaetigung', help='Automatischer Versand E-Mail Auftragsbestaetigung', default=False)
     auto_purchase = fields.Boolean(string='Auto Annahme Bestellung', help='Automatische Bestaetigung des ERSTEN vorkalkulierten Lieferantenangebots', default=False)
@@ -68,19 +100,19 @@ class ama_sale_order(models.Model):
     auto_stock_carrier = fields.Boolean(string='Auto Bestellung Logistiker', help='Automatische Bestellung der Paketlabels beim verknüpften Logistiker')
     auto_invoice = fields.Boolean(string='Auto E-Mail Rechnung', help='Automatische Rechnungserstellung und Versendung nach Lieferung', default=False)
     
-    dhl_check = fields.Boolean(string='Lieferant ist DHL', compute=_compute_dhl_check, default=False)
-    dhl_name1 = fields.Char('name1', related='partner_shipping_id.dhl_name1')
-    dhl_name2 = fields.Char('name2', related='partner_shipping_id.dhl_name2')
-    dhl_streetName = fields.Char('streetName', related='partner_shipping_id.dhl_streetName')
-    dhl_streetName_parent = fields.Char('streetName', related='partner_shipping_id.parent_id.dhl_streetName')
-    dhl_streetNumber = fields.Char('streetNumber', related='partner_shipping_id.dhl_streetNumber')
-    dhl_streetNumber_parent = fields.Char('streetNumber', related='partner_shipping_id.parent_id.dhl_streetNumber')
-    dhl_zip = fields.Char('zip', related='partner_shipping_id.dhl_zip')
-    dhl_zip_parent = fields.Char('zip', related='partner_shipping_id.parent_id.dhl_zip')
-    dhl_city = fields.Char('city', related='partner_shipping_id.dhl_city')
-    dhl_city_parent = fields.Char('city', related='partner_shipping_id.parent_id.dhl_city')
-    dhl_phone = fields.Char('phone', related='partner_shipping_id.dhl_phone')
-    dhl_email = fields.Char('email', related='partner_shipping_id.dhl_email')
+    dhl_check = fields.Boolean(string='Lieferant ist DHL', compute=_compute_dhl_check, default=False, store=True)
+    dhl_name1 = fields.Char('name1', related='partner_shipping_id.dhl_name1', store=True)
+    dhl_name2 = fields.Char('name2', related='partner_shipping_id.dhl_name2', store=True)
+    dhl_streetName = fields.Char('streetName', related='partner_shipping_id.dhl_streetName', store=True)
+    dhl_streetName_parent = fields.Char('streetName', related='partner_shipping_id.parent_id.dhl_streetName', store=True)
+    dhl_streetNumber = fields.Char('streetNumber', related='partner_shipping_id.dhl_streetNumber', store=True)
+    dhl_streetNumber_parent = fields.Char('streetNumber', related='partner_shipping_id.parent_id.dhl_streetNumber', store=True)
+    dhl_zip = fields.Char('zip', related='partner_shipping_id.dhl_zip', store=True)
+    dhl_zip_parent = fields.Char('zip', related='partner_shipping_id.parent_id.dhl_zip', store=True)
+    dhl_city = fields.Char('city', related='partner_shipping_id.dhl_city', store=True)
+    dhl_city_parent = fields.Char('city', related='partner_shipping_id.parent_id.dhl_city', store=True)
+    dhl_phone = fields.Char('phone', related='partner_shipping_id.dhl_phone', store=True)
+    dhl_email = fields.Char('email', related='partner_shipping_id.dhl_email', store=True)
     
     del_is_company = fields.Boolean(related='partner_shipping_id.is_company', readonly=True)
     del_use_parent_address = fields.Boolean(related='partner_shipping_id.use_parent_address', readonly=True)
@@ -99,39 +131,6 @@ class ama_sale_order(models.Model):
     @api.multi
     def action_handle_order(self, context=None):
         for record in self:
-            # log_text = 'Angebot ' + record.name + ' wurde bestaetigt mit folgenden Parametern: \n'
-            # _logger.info(log_text)
-            
-            if not record.partner_id or not record.partner_invoice_id or not record.partner_shipping_id:
-                raise except_orm('Fehler','Es wurde kein Kunde, Rechnungsadresse oder Lieferadresse ausgewählt')
-            
-            if record.dhl_check:
-                if not record.dhl_name1:
-                    if record.dhl_name2:
-                        record.dhl_name1 = record.dhl_name2
-                        record.dhl_name2 = ''
-                    else:
-                         raise except_orm('Fehler DHL-Daten','Es wurde kein Empfängername bei den DHL-formatierten Daten angegeben')
-                if record.del_is_company:
-                    if not record.dhl_streetName:
-                        raise except_orm('Fehler DHL-Daten','Es wurde kein Strassenname bei den DHL-formatierten Daten angegeben')
-                    if not record.dhl_streetNumber:
-                        raise except_orm('Fehler DHL-Daten','Es wurde keine Hausnummer bei den DHL-formatierten Daten angegeben')
-                    if not record.dhl_zip:
-                        raise except_orm('Fehler DHL-Daten','Es wurde keine Postleitzahl bei den DHL-formatierten Daten angegeben')
-                    if not record.dhl_city:
-                        raise except_orm('Fehler DHL-Daten','Es wurde kein Ort bei den DHL-formatierten Daten angegeben')
-                if not record.del_is_company:
-                    if not record.dhl_streetName_parent:
-                        raise except_orm('Fehler DHL-Daten','Es wurde kein Strassenname bei den DHL-formatierten Daten angegeben')
-                    if not record.dhl_streetNumber_parent:
-                        raise except_orm('Fehler DHL-Daten','Es wurde keine Hausnummer bei den DHL-formatierten Daten angegeben')
-                    if not record.dhl_zip_parent:
-                        raise except_orm('Fehler DHL-Daten','Es wurde keine Postleitzahl bei den DHL-formatierten Daten angegeben')
-                    if not record.dhl_city_parent:
-                        raise except_orm('Fehler DHL-Daten','Es wurde kein Ort bei den DHL-formatierten Daten angegeben')
-                if not record.dhl_phone and not record.dhl_email:
-                    raise except_orm('Fehler DHL-Daten','Es wurde weder eine Kontakttelefonnummer, noch eine Kontaktemail bei den DHL-formatierten Daten angegeben. Mindestens eins der beiden Felder muss ausgefüllt werden')
             
             record.action_button_confirm()
             
@@ -192,24 +191,54 @@ class ama_sale_order(models.Model):
 
 class ama_rq_sale_order_line(models.Model):
     _inherit = 'sale.order.line'
+    
+    @api.multi
+    @api.onchange('release_quantity_check')
+    def _onchange_release_quantity_check(self):
+        for record in self:
+            if not record.release_quantity_check:
+                record.release_quantity_value = record.product_uom_qty
+    
+    @api.multi
+    @api.depends('product_uom_qty','release_quantity_check','release_quantity_input')
+    def _compute_release_quantity(self):
+        for record in self:
+            if not record.release_quantity_check:
+                record.release_quantity_value = record.product_uom_qty
+            else:
+                if record.release_quantity_input < 0:
+                    raise Warning('Fehlerhafte Abrufmenge','Abrufmenge muss größer gleich 0 sein.')
+                elif record.release_quantity_input > record.product_uom_qty:
+                    raise Warning('Fehlerhafte Abrufmenge','Abrufmenge muss kleiner gleich der Bestellmenge sein.')
+                else:
+                    record.release_quantity_value = record.release_quantity_input
+                
+    @api.multi
+    @api.constrains('release_quantity_input')
+    def _check_release_quantity(self):
+        for record in self:
+            if record.release_quantity_input < 0:
+                raise Warning('Fehlerhafte Abrufmenge','Abrufmenge muss größer gleich 0 sein.')
+            if record.release_quantity_input > record.product_uom_qty:
+                raise Warning('Fehlerhafte Abrufmenge','Abrufmenge muss kleiner gleich der Bestellmenge sein.')
+                
 
-    release_quantity_value = fields.Float('Abrufmenge', help="Anzahl der Produkte für einzelnen Lagerabrufe in der gleichen Einheit, wie die Standardmengeneinheit.")
+    # release_quantity_value = fields.Float('Abrufmenge', compute='_get_release_quantity', inverse='_set_release_quantity', store=True, help="Anzahl der Produkte für einzelnen Lagerabrufe in der gleichen Einheit, wie die Standardmengeneinheit.")
+    release_quantity_value = fields.Float('Abrufmenge', compute='_compute_release_quantity', help="Anzahl der Produkte für einzelnen Lagerabrufe in der gleichen Einheit, wie die Standardmengeneinheit.")
     release_quantity_check = fields.Boolean('Abrufmenge aktivieren', help="Nur wenn dieser Schalter gesetzt ist, wird die Abrufmenge geliefert, sonst die komplette Bestellmenge.")
+    release_quantity_input = fields.Float('Abrufmenge', help="Eingabefeld für die Abrufmenge")
     
                 
 class ama_rq_procurement_order(models.Model):
     _inherit = 'procurement.order'
 
-    '''release_quantity = fields.Float('Abrufmenge',
-      help="Anzahl der Produkte für einzelnen Lagerabrufe in der gleichen "
-           "Einheit, wie die Standardmengeneinheit.")'''
-           
     @api.v7
     def _run_move_create(self, cr, uid, procurement, context=None):
         vals = super(ama_rq_procurement_order, self)._run_move_create(cr, uid, procurement, context)
         vals.update({
             'release_quantity_value': procurement.sale_line_id and procurement.sale_line_id.release_quantity_value,
-            'release_quantity_check': procurement.sale_line_id and procurement.sale_line_id.release_quantity_check
+            'release_quantity_check': procurement.sale_line_id and procurement.sale_line_id.release_quantity_check,
+            'release_quantity_input': procurement.sale_line_id and procurement.sale_line_id.release_quantity_input,
             })
         return vals
                     

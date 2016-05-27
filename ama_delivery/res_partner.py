@@ -50,13 +50,20 @@ class res_partner_dhl_addresses(models.Model):
                 record.dhl_streetNumber = record.street_number.strip()[0:7]
                 
                 
-    @api.multi
+    '''@api.multi
     @api.onchange('zip')
     def _validate_zip(self):
         for record in self:
             _logger.info(record.zip)
             if record.zip:
-                record.dhl_zip = record.zip.strip()[0:5]
+                record.dhl_zip = record.zip.strip()[0:5]'''
+                
+    @api.multi
+    def _validate_zip(self, tmp_zip):
+        for record in self:
+            _logger.info(tmp_zip)
+            if tmp_zip:
+                record.dhl_zip = tmp_zip.strip()[0:5]
                 
                 
     @api.multi
@@ -86,11 +93,11 @@ class res_partner_dhl_addresses(models.Model):
                 
     
     #dhl formated address
-    dhl_name1 = fields.Char('Name1', size=30)
-    dhl_name2 = fields.Char('Name2', size=30)
-    dhl_streetName = fields.Char('streetName', size=30)
-    dhl_streetNumber = fields.Char('streetNumber', size=7)
-    dhl_zip = fields.Char('zip', size=5)
-    dhl_city = fields.Char('city', size=50)
-    dhl_phone = fields.Char('phone', size=20)
-    dhl_email = fields.Char('email', size=30)
+    dhl_name1 = fields.Char('Name1', size=30, store=True)
+    dhl_name2 = fields.Char('Name2', size=30, store=True)
+    dhl_streetName = fields.Char('streetName', size=30, store=True)
+    dhl_streetNumber = fields.Char('streetNumber', size=7, store=True)
+    dhl_zip = fields.Char('zip', size=5, store=True)
+    dhl_city = fields.Char('city', size=50, store=True)
+    dhl_phone = fields.Char('phone', size=20, store=True)
+    dhl_email = fields.Char('email', size=30, store=True)
