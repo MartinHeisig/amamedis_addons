@@ -20,7 +20,7 @@
                     <field name="attachmentType"/>
                     <div>
                         <label for="attachmentName" style="font-weight:bold;" class="oe_inline" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
-                        <button name="rename_attachments" type="object" icon="STOCK_FLOPPY" readonly="0" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
+                        <button name="rename_attachments" string="Umbenennen" type="object" icon="STOCK_FLOPPY" readonly="0" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
                     </div>
                     <div>
                         <field name="attachmentName" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
@@ -82,7 +82,7 @@
                     <field name="attachmentType"/>
                     <div>
                         <label for="attachmentName" style="font-weight:bold;" class="oe_inline" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
-                        <button name="rename_attachments" type="object" icon="STOCK_FLOPPY" readonly="0" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
+                        <button name="rename_attachments" string="Umbenennen" type="object" icon="STOCK_FLOPPY" readonly="0" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
                     </div>
                     <div>
                         <field name="attachmentName" attrs="{'invisible':[('attachmentType','!=','order_fax'),('attachmentType','!=','order'),('attachmentType','!=','sepa_fax')]}"/>
