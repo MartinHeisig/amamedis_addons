@@ -213,6 +213,7 @@
             <field name="arch" type="xml">
                 <!--tree string="Shipment List" colors="red:error_occurred=='True'"-->
                 <tree string="Shipment List" colors="red:error_occurred==True">
+                    <!--button name="synchronize_cron" type="object" string="CronJob"/-->
                     <field name="name"/>
                     <field name="stock_dm_picking_unit_id"/>
                     <field name="partner_id"/>
@@ -427,6 +428,31 @@
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Erstelle eine neue DHL Sendung</p>
             </field>
+        </record>
+        
+        <!--record model="ir.actions.act_window" id="stock_dhl_tracking_button_action">
+            <field name="name">stock.dhl.tracking.button.action</field>
+            <field name="res_model">stock.dhl.picking.unit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Erstelle eine neue DHL Sendung</p>
+            </field>
+        </record-->
+        
+        <record model="ir.actions.server" id="stock_dhl_tracking_button_action">
+            <field name="name">DHL Track&amp;Trace</field>
+            <field name="model_id" ref="model_stock_dhl_picking_unit"/>
+            <field name="code">action = self.tracking(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        
+        <record model="ir.values" id="stock_dhl_tracking_button">
+            <field name="model_id" ref="model_stock_dhl_picking_unit"/>
+            <field name="name">DHL Track&amp;Trace</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('stock_dhl_tracking_button_action'))" />
+            <field name="key">action</field>
+            <field name="model">stock.dhl.picking.unit</field>
         </record>
         
         <menuitem id="stock_dhl_main_menu" name="DHL"

@@ -51,7 +51,7 @@ class stock_dhl_picking_unit(models.Model):
     # DHL response fields
     dhl_airway_bill_number = fields.Char(string="airway-bill-number")
     dhl_code = fields.Char(string="code")
-    dhl_delivery_event_flag = fields.Char(string="delivery-event-flag")
+    dhl_delivery_event_flag = fields.Char(string="delivery-event-flag", default='0')
     dhl_dest_country = fields.Char(string="dest-country")
     dhl_division = fields.Char(string="division")
     dhl_domestic_id = fields.Char(string="domestic-id")
@@ -181,21 +181,17 @@ class stock_dhl_picking_unit(models.Model):
     @api.model
     def synchronize_cron(self):
         _logger.info('Ich bins der CronJob')
-        uncompleted = self.search([('dhl_delivery_event_flag', '!=', '1')])
-        _logger.info('Tracking fuer: ' + str(uncompleted))
-        uncompleted.tracking()
         
-        unimaged = self.search([('dhl_image','=',False),('dhl_delivery_event_flag','=','1'),('dhl_dest_country','=','DE')])
-        _logger.info('Tracking fuer: ' + str(unimaged))
-        unimaged.tracking()
+        # get all undelivered packages
+        ids = self.search([('dhl_delivery_event_flag', '!=', '1')])
+        _logger.info(str(ids))
+        ids.tracking()
         
-        # dhl_pu_ids = self.search([('|',('dhl_delivery_event_flag', '!=', '1'),(('dhl_image','=',False),('dhl_delivery_event_flag','=','1'),('dhl_dest_country','=','DE')))])
-        # dhl_pu_ids = self.search([('|',('dhl_delivery_event_flag', '!=', '1'),(('dhl_image','=',False),('dhl_delivery_event_flag','=','1'),('dhl_dest_country','=','DE')))])
-        # dhl_pu_ids = self.search([('|',('dhl_delivery_event_flag', '!=', '1'),('&amp;',('dhl_image','=',False),('&amp;',('dhl_delivery_event_flag','=','1'),('dhl_dest_country','=','DE'))))])
-        # _logger.info('Tracking fuer: ' + str(dhl_pu_ids))
-        # dhl_pu_ids.tracking()
-        '''for dhl_pu in dhl_pu_ids:
-            dhl_pu.tracking()'''
+        # get all delivered packages without image received
+        ids = self.search([('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
+        _logger.info(str(ids))
+        ids.tracking()
+        
             
     
     @api.multi
