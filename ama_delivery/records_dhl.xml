@@ -669,37 +669,37 @@
             <field name="code">ADVIS</field>
             <field name="text_en">Advise</field>
             <field name="text_de">Sendungsavise</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice2">
             <field name="code">ASMVT</field>
             <field name="text_en">Assigned to movement / tour vehicle</field>
             <field name="text_de">Transportzuweisung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice3">
             <field name="code">CHECK</field>
             <field name="text_en">Checked</field>
             <field name="text_de">Produktmerkmal-Prüfung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice4">
             <field name="code">CNFSC</field>
             <field name="text_en">Confiscation</field>
             <field name="text_de">Beschlagnahme/Postsperre</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice5">
             <field name="code">CNRFC</field>
             <field name="text_en">Consignee notified - Ready for collection</field>
             <field name="text_de">Benachrichtigt</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice6">
             <field name="code">CTBRN</field>
             <field name="text_en">Customer broker notified</field>
             <field name="text_de">Agent für Zollabfertigung benachrichtigt</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice7">
             <field name="code">DLVRD</field>
@@ -717,7 +717,7 @@
             <field name="code">DMGDS</field>
             <field name="text_en">Damage discovered</field>
             <field name="text_de">Beschädigt</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice10">
             <field name="code">DSPSD</field>
@@ -729,25 +729,25 @@
             <field name="code">DTNPC</field>
             <field name="text_en">Data, but no piece</field>
             <field name="text_de">Daten ohne Sendung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms10"/>
         </record>
         <record model="stock.dhl.ice" id="ice12">
             <field name="code">EXPHD</field>
             <field name="text_en">Exception hold</field>
             <field name="text_de">Sonderereignis</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice13">
             <field name="code">HLDCC</field>
             <field name="text_en">Held for consignee collection</field>
             <field name="text_de">Sendung liegt zur Abholung bereit</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms20"/>
         </record>
         <record model="stock.dhl.ice" id="ice14">
             <field name="code">HLDCP</field>
             <field name="text_en">Held for clearance purposes</field>
             <field name="text_de">Bereithaltung zur Zollübergabe</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice15">
             <field name="code">HLDCU</field>
@@ -777,19 +777,19 @@
             <field name="code">INFCL</field>
             <field name="text_en">In facility</field>
             <field name="text_de">Lagerung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice20">
             <field name="code">ITBAR</field>
             <field name="text_en">In bonded area</field>
             <field name="text_de">Lagerung unter Verschluss</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice21">
             <field name="code">LDEXC</field>
             <field name="text_en">Loading exception</field>
             <field name="text_de">Ladungsrückstellung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice22">
             <field name="code">LDTMV</field>
@@ -801,37 +801,37 @@
             <field name="code">MSRTD</field>
             <field name="text_en">Mis routed</field>
             <field name="text_de">Routingfehler</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice24">
             <field name="code">MVARR</field>
             <field name="text_en">Movement / tour vehicle arrived</field>
             <field name="text_de">Fahrzeug angekommen</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice25">
             <field name="code">MVDEX</field>
             <field name="text_en">Movement / tour vehicle departure exception</field>
             <field name="text_de">Fahrzeug verspätet</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice26">
             <field name="code">MVDPT</field>
             <field name="text_en">Movement / tour vehicle departed</field>
             <field name="text_de">Fahrzeug hat den Standort verlassen</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice27">
             <field name="code">MVTEX</field>
             <field name="text_en">Movement / tour vehicle exception</field>
             <field name="text_de">Problem beim Transport</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice28">
             <field name="code">NTDEL</field>
             <field name="text_en">Not delivered</field>
             <field name="text_de">Nicht ausgeliefert</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice29">
             <field name="code">NTPUP</field>
@@ -843,25 +843,25 @@
             <field name="code">OFWRD</field>
             <field name="text_en">Onforwarded</field>
             <field name="text_de">Nachsendung / Rücksendung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice31">
             <field name="code">OOBAR</field>
             <field name="text_en">Out of bonded area</field>
             <field name="text_de">Weiterbearbeitung nach gesicherter Lagerung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice32">
             <field name="code">OOSTR</field>
             <field name="text_en">Out of storage</field>
             <field name="text_de">Weiterbearbeitung nach Lagerung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice33">
             <field name="code">PARCV</field>
             <field name="text_en">PAN Received by Carrier</field>
             <field name="text_de">Elektronische Sendungsdaten liegen vor</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms10"/>
         </record>
         <record model="stock.dhl.ice" id="ice34">
             <field name="code">PBNDT</field>
@@ -885,7 +885,7 @@
             <field name="code">RCCLS</field>
             <field name="text_en">Record closed</field>
             <field name="text_de">Sendungslauf beendet</field>
-            <field name="stock_dm_state_id" ref="dms80"/>
+            <field name="stock_dm_state_id" ref="dms70"/>
         </record>
         <record model="stock.dhl.ice" id="ice38">
             <field name="code">REPCK</field>
@@ -897,31 +897,31 @@
             <field name="code">RETRN</field>
             <field name="text_en">Shipment will be returned to origin</field>
             <field name="text_de">Rücksendung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms60"/>
         </record>
         <record model="stock.dhl.ice" id="ice40">
             <field name="code">RSDCP</field>
             <field name="text_en">Released from clearance processing</field>
             <field name="text_de">Zollfreigabe</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice41">
             <field name="code">SECHK</field>
             <field name="text_en">Security checked</field>
             <field name="text_de">Sicherheitsprüfung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice42">
             <field name="code">SHRCU</field>
             <field name="text_en">Shipment Received from customer</field>
             <field name="text_de">Einlieferung der Sendung durch den Kunden</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice43">
             <field name="code">SRTED</field>
             <field name="text_en">Sorted</field>
             <field name="text_de">Sortierung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice44">
             <field name="code">TRBCR</field>
@@ -939,13 +939,13 @@
             <field name="code">ULFMV</field>
             <field name="text_en">Unloaded from movement / tour vehicle</field>
             <field name="text_de">Eingang</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice47">
             <field name="code">WGDMM</field>
             <field name="text_en">Weight/Volume/Dimensions measured</field>
             <field name="text_de">Gewicht/Volumen/Abmessungsermittlung</field>
-            <field name="stock_dm_state_id" ref=""/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
 
         <!-- stock.dhl.ttpro -->

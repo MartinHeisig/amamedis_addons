@@ -8,6 +8,7 @@ from subprocess import Popen, PIPE
 
 import logging
 import binascii
+import pytz
 import requests
 import time
 import xmltodict
@@ -112,7 +113,7 @@ class stock_dhl_picking_unit(models.Model):
     _sql_constraints = [
             ('name_unique',
              'UNIQUE(name)',
-             "Sendungen sind einmalig und können nicht dupliziert werden.\nFalls es sich um eine reguläre Sendung handelt, prüfen Sie ob Ihr Ihnen zugewiesener Nummernpool zu klein ist."),
+             "Sendungen sind einmalig und koennen nicht dupliziert werden.\nFalls es sich um eine regulaere Sendung handelt, pruefen Sie ob Ihr Ihnen zugewiesener Nummernpool zu klein ist."),
             ]
     
     @api.multi
@@ -217,20 +218,6 @@ class stock_dhl_picking_unit(models.Model):
                 cig_user = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_cig_user
                 cig_pass = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_cig_pass
                 
-            # auslagern in company
-            # appname = "dhl_entwicklerportal"
-            # password = "Dhl_123!"
-            # cig_user = "robberechts"
-            # cig_pass = "1Q@dhl.com"
-            # endpoint = "https://cig.dhl.de/services/sandbox/rest/sendungsverfolgung/"
-            
-            # test = False
-            # appname = "zt104583"
-            # password = "WceeV5u6SK"
-            # cig_user = "AMADHL_2"
-            # cig_pass = "lIIqqjFCpDCRSysKg4AKZrqA5kmeXL"
-            # endpoint = "https://cig.dhl.de/services/production/rest/sendungsverfolgung/"
-        
             if record.dhl_delivery_event_flag != '1':
         
                 method = "d-get-piece-detail"
@@ -439,7 +426,7 @@ class stock_dhl_picking_unit(models.Model):
                 arguments = [ constants_dhl.METHOD + "=deleteShipment",
                         constants_dhl.SHIPPING_NUMBER + "=" + record.name,
                         constants_dhl.INTRASHIP_USER + "=" + str(company.dhl_test and company.dhl_order_intraship_user_test or company.dhl_order_intraship_user),
-                        constants_dhl.INTRASHIP_PASSWORD + "=" + str(company.dhl_test and company.dhl_order_intraship_password_test or company.dhl_order_password_user) ]
+                        constants_dhl.INTRASHIP_PASSWORD + "=" + str(company.dhl_test and company.dhl_order_intraship_password_test or company.dhl_order_intraship_password) ]
                 if test != '':
                     arguments.append(test)
                 _logger.info("Anfrage (Latin-1) an JAVA: " + str(arguments))
@@ -667,7 +654,9 @@ class stock_dhl_event(models.Model):
         for record in self:
             if record.dhl_event_timestamp:
                 try:
-                    record.event_date = datetime.strptime(record.dhl_event_timestamp, '%d.%m.%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
+                    tz = pytz.timezone('Europe/Berlin') 
+                    record.event_date = tz.localize(datetime.strptime(record.dhl_event_timestamp, '%d.%m.%Y %H:%M')).astimezone(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+                    # record.event_date = datetime.strptime(record.dhl_event_timestamp, '%d.%m.%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
                 except ValueError:
                     record.event_date = False
             
