@@ -36,6 +36,7 @@ class amamedis_partner(models.Model):
     contact_remove = fields.Many2one('res.partner', 'Remove Contact')
     branch_ids = fields.Many2many('res.partner', 'res_partner_branch', 'partner_id', 'branch_id', 'Filialen')
     oc_folder = fields.Char('Owncloud-Verzeichnis')
+    type = fields.Selection(selection_add=[('fax', 'Fax')])
     
     '''Better Way for new Api but doesnt change the name in Many2One DropDown fields'''
     @api.multi

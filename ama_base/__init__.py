@@ -1,3 +1,4 @@
 import ama_base_partner
 import ama_base_sale
 import ama_base_product
+import ama_base_mail
