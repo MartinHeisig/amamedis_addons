@@ -264,9 +264,11 @@ class stock_dhl_picking_unit(models.Model):
                     if record.dhl_code != '0':
                         record.error_occurred = True
                         record.dhl_error = xml_response_dict['data']['@' + constants_dhl.ERROR]
+                        record.error = record.dhl_error
                         _logger.error(record.dhl_code + ": " + xml_response_dict['data']['@' + constants_dhl.ERROR])
                     else:
                         record.error_occurred = False
+                        record.error = ''
                         record.dhl_airway_bill_number = xml_response_dict['data']['data']['@' + constants_dhl.AIRWAY_BILL_NUMBER]
                         record.dhl_delivery_event_flag = xml_response_dict['data']['data']['@' + constants_dhl.DELIVERY_EVENT_FLAG]
                         record.dhl_dest_country = xml_response_dict['data']['data']['@' + constants_dhl.DEST_COUNTRY]
