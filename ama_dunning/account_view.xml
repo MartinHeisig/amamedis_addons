@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+     
+        <record id="ama_dun_account_payment_term_form" model="ir.ui.view">
+            <field name="name">ama_dun.account.payment.term.form</field>
+            <field name="model">account.payment.term</field>
+            <field name="inherit_id" ref="account.view_payment_term_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="is_remindable"/>
+                </field>
+            </field>
+        </record>
+    
+        <record id="ama_dun_account_invoice_tree" model="ir.ui.view">
+            <field name="name">ama_dun.account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="sequence">99</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes"> 
+                    <!--attribute name="colors">yellow:state == 'open' and reminder_level == 'ze1';orange:state == 'open' and reminder_level == 'ze2';red:state == 'open' and reminder_level == 'ze3';</attribute-->
+                    <!--attribute name="colors">blue:state == 'draft';black:state in ('proforma','proforma2');gray:state == 'cancel';yellow:state == 'open' and reminder_level == 'ze1';orange:state == 'open' and reminder_level == 'ze2';red:state == 'open' and reminder_level == 'ze3';</attribute-->
+                    <attribute name="colors">blue:state == 'draft';black:state in ('proforma','proforma2');gray:state == 'cancel';red:state == 'open' and reminder_level != False;</attribute>
+                </xpath>
+                <field name="date_due" position="after">
+                    <field name="reminder_level"/>
+                    <field name="reminder_sent"/>
+                </field>
+            </field>
+        </record>
+        
+        <record id="ama_dun_account_invoice_form" model="ir.ui.view">
+            <field name="name">ama_dun.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="sequence">99</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <button name="invoice_cancel" position="before">
+                    <button name="action_reminder_sent" type="object" class="oe_highlight" string="Erste Zahlungserinnerung versenden" attrs="{'invisible': ['|','|',('state','!=', 'open'),('reminder_level','!=','ze1'),'&amp;',('reminder_level','=','ze1'),('reminder_sent_ze1','=',True)]}"/>
+                    <button name="action_reminder_sent" type="object" string="Erste Zahlungserinnerung erneut versenden" attrs="{'invisible': ['|','|',('state','!=', 'open'),('reminder_level','!=','ze1'),'&amp;',('reminder_level','=','ze1'),('reminder_sent_ze1','=',False)]}"/>
+                    <button name="action_reminder_sent" type="object" class="oe_highlight" string="Zweite Zahlungserinnerung versenden" attrs="{'invisible': ['|','|',('state','!=', 'open'),('reminder_level','!=','ze2'),'&amp;',('reminder_level','=','ze2'),('reminder_sent_ze2','=',True)]}"/>
+                    <button name="action_reminder_sent" type="object" string="Zweite Zahlungserinnerung erneut versenden" attrs="{'invisible': ['|','|',('state','!=', 'open'),('reminder_level','!=','ze2'),'&amp;',('reminder_level','=','ze2'),('reminder_sent_ze2','=',False)]}"/>
+                    <button name="action_reminder_sent" type="object" class="oe_highlight" string="Dritte Zahlungserinnerung versenden" attrs="{'invisible': ['|','|',('state','!=', 'open'),('reminder_level','!=','ze3'),'&amp;',('reminder_level','=','ze3'),('reminder_sent_ze3','=',True)]}"/>
+                    <button name="action_reminder_sent" type="object" string="Dritte Zahlungserinnerung erneut versenden" attrs="{'invisible': ['|','|',('state','!=', 'open'),('reminder_level','!=','ze3'),'&amp;',('reminder_level','=','ze3'),('reminder_sent_ze3','=',False)]}"/>
+                </button>
+                <field name="date_due" position="after">
+                    <field name="date_due2"/>
+                    <!--field name="reminder_auto"/>
+                    <field name="reminder_level"/>
+                    <field name="reminder_sent"/>
+                    <field name="reminder_sent_ze1"/>
+                    <field name="reminder_due_date_ze1"/>
+                    <field name="reminder_sent_ze2"/>
+                    <field name="reminder_due_date_ze2"/>
+                    <field name="reminder_sent_ze3"/>
+                    <field name="reminder_due_date_ze3"/-->
+                </field>
+                <xpath expr="//page[@string='Other Info']/group" position="after">
+                    <group string="Zahlungserinnerungen" col="1">
+                        <group col="4">
+                            <field name="reminder_auto"/>
+                            <field name="reminder_level"/>
+                            <field name="reminder_sent"/>
+                        </group>
+                        <group col="4">
+                            <field name="reminder_sent_ze1"/>
+                            <field name="reminder_due_date_ze1"/>
+                            <field name="reminder_sent_ze2"/>
+                            <field name="reminder_due_date_ze2"/>
+                            <field name="reminder_sent_ze3"/>
+                            <field name="reminder_due_date_ze3"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="ama_dun_sales_team_form" model="ir.ui.view">
+            <field name="name">ama_dun.sales.team.form</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
+            <field name="arch" type="xml">
+                <page string="Notes" position="after">
+                    <page string="Zahlungserinnerungen">
+                        <group col="7">
+                            <b>Erste Zahlungserinnerung</b>
+                            <field name="ze1_days"/>
+                            <field name="ze1_days_due"/>
+                            <field name="ze1_email"/>
+                            <b>Zweite Zahlungserinnerung</b>
+                            <field name="ze2_days"/>
+                            <field name="ze2_days_due"/>
+                            <field name="ze2_email"/>
+                            <b>Dritte Zahlungserinnerung</b>
+                            <field name="ze3_days"/>
+                            <field name="ze3_days_due"/>
+                            <field name="ze3_email"/>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+    
+    </data>
+</openerp>
