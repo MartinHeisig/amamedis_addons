@@ -15,7 +15,7 @@
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
-    'category': 'Invoicing &amp; Payments',
+    'category': 'Invoicing & Payments',
     'version': '0.1',
 
     # any module necessary for this one to work correctly
@@ -24,6 +24,7 @@
         'account',
         'sale',
         'account_followup',
+        'email_template',
     ],
 
     # always loaded
