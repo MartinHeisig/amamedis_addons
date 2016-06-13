@@ -23,6 +23,7 @@
         'base',
         'account',
         'sale',
+        'account_followup',
     ],
 
     # always loaded

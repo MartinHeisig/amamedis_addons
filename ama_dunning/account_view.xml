@@ -22,8 +22,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes"> 
-                    <!--attribute name="colors">yellow:state == 'open' and reminder_level == 'ze1';orange:state == 'open' and reminder_level == 'ze2';red:state == 'open' and reminder_level == 'ze3';</attribute-->
-                    <!--attribute name="colors">blue:state == 'draft';black:state in ('proforma','proforma2');gray:state == 'cancel';yellow:state == 'open' and reminder_level == 'ze1';orange:state == 'open' and reminder_level == 'ze2';red:state == 'open' and reminder_level == 'ze3';</attribute-->
                     <attribute name="colors">blue:state == 'draft';black:state in ('proforma','proforma2');gray:state == 'cancel';red:state == 'open' and reminder_level != False;</attribute>
                 </xpath>
                 <field name="date_due" position="after">
@@ -48,18 +46,6 @@
                     <button name="action_reminder_sent" type="object" class="oe_highlight" string="Dritte Zahlungserinnerung versenden" attrs="{'invisible': ['|','|',('state','!=', 'open'),('reminder_level','!=','ze3'),'&amp;',('reminder_level','=','ze3'),('reminder_sent_ze3','=',True)]}"/>
                     <button name="action_reminder_sent" type="object" string="Dritte Zahlungserinnerung erneut versenden" attrs="{'invisible': ['|','|',('state','!=', 'open'),('reminder_level','!=','ze3'),'&amp;',('reminder_level','=','ze3'),('reminder_sent_ze3','=',False)]}"/>
                 </button>
-                <field name="date_due" position="after">
-                    <field name="date_due2"/>
-                    <!--field name="reminder_auto"/>
-                    <field name="reminder_level"/>
-                    <field name="reminder_sent"/>
-                    <field name="reminder_sent_ze1"/>
-                    <field name="reminder_due_date_ze1"/>
-                    <field name="reminder_sent_ze2"/>
-                    <field name="reminder_due_date_ze2"/>
-                    <field name="reminder_sent_ze3"/>
-                    <field name="reminder_due_date_ze3"/-->
-                </field>
                 <xpath expr="//page[@string='Other Info']/group" position="after">
                     <group string="Zahlungserinnerungen" col="1">
                         <group col="4">
