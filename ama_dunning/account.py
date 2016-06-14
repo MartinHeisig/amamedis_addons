@@ -103,7 +103,10 @@ class ama_dun_account_invoice(models.Model):
             
             
     @api.model
-    def _set_reminder_level(self):
+    def _set_reminder_level(self, days_execute=[]):
+        if date.today().isoweekday() in days_execute:
+            _logger.info('Ich wollte heute arbeiten aber durfte nicht')
+            return
         ids = self.search([('state', '=', 'open'),('type','=','out_invoice')])
         
         for record in ids:

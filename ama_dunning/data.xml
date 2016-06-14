@@ -13,7 +13,7 @@
             <field eval="False" name="doall" /> <!-- execute missed occurrences when server restarts -->
             <field eval="'account.invoice'" name="model" /> <!-- model name of the cron job method -->
             <field eval="'_set_reminder_level'" name="function" /> <!-- method name that should be executed -->
-            <field eval="'()'" name="args" /> <!-- arguments needed for this method -->
+            <field eval="'([[6,7]])'" name="args" /> <!-- arguments needed for this method -->
         </record>
         
     </data>
