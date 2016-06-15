@@ -34,25 +34,18 @@ class ama_dun_account_invoice(models.Model):
     @api.multi
     def action_reminder_sent(self):
         self.ensure_one()
-        # assert len(self) == 1, 'This option should only be used for a single id at a time.'
-        # template = self.env.ref(use_template, False)
         template = False
-        if self.section_id:
-            if self.reminder_level == 'ze3' and self.section_id.ze3_email:
-                template = self.section_id.ze3_email
-                # self.message_post(body='3. Zahlungserinnerung versendet', subtype='mail.mt_comment',)
-                # self.reminder_sent_ze3 = True
-            if self.reminder_level == 'ze2' and self.section_id.ze2_email:
-                template = self.section_id.ze2_email
-                # self.message_post(body='2. Zahlungserinnerung versendet', subtype='mail.mt_comment',)
-                # self.reminder_sent_ze2 = True
-            if self.reminder_level == 'ze1' and self.section_id.ze1_email:
-                template = self.section_id.ze1_email
-                # self.message_post(body='1. Zahlungserinnerung versendet', subtype='mail.mt_comment',)
-                # self.reminder_sent_ze1 = True
+        section = self.partner_id.is_company and self.partner_id.section_id or self.partner_id.parent_id.section_id
+        if section:
+            if self.reminder_level == 'ze3' and section.ze3_email:
+                template = section.ze3_email
+            if self.reminder_level == 'ze2' and section.ze2_email:
+                template = section.ze2_email
+            if self.reminder_level == 'ze1' and section.ze1_email:
+                template = section.ze1_email
             
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        # _logger.info(str(template.user_signature))
+        
         ctx = dict(
             default_model='account.invoice',
             default_res_id=self.id,
@@ -72,35 +65,6 @@ class ama_dun_account_invoice(models.Model):
             'target': 'new',
             'context': ctx,
         }
-    
-    '''@api.multi
-    def _send_reminder(self):
-        self.ensure_one()
-        email_act = self.action_reminder_sent()
-        if email_act and email_act.get('context'):
-            composer_obj = self.env['mail.compose.message']
-            composer_values = {}
-            email_ctx = email_act['context']
-            template_values = [
-                email_ctx.get('default_template_id'),
-                email_ctx.get('default_composition_mode'),
-                email_ctx.get('default_model'),
-                email_ctx.get('default_res_id'),
-            ]
-            composer_values.update(composer_obj.onchange_template_id(*template_values).get('value', {}))
-            for key in ['attachment_ids', 'partner_ids']:
-                if composer_values.get(key):
-                    composer_values[key] = [(6, 0, composer_values[key])]
-            composer_id = composer_obj.create(composer_values, context=email_ctx)
-            # _logger.info(str(composer_id.author_id))
-            # _logger.info(str(composer_id.model))
-            # _logger.info(str(composer_id.template_id.user_signature))
-            # composer_id.author_id = self.user_id.partner_id.id
-            # composer_id.is_log = True
-            # _logger.info(str(composer_id.author_id))
-            # _logger.info(str(composer_id.is_log))
-            composer_id.send_mail()'''
-            
             
     @api.model
     def _set_reminder_level(self, days_execute=[]):
@@ -110,45 +74,40 @@ class ama_dun_account_invoice(models.Model):
         ids = self.search([('state', '=', 'open'),('type','=','out_invoice')])
         
         for record in ids:
-            if record.date_due and record.section_id:
+            section = record.partner_id.is_company and record.partner_id.section_id or record.partner_id.parent_id.section_id
+            if record.date_due and section:
                 date_diff = date.today() - datetime.strptime(record.date_due, '%Y-%m-%d').date()
                 email_act = False
-                if date_diff.days > record.section_id.ze3_days:
+                # automatic only works if all of this activated
+                #       - no email send before
+                #       - automatism activated
+                #       - payment-term is set to automatism
+                #       - invoice per email checked in partner form
+                if date_diff.days > section.ze3_days:
                     record.reminder_level = 'ze3'
-                    # automatic only works if all of this activated
-                    #       - no email send before
-                    #       - automatism activated
-                    #       - payment-term is set to automatism
-                    #       - invoice per email checked in partner form
                     if not record.reminder_sent_ze3 and record.reminder_auto and record.payment_term.is_remindable and record.partner_id.invoice_email:
                         try:
-                            msg_id = self.env['email.template'].browse(record.section_id.ze3_email.id).send_mail(record.id, True, True)
+                            msg_id = self.env['email.template'].browse(section.ze3_email.id).send_mail(record.id, True, True)
                             if msg_id:
                                 record.reminder_sent_ze3 = True
                         except Exception, e:
                             _logger.exception("Failed to send automatic payment reminder email %s: %s" % (record.number, unicode(e)))
                             record.message_post(body=str(e), subtype='mail.mt_comment',)
-                        # record._send_reminder()
-                        # record.reminder_sent_ze3 = True
-                        # email_act = record.action_reminder_sent('ama_dunning.email_template_invoice_reminder_third')
-                elif date_diff.days > record.section_id.ze2_days:
+                elif date_diff.days > section.ze2_days:
                     record.reminder_level = 'ze2'
                     if not record.reminder_sent_ze2 and record.reminder_auto and record.payment_term.is_remindable and record.partner_id.invoice_email:
                         try:
-                            msg_id = self.env['email.template'].browse(record.section_id.ze2_email.id).send_mail(record.id, True, True)
+                            msg_id = self.env['email.template'].browse(section.ze2_email.id).send_mail(record.id, True, True)
                             if msg_id:
                                 record.reminder_sent_ze2 = True
                         except Exception, e:
                             _logger.exception("Failed to send automatic payment reminder email %s: %s" % (record.number, unicode(e)))
                             record.message_post(body=str(e), subtype='mail.mt_comment',)
-                        # record._send_reminder()
-                        # record.reminder_sent_ze2 = True
-                        # email_act = record.action_reminder_sent('ama_dunning.email_template_invoice_reminder_second')
-                elif date_diff.days > record.section_id.ze1_days:
+                elif date_diff.days > section.ze1_days:
                     record.reminder_level = 'ze1'
                     if not record.reminder_sent_ze1 and record.reminder_auto and record.payment_term.is_remindable and record.partner_id.invoice_email:
                         try:
-                            msg_id = self.env['email.template'].browse(record.section_id.ze1_email.id).send_mail(record.id, True, True)
+                            msg_id = self.env['email.template'].browse(section.ze1_email.id).send_mail(record.id, True, True)
                             if msg_id:
                                 record.reminder_sent_ze1 = True
                         except Exception, e:
@@ -158,25 +117,28 @@ class ama_dun_account_invoice(models.Model):
                         
     
     @api.multi
-    @api.depends('date_due','section_id')
+    @api.depends('date_due','section_id','partner_id')
     def _compute_due_ze1(self):
         for record in self:
-            if record.date_due and record.section_id and record.section_id.ze1_days_due:
-                record.reminder_due_date_ze1 = datetime.strptime(record.date_due, '%Y-%m-%d') + timedelta(days = record.section_id.ze1_days_due)
+            section = record.partner_id.is_company and record.partner_id.section_id or record.partner_id.parent_id.section_id
+            if record.date_due and section and section.ze1_days_due:
+                record.reminder_due_date_ze1 = datetime.strptime(record.date_due, '%Y-%m-%d') + timedelta(days = section.ze1_days_due)
         
     @api.multi
-    @api.depends('date_due','section_id')
+    @api.depends('date_due','section_id','partner_id')
     def _compute_due_ze2(self):
         for record in self:
-            if record.date_due and record.section_id and record.section_id.ze2_days_due:
-                record.reminder_due_date_ze2 = datetime.strptime(record.date_due, '%Y-%m-%d') + timedelta(days = record.section_id.ze2_days_due)
+            section = record.partner_id.is_company and record.partner_id.section_id or record.partner_id.parent_id.section_id
+            if record.date_due and section and section.ze2_days_due:
+                record.reminder_due_date_ze2 = datetime.strptime(record.date_due, '%Y-%m-%d') + timedelta(days = section.ze2_days_due)
         
     @api.multi
-    @api.depends('date_due','section_id')
+    @api.depends('date_due','section_id','partner_id')
     def _compute_due_ze3(self):
         for record in self:
-            if record.date_due and record.section_id and record.section_id.ze3_days_due:
-                record.reminder_due_date_ze3 = datetime.strptime(record.date_due, '%Y-%m-%d') + timedelta(days = record.section_id.ze3_days_due)
+            section = record.partner_id.is_company and record.partner_id.section_id or record.partner_id.parent_id.section_id
+            if record.date_due and section and section.ze3_days_due:
+                record.reminder_due_date_ze3 = datetime.strptime(record.date_due, '%Y-%m-%d') + timedelta(days = section.ze3_days_due)
         
                 
     
