@@ -181,15 +181,15 @@ class ama_dun_account_invoice(models.Model):
                 
     
     # date_due2 = fields.Date(string='Due Date 2')
-    reminder_level = fields.Selection([('ze1', 'Erste Zahlungserinnerung'),('ze2', 'Zweite Zahlungserinnerung'),('ze3', 'Dritte Zahlungserinnerung')], string='Zahlungserinnerungsstufe')
-    reminder_sent = fields.Boolean('Zahlungserinnerung versendet', default=False, compute='_compute_sent', help='Markiert ob die Zahlungserinnerung fuer das aktuelle Level versendet wurde', store=True)
-    reminder_sent_ze1 = fields.Boolean('Erste Zahlungserinnerung versendet', default=False)
-    reminder_sent_ze2 = fields.Boolean('Zweite Zahlungserinnerung versendet', default=False)
-    reminder_sent_ze3 = fields.Boolean('Dritte Zahlungserinnerung versendet', default=False)
-    reminder_due_date_ze1 = fields.Date(string='Fälligkeit erste Zahlungserinnerung', compute='_compute_due_ze1')
-    reminder_due_date_ze2 = fields.Date(string='Fälligkeit zweite Zahlungserinnerung', compute='_compute_due_ze2')
-    reminder_due_date_ze3 = fields.Date(string='Fälligkeit dritte Zahlungserinnerung', compute='_compute_due_ze3')
-    reminder_auto = fields.Boolean('Automatische Zahlungserinnerungen', default=True)
+    reminder_level = fields.Selection([('ze1', 'Erste'),('ze2', 'Zweite'),('ze3', 'Dritte')], string='Stufe')
+    reminder_sent = fields.Boolean('Aktuelle Stufe versendet', default=False, compute='_compute_sent', help='Markiert ob die Zahlungserinnerung fuer die aktuelle Stufe versendet wurde', store=True)
+    reminder_sent_ze1 = fields.Boolean('1. Stufe versendet', default=False)
+    reminder_sent_ze2 = fields.Boolean('2. Stufe versendet', default=False)
+    reminder_sent_ze3 = fields.Boolean('3. Stufe versendet', default=False)
+    reminder_due_date_ze1 = fields.Date(string='Neue Fälligkeit 1. Stufe', compute='_compute_due_ze1')
+    reminder_due_date_ze2 = fields.Date(string='Neue Fälligkeit 2. Stufe', compute='_compute_due_ze2')
+    reminder_due_date_ze3 = fields.Date(string='Neue Fälligkeit 3. Stufe', compute='_compute_due_ze3')
+    reminder_auto = fields.Boolean('Automatisch versenden', default=True)
     
     
 class ama_dun_sales_team(models.Model):
