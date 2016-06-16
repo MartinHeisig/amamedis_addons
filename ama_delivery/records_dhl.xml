@@ -15,6 +15,10 @@
             <field eval="'()'" name="args" /> <!-- arguments needed for this method -->
         </record>
         
+        <!-- Function call after installing the module -->
+        <function model="res.partner" name="_first_install"/>
+
+    
         <!-- stock.dm.state -->
         <record model="stock.dm.state" id="dms10">
             <field name="name_en">Shipment Preparation</field>

@@ -287,6 +287,21 @@ class ama_website_crm(models.Model):
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
         
+        if defaults['name'].startswith('Anruf im CC'):
+            for line in mail.html2plaintext(msg.get('body','')).split('\n'):
+                line = line.strip()
+                if line.startswith('CallID:'):
+                    try:
+                        cid = line.split(':', 1)[1].strip()
+                        if cid.isdigit():
+                            lead_id = self.pool.get('crm.lead').search(cr,uid,[('CallID','=',cid)])
+                            lead = self.pool.get('crm.lead').browse(cr,uid,lead_id)
+                            if lead and lead[0]:
+                                lead[0].message_post(body=msg.get('body',''), subject=msg.get('subject') or _("No Subject"), type='comment')
+                                return
+                    except:
+                        _logger.error('Error with CallCenter Mail with %s' % line)
+        
         if defaults['name'].startswith('Fax an'):
             defaults['description'] = 'Automatically generated from fax'
             defaults['medium_id'] = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'ama_website_crm.crm_t_m_fax')

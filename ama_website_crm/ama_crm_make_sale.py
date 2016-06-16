@@ -87,64 +87,21 @@ class ama_crm_make_sale(models.TransientModel):
                 message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
                 case.message_post(body=message)
                 attach_obj = self.pool.get('ir.attachment')
-                if case.attachmentType in ['order', 'order_fax']:
-                    message = self.pool.get('mail.message')
-                    for history in case.message_ids:
-                        if history.type != 'notification':
-                            message.write(cr, uid, history.id, {
-                                    'res_id': new_id,
-                                    'model': 'sale.order',
-                                    'subject' : _("Message moved from Lead %s : %s") % (case.id, history.subject)
-                            }, context=context)
-                    for attachment in case.attachments:
-                        values = {'res_id': new_id, 'res_model': 'sale.order', 'partner_id': partner.id}
-                        attachment.write(values)
-                    sale_order.message_post(body=re.sub(r"\r|\n|(\r\n)", "<br />", case.description or ''), subject=_("Description from Lead %s") % (case.id), type='comment')
-                    
-                '''if make.messageBehavior == 'order':
-                    message = self.pool.get('mail.message')
-                    for history in case.message_ids:
-                        if history.type != 'notification':
-                            if history.subject.startswith('Fax an') and history.attachment_ids:
-                                # attachments = attach_obj.browse(cr, uid, history.attachment_ids, context=context)
-                                for attachment in history.attachment_ids:
-                                # for attachment in attachments:
-                                    values = {'res_id': new_id, 'res_model': 'sale.order', 'name': 'Fax_%s_%s_%s.pdf' % (datetime.strftime(datetime.strptime(case.CallStart, '%Y-%m-%d %H:%M:%S'), '%Y%m%d'), case.DDI2, case.CLI)}
-                                    # values = {'res_id': new_id, 'res_model': 'sale.order'}
-                                    attachment.write(values)
-                            message.write(cr, uid, history.id, {
-                                    'res_id': new_id,
-                                    'model': 'sale.order',
-                                    'subject' : _("Message moved from Lead %s : %s") % (case.id, history.subject)
-                            }, context=context)
-                if make.messageBehavior == 'partner':
-                    message = self.pool.get('mail.message')
-                    for history in case.message_ids:
-                        if history.type != 'notification':
-                            message.write(cr, uid, history.id, {
-                                    'res_id': partner.id,
-                                    'model': 'res.partner',
-                                    'subject' : _("Message moved from Lead %s : %s") % (case.id, history.subject)
-                            }, context=context)
-                if make.attachmentBehavior == 'order':
-                    order_attachments = attach_obj.browse(cr, uid, attach_obj.search(cr, uid, [('res_model', '=', 'sale.order'), ('res_id', '=', new_id)], context=context), context=context)
-
-                    #counter of all attachments to move. Used to make sure the name is different for all attachments
-                    count = 1
-                    attachments = attach_obj.browse(cr, uid, attach_obj.search(cr, uid, [('res_model', '=', 'crm.lead'), ('res_id', '=', case.id)], context=context), context=context)
-                    for attachment in attachments:
-                        values = {'res_id': new_id, 'res_model': 'sale.order',}
-                        attachment.write(values)
-                    
-                if make.attachmentBehavior == 'partner':
-                    order_attachments = attach_obj.browse(cr, uid, attach_obj.search(cr, uid, [('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)], context=context), context=context)
-
-                    #counter of all attachments to move. Used to make sure the name is different for all attachments
-                    count = 1
-                    attachments = attach_obj.browse(cr, uid, attach_obj.search(cr, uid, [('res_model', '=', 'crm.lead'), ('res_id', '=', case.id)], context=context), context=context)
-                    for attachment in attachments:
-                        values = {'res_id': partner.id, 'res_model': 'res.partner',}
-                        attachment.write(values)'''
+                # June 16th enabled for all attachmentTypes, because it is filtert by use of the button. so not changed types will move their messages too
+                # if case.attachmentType in ['order', 'order_fax']:
+                message = self.pool.get('mail.message')
+                for history in case.message_ids:
+                    if history.type != 'notification':
+                        message.write(cr, uid, history.id, {
+                                'res_id': new_id,
+                                'model': 'sale.order',
+                                'subject' : _("Message moved from Lead %s : %s") % (case.id, history.subject)
+                        }, context=context)
+                for attachment in case.attachments:
+                    values = {'res_id': new_id, 'res_model': 'sale.order', 'partner_id': partner.id}
+                    attachment.write(values)
+                sale_order.message_post(body=re.sub(r"\r|\n|(\r\n)", "<br />", case.description or ''), subject=_("Description from Lead %s") % (case.id), type='comment')
+                
                 
             if make.close:
                 case_obj.case_mark_won(cr, uid, data, context=context)

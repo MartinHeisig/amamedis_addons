@@ -11,6 +11,13 @@ class res_partner_dhl_addresses(models.Model):
     _phone_fields = ['dhl_phone', 'phone', 'fax', 'mobile']
     # _phone_fields = super(res_partner_dhl_addresses)._phone_fields.append('dhl_phone')
     
+    @api.model
+    def _first_install(self):
+        partner = self.env['res.partner']
+        _logger.info('Hier bin ich')
+        _logger.info(str(partner))
+        partner._validate_street()
+    
     @api.multi
     @api.onchange('name','first_name','is_company','parent_id')
     def _validate_name(self):
@@ -50,20 +57,20 @@ class res_partner_dhl_addresses(models.Model):
                 record.dhl_streetNumber = record.street_number.strip()[0:7]
                 
                 
-    '''@api.multi
+    @api.multi
     @api.onchange('zip')
     def _validate_zip(self):
         for record in self:
             _logger.info(record.zip)
             if record.zip:
-                record.dhl_zip = record.zip.strip()[0:5]'''
+                record.dhl_zip = record.zip.strip()[0:5]
                 
-    @api.multi
+    '''@api.multi
     def _validate_zip(self, tmp_zip):
         for record in self:
             _logger.info(tmp_zip)
             if tmp_zip:
-                record.dhl_zip = tmp_zip.strip()[0:5]
+                record.dhl_zip = tmp_zip.strip()[0:5]'''
                 
                 
     @api.multi
