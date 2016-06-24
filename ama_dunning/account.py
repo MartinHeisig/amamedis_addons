@@ -174,7 +174,7 @@ class ama_dun_mail_compose_message(models.Model):
     @api.multi
     def send_mail(self):
         context = self._context
-        _logger.info('Ich sende: %s' % str(context.get('mark_reminder_as_sent')))
+        # _logger.debug('Ich sende: %s' % str(context.get('mark_reminder_as_sent')))
         if context.get('default_model') == 'account.invoice' and \
                 context.get('default_res_id') and context.get('mark_reminder_as_sent'):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])

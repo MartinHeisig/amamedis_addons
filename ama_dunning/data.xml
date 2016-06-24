@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
         <!-- Cron job for setting the invoice reminder-level -->
         <record forcecreate="True" id="ir_cron_reminder_level" model="ir.cron">
             <field name="name">Zahlungserinnerungen versenden</field> <!-- name of the cron job -->

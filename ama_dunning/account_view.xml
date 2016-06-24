@@ -53,7 +53,7 @@
                             <field name="reminder_auto"/>
                             <field name="reminder_sent"/>
                             <div colspan="2">
-                                <a href="http://odoowiki.amamedis.de/index.php/Zahlungserinnerungen" target="_blank">Weitere Informationen</a>
+                                <a href="https://odoowiki.amamedis.de/index.php/Zahlungserinnerungen" target="_blank">Weitere Informationen</a>
                             </div>
                             <field name="reminder_sent_ze1"/>
                             <field name="reminder_due_date_ze1"/>
