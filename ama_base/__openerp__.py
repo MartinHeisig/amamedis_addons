@@ -58,13 +58,14 @@ Auftragszeilen
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sale', 'product', 'sale_stock'],
+    'depends': ['base', 'sale', 'product', 'sale_stock', 'purchase'],
 
     # always loaded
     'data': [
         'ama_base_partner_view.xml',
         'ama_base_product_view.xml',
         'ama_base_sale_view.xml',
+        'ama_base_purchase_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
