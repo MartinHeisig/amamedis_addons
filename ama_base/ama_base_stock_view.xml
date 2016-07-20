@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="ama_base_stock_form" model="ir.ui.view">
+            <field name="name">ama.base.stock.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="before">
+                    <field name="orig_order"/>
+                </field>
+            </field>
+        </record>
+    
+    </data>
+</openerp>
