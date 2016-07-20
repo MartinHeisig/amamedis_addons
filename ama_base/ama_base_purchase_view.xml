@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="replace">
                     <field name="dest_address_id"/>
+                    <field name="invoiced"/>
                 </field>
             </field>
         </record>
