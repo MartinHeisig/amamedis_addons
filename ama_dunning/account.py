@@ -83,7 +83,7 @@ class ama_dun_account_invoice(models.Model):
                 #       - automatism activated
                 #       - payment-term is set to automatism
                 #       - invoice per email checked in partner form
-                if date_diff.days > section.ze3_days:
+                if date_diff.days >= section.ze3_days:
                     record.reminder_level = 'ze3'
                     if not record.reminder_sent_ze3 and record.reminder_auto and record.payment_term.is_remindable and record.partner_id.invoice_email:
                         try:
@@ -93,7 +93,7 @@ class ama_dun_account_invoice(models.Model):
                         except Exception, e:
                             _logger.exception("Failed to send automatic payment reminder email %s: %s" % (record.number, unicode(e)))
                             record.message_post(body=str(e), subtype='mail.mt_comment',)
-                elif date_diff.days > section.ze2_days:
+                elif date_diff.days >= section.ze2_days:
                     record.reminder_level = 'ze2'
                     if not record.reminder_sent_ze2 and record.reminder_auto and record.payment_term.is_remindable and record.partner_id.invoice_email:
                         try:
@@ -103,7 +103,7 @@ class ama_dun_account_invoice(models.Model):
                         except Exception, e:
                             _logger.exception("Failed to send automatic payment reminder email %s: %s" % (record.number, unicode(e)))
                             record.message_post(body=str(e), subtype='mail.mt_comment',)
-                elif date_diff.days > section.ze1_days:
+                elif date_diff.days >= section.ze1_days:
                     record.reminder_level = 'ze1'
                     if not record.reminder_sent_ze1 and record.reminder_auto and record.payment_term.is_remindable and record.partner_id.invoice_email:
                         try:
