@@ -67,6 +67,7 @@ Auftragszeilen
         'ama_base_sale_view.xml',
         'ama_base_purchase_view.xml',
         'ama_base_stock_view.xml',
+        'ama_base_mail_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

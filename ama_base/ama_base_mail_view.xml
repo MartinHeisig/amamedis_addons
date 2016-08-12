@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- ir.mail.server -->
+        <record model="ir.ui.view" id="ir_mail_server_form_auto_cc_bcc">
+            <field name="name">ir.mail_server.form</field>
+            <field name="model">ir.mail_server</field>
+            <field name="inherit_id" ref="base.ir_mail_server_form"/>
+            <field name="arch" type="xml">
+                  <sheet position="inside">
+                     <group string="Auto CC/BCC" colspan="4">
+                        <field name="force_from_to_reply"/>
+                        <field name="force_return_path"/>
+                        <field name="auto_CC_addresses"/>
+                        <field name="auto_BCC_addresses"/>
+                    </group>
+                  </sheet>  
+            </field>
+        </record>
+    </data>
+</openerp>
