@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
         <!-- Cron job for DHL Track&Trace -->
         <record forcecreate="True" id="ir_cron_dhl_tracking" model="ir.cron">
             <field name="name">DHL Track&amp;Trace</field> <!-- name of the cron job -->
@@ -15,9 +15,39 @@
             <field eval="'()'" name="args" /> <!-- arguments needed for this method -->
         </record>
         
-        <!-- Function call after installing the module -->
-        <function model="res.partner" name="_first_install"/>
+        <report 
+            string="Delivery Note Customer" 
+            id="action_report_delivery_note_default" 
+            model="stock.picking" 
+            report_type="qweb-pdf"
+            name="stock.report_picking" 
+            file="stock.report_picking" 
+        />
+        
+        <record id="email_template_stock_picking_default" model="email.template">
+            <field name="name">Lieferschein Default</field>
+            <field name="email_from">ELAC Service AMAMEDIS &lt;service.elac@amamedis.de&gt;</field>
+            <field name="subject">Versandauftrag Lieferschein ${object.name} ${object.delivery_address_id.is_company and '('+object.delivery_address_id.name+', '+object.delivery_address_id.city+')' | safe or object.delivery_address_id.parent_id and '('+object.delivery_address_id.parent_id.name+', '+object.delivery_address_id.parent_id.city+')' | safe}</field>
+            <field name="email_to">service@amamedis.de</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="report_template" ref="action_report_delivery_note_default"/>
+            <field name="report_name">${(object.name).replace('/','_')}.pdf</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="color: rgb(0, 0, 0); font-family: Arial, Verdana, sans-serif; font-size: 0.8em;">
+<p>Sehr geehrte Damen und Herren,</p>
 
+<p>bitte versenden Sie die Ware laut Lieferschein ${object.name} ${object.delivery_address_id.is_company and '('+object.delivery_address_id.name+', '+object.delivery_address_id.city+')' | safe or object.delivery_address_id.parent_id and '('+object.delivery_address_id.parent_id.name+', '+object.delivery_address_id.parent_id.city+')' | safe}.</p>
+
+<p>Bitte melden Sie Verz&ouml;gerungen oder sonstige Probleme an service@amamedis.de.</p>
+
+<p>${user.name and '('+user.name+')'|safe}</p>
+
+<p>${object.company_id.rml_footer | safe}</p>
+<!--p>${object.delivery_address_id.section_id and object.delivery_address_id.section_id.signature | safe or object.delivery_address_id.parent_id.section_id and object.delivery_address_id.parent_id.section_id.signature | safe or object.company_id.rml_footer | safe}</p--></div>
+            ]]></field>
+        </record>
     
         <!-- stock.dm.state -->
         <record model="stock.dm.state" id="dms10">
@@ -1040,28 +1070,34 @@
             <field name="active">True</field>
             <field name="partner_id">5299</field>
             <field name="product_id">12</field>
-            <field name="normal_price">0</field>
+            <field name="normal_price">5.50</field>
             <field name="res_model" ref="ama_delivery.model_stock_dhl_picking_unit"/>
+            <field name="product">V01PAK</field>
+            <field name="procedure">01</field>
         </record>
         <record model="delivery.carrier" id="dm2">
-            <field name="name">Weltpaket</field>
-            <field name="active">False</field>
+            <field name="name">DHL Paket International</field>
+            <field name="active" eval="False"/>
             <field name="partner_id">5299</field>
             <field name="product_id">12</field>
             <field name="normal_price">0</field>
             <field name="res_model" ref="ama_delivery.model_stock_dhl_picking_unit"/>
+            <field name="product">V53WPAK</field>
+            <field name="procedure">53</field>
         </record>
         <record model="delivery.carrier" id="dm3">
             <field name="name">DHL Europaket</field>
-            <field name="active">False</field>
+            <field name="active" eval="False"/>
             <field name="partner_id">5299</field>
             <field name="product_id">12</field>
             <field name="normal_price">0</field>
             <field name="res_model" ref="ama_delivery.model_stock_dhl_picking_unit"/>
+            <field name="product">V54EPAK</field>
+            <field name="procedure">54</field>
         </record>
         <record model="delivery.carrier" id="dm4">
             <field name="name">DHL Express National</field>
-            <field name="active">False</field>
+            <field name="active" eval="False"/>
             <field name="partner_id">5299</field>
             <field name="product_id">12</field>
             <field name="normal_price">0</field>
@@ -1069,7 +1105,7 @@
         </record>
         <record model="delivery.carrier" id="dm5">
             <field name="name">DHL Express International</field>
-            <field name="active">False</field>
+            <field name="active" eval="False"/>
             <field name="partner_id">5299</field>
             <field name="product_id">12</field>
             <field name="normal_price">0</field>
@@ -3435,5 +3471,45 @@
             <field name="text_en">The request cannot be edited. The request is probably already exported for processing.</field>
             <field name="text_de">Die Änderung des Auftrags kann nicht durchgeführt werden. Der Auftrag wurde ggf. bereits zur Verarbeitung weitergeleitet.</field>
         </record>
+        <record model="stock.dhl.status" id="status57">
+            <field name="code">500</field>
+            <field name="text_en">Service temporary not available</field>
+            <field name="text_de">Service vorübergehend nicht verfügbar</field>
+        </record>
+        <record model="stock.dhl.status" id="status58">
+            <field name="code">1000</field>
+            <field name="text_en">General error</field>
+            <field name="text_de">Ein allgemeiner Fehler ist aufgetreten. Bitte wenden Sie sich an Ihren Systemadministrator.</field>
+        </record>
+        <record model="stock.dhl.status" id="status59">
+            <field name="code">1001</field>
+            <field name="text_en">Authentication failure</field>
+            <field name="text_de">Der Nutzer des Webservice konnte nicht authentifiziert werden.</field>
+        </record>
+        <record model="stock.dhl.status" id="status60">
+            <field name="code">1050</field>
+            <field name="text_en">At least on shipment could not be deleted.</field>
+            <field name="text_de">Mindestens eine Senudng konnte nicht gelöscht werden.</field>
+        </record>
+        <record model="stock.dhl.status" id="status61">
+            <field name="code">1101</field>
+            <field name="text_en">Hard validation error occured.</field>
+            <field name="text_de">In der Sendung trat mindestens ein druckverhindernder Fehler auf. Bitte prüfen Sie Ihre Eingaben.</field>
+        </record>
+        <record model="stock.dhl.status" id="status62">
+            <field name="code">2000</field>
+            <field name="text_en">Unknown shipment number.</field>
+            <field name="text_de">Ihre Sendungsnummer ist unbekannt. Bitte prüfen Sie, ob die Sendungsnummer bereits abgeschlossen oder storniert wurde.</field>
+        </record>
+        <record model="stock.dhl.status" id="status63">
+            <field name="code">2010</field>
+            <field name="text_en">Shipment already deleted.</field>
+            <field name="text_de">Sendung wurde schon gelöscht.</field>
+        </record>
+        
+        <!-- Function call after installing the module -->
+        <function model="res.partner" name="_first_install"/>
+        <function model="stock.picking" name="_first_install"/>
+
     </data>
 </openerp>

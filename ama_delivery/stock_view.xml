@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+    
+        <record id="product_form" model="ir.ui.view">
+            <field name="name">product.template.dhl.delivery.form</field>
+                <field name="model">product.template</field>
+                <field name="inherit_id" ref="product.product_template_form_view"/>
+                <field name="arch" type="xml">
+                <field name="uom_id" position="after">
+                    <field name="container_size"/>
+                </field>
+            </field>
+        </record>
+    
         <record id="ama_del_stock_location_route_form_view" model="ir.ui.view">
             <field name="name">ama.stock.location.route.form</field>
             <field name="model">stock.location.route</field>
@@ -61,14 +73,9 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <page string="Additional Info" position="after">
-                    <page string="Automation">
-                        <group>
-                            <field name="auto_stock_carrier"/>
-                            <!--field name="auto_invoice"/-->
-                        </group>
-                    </page>
-                </page>
+                <xpath expr="//form/header/field[@name='state']" position="before">
+                    <button name="action_delivery_note_send" class="oe_highlight" string="E-Mail Lieferschein (Lieferant/Lager)" groups="stock.group_stock_user" type="object" attrs="{'invisible':[('state','!=','done')]}"/>
+                </xpath>
                 <field name="move_lines" position="after">
                     <group class="oe_subtotal_footer oe_right" colspan="2" name="stock_total">
                         <button name="button_dummy" states="draft,waiting,confirmed,partially_available,assigned" string="(Aktualisieren)" type="object" class="oe_edit_only oe_link"/>
@@ -76,57 +83,29 @@
                 </field>
                 <field name="carrier_tracking_ref" position="after">
                     <field name="carrier_label"/>
+                    <field name="carrier_status_code"/>
+                    <field name="carrier_status_message"/>
                 </field>
-                <field name="note" position="before">
-                    <field name="dhl_check" invisible="1"/>
+                <field name="delivery_address_id" position="after">
                     <field name="del_is_company" invisible="1"/>
-                    <field name="del_use_parent_address" invisible="1"/>
-                    <group attrs="{'invisible':[('dhl_check', '!=', True)]}">
-                        <group string="Adressdaten aus Lieferkontakt">
-                            <div>
-                                <field name="del_name1_company" attrs="{'invisible':[('del_is_company', '!=', True)]}"/>
-                                <field name="del_name1_person" attrs="{'invisible':[('del_is_company', '=', True)]}"/>
-                                <field name="del_name2_company" attrs="{'invisible':[('del_is_company', '!=', True)]}"/>
-                                <div attrs="{'invisible':[('del_is_company', '=', True)]}">
-                                    <field name="del_name2_person_first_name" class="oe_inline"/>
-                                    <field name="del_name2_person_name" class="oe_inline"/>
-                                </div>
-                                <div>
-                                    <field name="del_streetName" class="oe_inline"/>
-                                    <field name="del_streetNumber" class="oe_inline"/>
-                                </div>
-                                <div>
-                                    <field name="del_zip" class="oe_inline"/>
-                                    <field name="del_city" class="oe_inline"/>
-                                </div>
-                                <field name="del_phone"/>
-                                <field name="del_email"/>
-                            </div>
-                        </group>
-                        <group string="DHL-formatierte Adresse">
-                            <div>
-                                <field name="dhl_name1"/>
-                                <field name="dhl_name2"/>
-                                <div>
-                                    <!--field name="dhl_streetName" class="oe_inline" colors="green:dhl_streetName==del_streetName"/>
-                                    <field name="dhl_streetNumber" class="oe_inline" colors="red:dhl_streetNumber!=del_streetNumber"/-->
-                                    <field name="dhl_streetName" class="oe_inline" attrs="{'invisible':['&amp;',('del_is_company', '=', False),('del_use_parent_address', '=', True)]}"/>
-                                    <field name="dhl_streetNumber" class="oe_inline" attrs="{'invisible':['&amp;',('del_is_company', '=', False),('del_use_parent_address', '=', True)]}"/>
-                                    <field name="dhl_streetName_parent" class="oe_inline" attrs="{'invisible':['|',('del_is_company', '=', True),('del_use_parent_address', '=', False)]}"/>
-                                    <field name="dhl_streetNumber_parent" class="oe_inline" attrs="{'invisible':['|',('del_is_company', '=', True),('del_use_parent_address', '=', False)]}"/>
-                                </div>
-                                <div>
-                                    <field name="dhl_zip" class="oe_inline" attrs="{'invisible':['&amp;',('del_is_company', '=', False),('del_use_parent_address', '=', True)]}"/>
-                                    <field name="dhl_city" class="oe_inline" attrs="{'invisible':['&amp;',('del_is_company', '=', False),('del_use_parent_address', '=', True)]}"/>
-                                    <field name="dhl_zip_parent" class="oe_inline" attrs="{'invisible':['|',('del_is_company', '=', True),('del_use_parent_address', '=', False)]}"/>
-                                    <field name="dhl_city_parent" class="oe_inline" attrs="{'invisible':['|',('del_is_company', '=', True),('del_use_parent_address', '=', False)]}"/>
-                                </div>
-                                <field name="dhl_phone"/>
-                                <field name="dhl_email"/>
-                            </div>
-                        </group>
-                    </group>
+                    <field name="del_name1_parent" string="Versandname 1" attrs="{'invisible':[('del_is_company', '=', True)]}"/>
+                    <field name="del_name2_parent" string="Versandname 2" attrs="{'invisible':[('del_is_company', '=', True)]}"/>
+                    <field name="del_name1" string="Versandname 1/3"/>
+                    <field name="del_name2" string="Versandname 2" attrs="{'invisible':[('del_is_company', '=', False)]}"/>
                 </field>
+                <field name="origin" position="after">
+                    <field name="auto_stock_carrier"/>
+                    <field name="auto_stock"/>
+                    <field name="auto_invoice"/>
+                    <field name="mail_sent"/>
+                    <field name="del_date"/>
+                    <field name="delivery_done"/>
+                </field>
+                <page string="Additional Info" position="after">
+                    <page string="Sendungen">
+                        <field name="stock_dm_picking_unit_ids"/>
+                    </page>
+                </page>
             </field>    
         </record>
     </data>

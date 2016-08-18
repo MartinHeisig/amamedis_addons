@@ -2,7 +2,7 @@
 <openerp>
     <data>
     
-        <record model="ir.ui.view" id="stock_dm_picking_form">
+        <!--record model="ir.ui.view" id="stock_dm_picking_form">
             <field name="name">stock.dm.picking.form</field>
             <field name="model">stock.picking</field>
             <field name="priority">17</field>
@@ -14,7 +14,7 @@
                     </page>
                 </page>
             </field>    
-        </record>
+        </record-->
 
         <record model="ir.ui.view" id="stock_dm_state_tree_view">
             <field name="name">stock.dm.state.tree</field>
@@ -54,6 +54,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="stock_picking_id"/>
+                    <field name="order_date"/>
                     <field name="delivery_carrier_id"/>
                     <field name="partner_id"/>
                     <field name="delivery_carrier_res_model"/>
@@ -80,6 +81,7 @@
                             <field name="name"/>
                             <field name="code"/>
                             <field name="stock_picking_id"/>
+                            <field name="order_date"/>
                             <field name="partner_id"/>
                             <field name="delivery_carrier_id"/>
                             <field name="delivery_carrier_res_model"/>

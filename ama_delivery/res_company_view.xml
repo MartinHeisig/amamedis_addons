@@ -10,33 +10,65 @@
                     <page string="Cloud">
                         <group string="OwnCloud">
                             <group>
-                                <field name="oc_user"/>
-                                <field name="oc_password" password="True"/>
+                                <field name="del_oc_user"/>
+                                <field name="del_oc_password" password="True"/>
                             </group>
                             <group>
-                                <field name="oc_local_dir"/>
-                                <field name="oc_remote_dir"/>
+                                <field name="del_oc_local_dir"/>
+                                <field name="del_oc_remote_dir"/>
                             </group>
                         </group>
                     </page>
                     <page string="DHL">
-                        <group string="Produktionsbetrieb" col="4">
+                        <group string="Zugangsdaten" col="4">
+                            <group string="Produktionsbetrieb">
+                                <field name="ekp_dhl"/>
+                                <field name="partner_id_dhl"/>
+                                <field name="cig_user_dhl"/>
+                                <field name="cig_pass_dhl"/>
+                                <field name="intraship_user_dhl"/>
+                                <field name="intraship_pass_dhl"/>
+                                <field name="cig_user_dhl2"/>
+                                <field name="cig_pass_dhl2"/>
+                                <field name="gkp_user_dhl"/>
+                                <field name="gkp_pass_dhl"/>
+                                <field name="zt_user_dhl"/>
+                                <field name="zt_pass_dhl"/>
+                                <field name="endpoint_order_dhl"/>
+                                <field name="endpoint_track_dhl"/>
+                            </group>
+                            <group string="Testbetrieb">
+                                <field name="ekp_dhl_test"/>
+                                <field name="partner_id_dhl_test"/>
+                                <field name="cig_user_dhl_test"/>
+                                <field name="cig_pass_dhl_test"/>
+                                <field name="intraship_user_dhl_test"/>
+                                <field name="intraship_pass_dhl_test"/>
+                                <field name="zt_user_dhl_test"/>
+                                <field name="zt_pass_dhl_test"/>
+                                <field name="endpoint_order_dhl_test"/>
+                                <field name="endpoint_track_dhl_test"/>
+                                <field name="sandbox_dhl"/>
+                                <field name="api_order_dhl"/>
+                            </group>
+                        </group>
+                        <!--group string="Produktionsbetrieb" col="4">
                             <group string="DHL Geschäftskundenversand">
                                 <group>
                                     <field name="dhl_order_endpoint"/>
                                     <field name="dhl_order_ekp"/>
                                     <field name="dhl_order_partner_id"/>
                                     <field name="dhl_order_intraship_user"/>
-                                    <!--field name="dhl_order_intraship_password" password="True"/-->
-                                    <field name="dhl_order_intraship_password"/>
+                                    <field name="dhl_order_intraship_password" password="True"/>
+                                    <field name="dhl_order_api"/>
+                                    <field name="dhl_sandbox"/>
                                 </group>
                             </group>
                             <group string="DHL Sendungsverfolgung">
                                 <group>
                                     <field name="dhl_track_endpoint"/>
                                     <field name="dhl_track_appname"/>
-                                    <!--field name="dhl_track_password" password="True"/-->
-                                    <field name="dhl_track_password"/>
+                                    <field name="dhl_track_password" password="True"/>
                                     <field name="dhl_track_cig_user"/>
                                     <field name="dhl_track_cig_pass"/>
                                 </group>
@@ -49,9 +81,7 @@
                                     <field name="dhl_order_ekp_test"/>
                                     <field name="dhl_order_partner_id_test"/>
                                     <field name="dhl_order_intraship_user_test"/>
-                                    <!--field name="dhl_order_intraship_password_test" password="True"/-->
-                                    <field name="dhl_order_intraship_password_test"/>
-                                    <field name="dhl_test"/>
+                                    <field name="dhl_order_intraship_password_test" password="True"/>
                                 </group>
                             </group>
                             <group string="DHL Sendungsverfolgung">
@@ -60,11 +90,10 @@
                                     <field name="dhl_track_appname_test"/>
                                     <field name="dhl_track_password_test"/>
                                     <field name="dhl_track_cig_user_test"/>
-                                    <!--field name="dhl_track_cig_pass_test" password="True"/-->
-                                    <field name="dhl_track_cig_pass_test"/>
+                                    <field name="dhl_track_cig_pass_test" password="True"/>
                                 </group>
                             </group>
-                        </group>
+                        </group-->
                     </page>
                 </page>
             </field>

@@ -16,9 +16,18 @@ import HTMLParser
 
 import constants_dhl
 
+from suds.client import Client
+from suds.transport.https import HttpAuthenticated
+from suds.plugin import MessagePlugin
+from suds.wsse import *
+
 h = HTMLParser.HTMLParser()
 
 _logger = logging.getLogger(__name__)
+
+logging.getLogger('suds').setLevel(logging.WARNING) #WARNING
+logging.getLogger('suds.client').setLevel(logging.DEBUG)
+logging.getLogger('suds.transport').setLevel(logging.DEBUG)
 
 
 class stock_dhl_picking_unit(models.Model):
@@ -26,11 +35,11 @@ class stock_dhl_picking_unit(models.Model):
     '''DHL-gebrandete Sendung'''
     
     name = fields.Char(string='Name', help='Sendungsnummer', required=True)
-    stock_dhl_ice_id = fields.Many2one('stock.dhl.ice', ondelete='restrict', string="ICE", compute='_compute_ice', readonly=True, store=True)
+    stock_dhl_ice_id = fields.Many2one('stock.dhl.ice', ondelete='restrict', string="ICE", readonly=True, store=True) #, compute='_compute_ice'
     stock_dhl_ric_id = fields.Many2one('stock.dhl.ric', ondelete='restrict', string="RIC", compute='_compute_ric', readonly=True, store=True)
     stock_dhl_ttpro_id = fields.Many2one('stock.dhl.ttpro', ondelete='restrict', string="TTpro", compute='_compute_ttpro', readonly=True, store=True)
     stock_dm_picking_unit_id = fields.Many2one('stock.dm.picking.unit', string='Sendung', ondelete='restrict', help='Zugehoerige interne Sendung', store=True,) # required=True)
-    stock_dm_state_id = fields.Many2one('stock.dm.state', string='Status der Lieferung', related='stock_dhl_ice_id.stock_dm_state_id', ondelete='restrict', readonly=True, store=True)
+    stock_dm_state_id = fields.Many2one('stock.dm.state', string='Status der Lieferung', ondelete='restrict', readonly=True, store=True, default=lambda self: self.env['stock.dm.state'].search([('sequence','=','10')], limit=1)) #, compute='_compute_stock_dm_state_id'
     image = fields.Binary(string="Signature", compute='_compute_image', readonly=True, store=True)
     stock_dhl_event_ids = fields.One2many(comodel_name='stock.dhl.event', inverse_name='stock_dhl_picking_unit_id', string="Events")
     stock_dhl_event_ids_2 = fields.One2many(comodel_name='stock.dhl.event', inverse_name='stock_dhl_picking_unit_id', string="DHL Events")
@@ -38,6 +47,9 @@ class stock_dhl_picking_unit(models.Model):
     error = fields.Char(string='Fehlermeldung')
     error_occurred = fields.Boolean(default=False)
     stock_dhl_status_id = fields.Many2one('stock.dhl.status', ondelete='restrict', string="DHL Status", compute='_compute_status', readonly=True, store=True)
+    auto_tracking = fields.Boolean(string='Automatische Sendungsverfolgung', default=True, help='Legt fest ob die Sendung weiterhin verfolgt wird')
+    error_counter = fields.Integer(string='Anzahl Tracking-Fehler', default=False, help='Erreicht der Zaehler 5 wird nicht mehr automatisch getrackt.')
+    ownership = fields.Boolean(string='Eigene Sendung', default=False, help='Legt fest, mit welcher Methode die Sendung verfolgt wird, da es hier Unterschiede zwischen eigenen und fremden Sendungen gibt.')
     
     stock_dhl_ice_code = fields.Char(related='stock_dhl_ice_id.code', string="ICE-Code", readonly=True)
     stock_dhl_ice_text = fields.Char(related='stock_dhl_ice_id.text', string="ICE-Text", readonly=True)
@@ -116,11 +128,33 @@ class stock_dhl_picking_unit(models.Model):
              "Sendungen sind einmalig und koennen nicht dupliziert werden.\nFalls es sich um eine regulaere Sendung handelt, pruefen Sie ob Ihr Ihnen zugewiesener Nummernpool zu klein ist."),
             ]
     
-    @api.multi
+    '''@api.multi
     @api.depends('dhl_ice')
     def _compute_ice(self):
         for record in self:
             record.stock_dhl_ice_id = self.env['stock.dhl.ice'].search([('code','=',record.dhl_ice)], limit=1)
+            _logger.debug(len(record.stock_dm_state_id))
+            _logger.debug(record.stock_dm_state_id)
+            if not record.stock_dm_state_id or record.stock_dhl_ice_id.stock_dm_state_id.sequence > record.stock_dm_state_id.sequence:
+                #record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
+                record.write({'stock_dm_state_id': record.stock_dhl_ice_id.stock_dm_state_id.id})
+                _logger.debug('Hier bin ich')
+                _logger.debug(record.stock_dm_state_id)'''
+    
+    '''@api.multi
+    @api.onchange('dhl_ice')
+    def _onchange_dhl_ice(self):
+        for record in self:
+            _logger.debug('Neuer ICE-Code?')
+            _logger.debug(record.stock_dhl_ice_id)
+            record.stock_dhl_ice_id = self.env['stock.dhl.ice'].search([('code','=',self.dhl_ice)], limit=1)
+            _logger.debug(record.stock_dhl_ice_id)
+            if record.stock_dhl_ice_id and record.stock_dhl_ice_id.stock_dm_state_id:
+                if not record.stock_dm_state_id:
+                    record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
+                else:
+                    if record.stock_dm_state_id.sequence and (record.stock_dm_state_id.sequence == 70 or (record.stock_dhl_ice_id.stock_dm_state_id.sequence and record.stock_dm_state_id.sequence < record.stock_dhl_ice_id.stock_dm_state_id.sequence)):
+                        record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id'''
 
     @api.multi
     @api.depends('dhl_ric')
@@ -148,6 +182,15 @@ class stock_dhl_picking_unit(models.Model):
             if record.dhl_code:
                 record.stock_dhl_status_id = self.env['stock.dhl.status'].search([('code','=',record.dhl_code)], limit=1)
 
+    '''@api.multi
+    @api.depends('stock_dhl_ice_id')
+    def _compute_stock_dm_state_id(self):
+        for record in self:
+            if not record.stock_dm_state_id or record.stock_dhl_ice_id.stock_dm_state_id.sequence > record.stock_dm_state_id.sequence:
+                _logger.debug(record.stock_dm_state_id)
+                record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
+                _logger.debug(record.stock_dm_state_id)'''
+                
     @api.multi
     @api.onchange('stock_dm_state_id')
     def _onchange_stock_dm_state_id(self):
@@ -164,6 +207,16 @@ class stock_dhl_picking_unit(models.Model):
                     record.error = record.stock_dhl_status_id.name
                 else:
                     record.error = ''
+    
+    @api.multi
+    @api.onchange('error_counter')
+    def _onchange_error_counter(self):
+        for record in self:
+            _logger.debug('Bin ich hier?')
+            if record.error_counter >= 5:
+                record.auto_tracking = False
+            else:
+                record.auto_tracking = True
     
     '''@api.multi
     @api.onchange('stock_dm_picking_unit_id')
@@ -200,27 +253,29 @@ class stock_dhl_picking_unit(models.Model):
         for record in self:
         
             language_code = "de"
+            sleep_time = (record.stock_dm_picking_unit_id.stock_picking_id.company_id.sandbox_dhl and 10) or 1
             try:
                 piece_code = record.name
             except Exception as e:
                 raise e
-            test = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_test
+            test = record.stock_dm_picking_unit_id.stock_picking_id.company_id.sandbox_dhl
             if test:
-                endpoint = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_endpoint_test
-                appname = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_appname_test
-                password = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_password_test
-                cig_user = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_cig_user_test
-                cig_pass = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_cig_pass_test
+                endpoint = record.stock_dm_picking_unit_id.stock_picking_id.company_id.endpoint_track_dhl_test
+                appname = record.stock_dm_picking_unit_id.stock_picking_id.company_id.zt_user_dhl_test
+                password = record.stock_dm_picking_unit_id.stock_picking_id.company_id.zt_pass_dhl_test
+                cig_user = record.stock_dm_picking_unit_id.stock_picking_id.company_id.cig_user_dhl_test
+                cig_pass = record.stock_dm_picking_unit_id.stock_picking_id.company_id.cig_pass_dhl_test
             else:
-                endpoint = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_endpoint
-                appname = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_appname
-                password = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_password
-                cig_user = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_cig_user
-                cig_pass = record.stock_dm_picking_unit_id.stock_picking_id.company_id.dhl_track_cig_pass
+                endpoint = record.stock_dm_picking_unit_id.stock_picking_id.company_id.endpoint_track_dhl
+                appname = record.stock_dm_picking_unit_id.stock_picking_id.company_id.zt_user_dhl
+                password = record.stock_dm_picking_unit_id.stock_picking_id.company_id.zt_pass_dhl
+                cig_user = record.stock_dm_picking_unit_id.stock_picking_id.company_id.cig_user_dhl
+                cig_pass = record.stock_dm_picking_unit_id.stock_picking_id.company_id.cig_pass_dhl
                 
-            if record.dhl_delivery_event_flag != '1':
+            if record.dhl_delivery_event_flag != '1' and record.auto_tracking:
         
                 method = "d-get-piece-detail"
+                #method = "get-status-for-public-user"
                 xml_response = ''
                 xml_response_dict = ''
 
@@ -230,7 +285,9 @@ class stock_dhl_picking_unit(models.Model):
                 request += constants_dhl.LANGUAGE_CODE + '=\"' + language_code + '\" '
                 request += constants_dhl.REQUEST + '=\"' + method + '\" '
 
+                #request += '><data '
                 request += constants_dhl.PIECE_CODE + '=\"' + piece_code + '\"/>'
+                #request += '</data>'
                 
                 headers = {'Content-Type': 'text/xml'}
                 payload = {'xml': request}
@@ -246,11 +303,13 @@ class stock_dhl_picking_unit(models.Model):
                         _logger.info(xml_response)
                     else:
                         record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Fehler beim Tracking der DHL Sendung '" + str(record.name) + "'. Server sendet Statuscode " + str(r.status_code) + " mit Inhalt: '" + str(r.text) + "'."
                         _logger.error("Fehler beim Tracking der DHL Sendung '" + str(record.name) + "'. Server sendet Statuscode " + str(r.status_code) + " mit Inhalt: '" + str(r.text) + "'.")
 
                 except Exception as e:
                     record.error_occurred = True
+                    record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                     record.error = "Fehler beim Tracking der DHL Sendung '" + str(record.name) + "'. HTTP-Request fehlgeschlagen: " + str(e)
                     _logger.error("Fehler beim Tracking der DHL Sendung '" + str(record.name) + "'. HTTP-Request fehlgeschlagen: " + str(e))
 
@@ -263,11 +322,13 @@ class stock_dhl_picking_unit(models.Model):
                     
                     if record.dhl_code != '0':
                         record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.dhl_error = xml_response_dict['data']['@' + constants_dhl.ERROR]
                         record.error = record.dhl_error
                         _logger.error(record.dhl_code + ": " + xml_response_dict['data']['@' + constants_dhl.ERROR])
                     else:
                         record.error_occurred = False
+                        record.error_counter = False
                         record.error = ''
                         record.dhl_airway_bill_number = xml_response_dict['data']['data']['@' + constants_dhl.AIRWAY_BILL_NUMBER]
                         record.dhl_delivery_event_flag = xml_response_dict['data']['data']['@' + constants_dhl.DELIVERY_EVENT_FLAG]
@@ -324,7 +385,11 @@ class stock_dhl_picking_unit(models.Model):
                         record.dhl_status_timestamp = xml_response_dict['data']['data']['@' + constants_dhl.STATUS_TIMESTAMP]
                         record.dhl_upu = xml_response_dict['data']['data']['@' + constants_dhl.UPU]
 
-                        for dhl_event in xml_response_dict['data']['data']['data']['data']:
+                        eventlist = xml_response_dict['data']['data']['data']['data']
+                        if not isinstance(eventlist, list) and isinstance(eventlist, dict):
+                            eventlist = [eventlist]
+                        
+                        for dhl_event in eventlist:
                             count = self.env['stock.dhl.event'].search_count([('stock_dhl_picking_unit_id','=',record.id),('dhl_event_timestamp','=',dhl_event['@' + constants_dhl.EVENT_TIMESTAMP])])
                             if count == 0:
                                 self.env['stock.dhl.event'].create({
@@ -339,6 +404,15 @@ class stock_dhl_picking_unit(models.Model):
                                     'dhl_ruecksendung': dhl_event['@' + constants_dhl.RUECKSENDUNG],
                                     'dhl_standard_event_code': dhl_event['@' + constants_dhl.STANDARD_EVENT_CODE],
                                 })
+                        
+                        record.stock_dhl_ice_id = self.env['stock.dhl.ice'].search([('code','=',self.dhl_ice)], limit=1)
+                        if record.stock_dhl_ice_id and record.stock_dhl_ice_id.stock_dm_state_id:
+                            if not record.stock_dm_state_id:
+                                record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
+                            else:
+                                if record.stock_dm_state_id.sequence and (record.stock_dm_state_id.sequence == 70 or (record.stock_dhl_ice_id.stock_dm_state_id.sequence and record.stock_dm_state_id.sequence < record.stock_dhl_ice_id.stock_dm_state_id.sequence)):
+                                    record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
+                        
 
                 elif xml_response.find('<B>SIM:</B>') != -1:
                     try:
@@ -346,21 +420,24 @@ class stock_dhl_picking_unit(models.Model):
                         errorsplit2 = errorsplit1[1].split('</FONT>')
                         errormessage = errorsplit2[0].strip()
                         record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Abfrage lieferte Fehlermeldung: " + h.unescape(errormessage)
                         _logger.error("Abfragefehler Tracking(Details) für DHL-Sendung '" + str(record.name) + "'. Abfrage lieferte Fehlermeldung: " + str(errormessage))
                     except Exception as e:
                         record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Server sendet unübliche Fehlermeldung: " + h.unescape(xml_response)
                         _logger.error("Abfragefehler Tracking(Details) für DHL-Sendung '" + str(record.name) + "'. Server sendet unübliche Fehlermeldung: " + str(xml_response))
                 else:
                     record.error_occurred = True
+                    record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                     record.error = "Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response)
                     _logger.error("Abfragefehler Tracking(Details) für DHL-Sendung '" + str(record.name) + "'. Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response))
                     
-            time.sleep(10)
+            time.sleep(sleep_time)
             
             record.new_image_received = False
-            if not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE':
+            if not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE' and record.auto_tracking:
                 method = 'd-get-signature'
                 xml_response = ''
                 xml_response_dict = ''
@@ -386,14 +463,23 @@ class stock_dhl_picking_unit(models.Model):
                         xml_response = r.text
                         _logger.info(xml_response)
                     else:
+                        record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                        record.error = "Fehler beim Abrufen des POD der DHL Sendung '" + str(record.name) + "'. Server sendet Statuscode " + str(r.status_code) + " mit Inhalt: '" + str(r.text) + "'."
                         _logger.error("Fehler beim Abrufen des POD der DHL Sendung '" + str(record.name) + "'. Server sendet Statuscode " + str(r.status_code) + " mit Inhalt: '" + str(r.text) + "'.")
 
                 except Exception as e:
+                    record.error_occurred = True
+                    record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                    record.error = "Fehler beim Abrufen des POD der DHL Sendung '" + str(record.name) + "'. HTTP-Request fehlgeschlagen: " + str(e)
                     _logger.error("Fehler beim Abrufen des POD der DHL Sendung '" + str(record.name) + "'. HTTP-Request fehlgeschlagen: " + str(e))
 
 
                 if xml_response.startswith('<?xml'):
                     # XML parsen
+                    record.error_occurred = False
+                    record.error_counter = False
+                    record.error = ''
                     xml_response_dict = xmltodict.parse(xml_response)
 
                     record.dhl_image_event_date = xml_response_dict['data']['data']['@' + constants_dhl.EVENT_DATE]
@@ -407,40 +493,142 @@ class stock_dhl_picking_unit(models.Model):
                         errorsplit1 = xml_response.split('<B>SIM:</B>')
                         errorsplit2 = errorsplit1[1].split('</FONT>')
                         errormessage = errorsplit2[0].strip()
+                        record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                        record.error = "Abfrage lieferte Fehlermeldung (POD): " + h.unescape(errormessage)
                         _logger.error("Abfragefehler Tracking(POD) für DHL-Sendung '" + str(record.name) + "'. Abfrage lieferte Fehlermeldung: " + str(errormessage))
                     except Exception as e:
+                        record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                        record.error = "Server sendet unübliche Fehlermeldung (POD): " + h.unescape(xml_response)
                         _logger.error("Abfragefehler Tracking(POD)für DHL-Sendung '" + str(record.name) + "'. Server sendet unübliche Fehlermeldung: " + str(xml_response))
                 else:
+                    record.error_occurred = True
+                    record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                    record.error = "Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung (POD): " + str(xml_response)
                     _logger.error("Abfragefehler Tracking(POD) für DHL-Sendung '" + str(record.name) + "'. Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response))
                     
-                time.sleep(10)
+                time.sleep(sleep_time)
     
     @api.multi
     def action_delete(self):
         for record in self:
             if record.name:
                 company = record.stock_dm_picking_unit_id.stock_picking_id.company_id
-                # Check if sandbox is active
-                test = company.dhl_test and constants_dhl.TEST + '=True' or ''
-                # Delete shipment at DHL -  Call Java program
-                command = ["java", "-jar", "./dhl.jar"]
-                # Add arguments
-                arguments = [ constants_dhl.METHOD + "=deleteShipment",
-                        constants_dhl.SHIPPING_NUMBER + "=" + record.name,
-                        constants_dhl.INTRASHIP_USER + "=" + str(company.dhl_test and company.dhl_order_intraship_user_test or company.dhl_order_intraship_user),
-                        constants_dhl.INTRASHIP_PASSWORD + "=" + str(company.dhl_test and company.dhl_order_intraship_password_test or company.dhl_order_intraship_password) ]
-                if test != '':
-                    arguments.append(test)
-                _logger.info("Anfrage (Latin-1) an JAVA: " + str(arguments))
-                command.extend(arguments)
-                out, err = Popen(command, stdin=PIPE, stdout=PIPE,
-                        stderr=PIPE, cwd="/opt/dhl").communicate()
-                # Raise error if we get content in stderr
-                _logger.info("Antwort JAVA (DHL): " + str(out))
-                if err != '':
-                    _logger.error('DHL Versand', err)
-                    return
-            record.stock_dhl_ice_id = self.env['stock.dhl.ice'].search([('code','=','RCCLS')], limit=1)
+                
+                location = (company.sandbox_dhl and company.endpoint_order_dhl_test) or company.endpoint_order_dhl
+                cig_username = (company.sandbox_dhl and company.cig_user_dhl_test) or (company.api_order_dhl == '1' and company.cig_user_dhl) or (company.api_order_dhl == '2' and company.cig_user_dhl2)
+                cig_password = (company.sandbox_dhl and company.cig_pass_dhl_test) or (company.api_order_dhl == '1' and company.cig_pass_dhl) or (company.api_order_dhl == '2' and company.cig_pass_dhl2)
+                intraship_username = (company.sandbox_dhl and company.intraship_user_dhl_test) or (company.api_order_dhl == '1' and company.intraship_user_dhl) or (company.api_order_dhl == '2' and company.gkp_user_dhl)
+                intraship_password = (company.sandbox_dhl and company.intraship_pass_dhl_test) or (company.api_order_dhl == '1' and company.intraship_pass_dhl) or (company.api_order_dhl == '2' and company.gkp_pass_dhl)
+                
+                if company.api_order_dhl == '1':
+                    WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/1.0/geschaeftskundenversand-api-1.0.wsdl'
+                    client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False, plugins=[MyPlugin()])
+                    
+                    authentification = client.factory.create('ns1:AuthentificationType')
+                    authentification.user = intraship_username
+                    authentification.signature = intraship_password
+                    client.set_options(soapheaders=authentification)
+
+                    version = client.factory.create('cis:Version')
+                    version.majorRelease = u'1'
+                    version.minorRelease = u'0'
+                    
+                    shipmentNumbers = []
+                    shipmentNumber = client.factory.create('ns1:ShipmentNumberType')
+                    shipmentNumber.shipmentNumber = record.name
+                    shipmentNumbers.append(shipmentNumber)
+                    
+                    deleteShipmentResponse = False
+                    
+                    try:
+                        deleteShipmentResponse = client.service.deleteShipmentDD(version, shipmentNumbers)
+                    except Exception as e:
+                        record.error = str(e)
+                        _logger.error('Fehler DHL-Versand (Server)', unicode(e))
+                        raise Warning('Fehler DHL-Versand (Server)', unicode(e))
+                        
+                    if deleteShipmentResponse:
+                        _logger.debug(str(deleteShipmentResponse))
+                        if deleteShipmentResponse.Status is not None:
+                            statusCode = deleteShipmentResponse.Status and deleteShipmentResponse.Status.StatusCode and str(deleteShipmentResponse.Status.StatusCode)
+                            statusMessage = deleteShipmentResponse.Status and deleteShipmentResponse.Status.StatusMessage and str(deleteShipmentResponse.Status.StatusMessage)
+                            record.dhl_code = statusCode
+                            _logger.debug('Request (Delete) Nummer %s ergab den Statuscode %s mit der Nachricht %s' % (record.name, statusCode, statusMessage))
+                            if statusCode == 0:
+                                record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','80')], limit=1)
+                                record.error_occurred = False
+                                record.error_counter = False
+                                record.error = ''
+                            else:
+                                #record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','70')], limit=1)
+                                record.error_occurred = True
+                                record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                                record.error = 'Request (Delete) Nummer %s ergab den Statuscode %s mit der Nachricht %s' % (record.name, statusCode, statusMessage)
+                                _logger.error('Request (Delete) Nummer %s ergab den Statuscode %s mit der Nachricht %s' % (record.name, statusCode, statusMessage))
+                                raise Warning('Request (Delete) Nummer %s ergab den Statuscode %s mit der Nachricht %s' % (record.name, statusCode, statusMessage))
+                    else:
+                        #record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','70')], limit=1)
+                        record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                        record.error = 'Request (Delete) Nummer %s ergab kein Ergebnis.' % (record.name)
+                        _logger.error('Request (Delete) Nummer %s ergab kein Ergebnis.' % (record.name))
+                        raise Warning('Request (Delete) Nummer %s ergab kein Ergebnis.' % (record.name))
+                
+                
+                elif company.api_order_dhl == '2':
+                    WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.1/geschaeftskundenversand-api-2.1.wsdl'
+                    client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False)
+                    
+                    authentification = client.factory.create('cis:AuthentificationType')
+                    authentification.user = intraship_username
+                    authentification.signature = intraship_password
+                    client.set_options(soapheaders=authentification)
+
+                    version = client.factory.create('ns1:Version')
+                    version.majorRelease = u'2'
+                    version.minorRelease = u'1'
+                    
+                    shipmentNumbers = []
+                    shipmentNumbers.append(Element('cis:shipmentNumber').setText(record.name))
+                    
+                    deleteShipmentOrderResponse = False
+                    
+                    try:
+                        deleteShipmentOrderResponse = client.service.deleteShipmentOrder(version, shipmentNumbers)
+                    except Exception as e:
+                        record.error = str(e)
+                        _logger.error('Fehler DHL-Versand (Server)', unicode(e))
+                        raise Warning('Fehler DHL-Versand (Server)', unicode(e))
+                        
+                    if deleteShipmentOrderResponse:
+                        _logger.debug(str(deleteShipmentOrderResponse))
+                        if deleteShipmentOrderResponse.Status is not None:
+                            statusCode = deleteShipmentOrderResponse.Status and deleteShipmentOrderResponse.Status.statusCode and str(deleteShipmentOrderResponse.Status.statusCode)
+                            statusMessage = deleteShipmentOrderResponse.Status and deleteShipmentOrderResponse.Status.statusMessage and deleteShipmentOrderResponse.Status.statusMessage[0]
+                            record.dhl_code = statusCode
+                            _logger.debug('Request (Delete) Nummer %s ergab den Statuscode %s mit der Nachricht %s' % (record.name, statusCode, statusMessage))
+                            if statusCode == 0:
+                                record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','80')], limit=1)
+                                record.error_occurred = False
+                                record.error_counter = False
+                                record.error = ''
+                            else:
+                                #record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','70')], limit=1)
+                                record.error_occurred = True
+                                record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                                record.error = 'Request (Delete) Nummer %s ergab den Statuscode %s mit der Nachricht %s' % (record.name, statusCode, statusMessage)
+                                _logger.error('Request (Delete) Nummer %s ergab den Statuscode %s mit der Nachricht %s' % (record.name, statusCode, statusMessage))
+                                raise Warning('Request (Delete) Nummer %s ergab den Statuscode %s mit der Nachricht %s' % (record.name, statusCode, statusMessage))
+                    else:
+                        #record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','70')], limit=1)
+                        record.error_occurred = True
+                        record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
+                        record.error = 'Request (Delete) Nummer %s ergab kein Ergebnis.' % (record.name)
+                        _logger.error('Request (Delete) Nummer %s ergab kein Ergebnis.' % (record.name))
+                        raise Warning('Request (Delete) Nummer %s ergab kein Ergebnis.' % (record.name))
+                
         return
     
     # Override delete method, so that shipment is deleted at DHL too.
@@ -453,6 +641,20 @@ class stock_dhl_picking_unit(models.Model):
             super(stock_dhl_picking_unit, record).unlink()
         return
 
+        
+class MyPlugin(MessagePlugin):
+
+    def marshalled(self, context):
+        #_logger.debug('Marshalled')
+        
+        for body_element in context.envelope.childAtPath('Body'):
+            #_logger.debug(body_element.name)
+            if body_element.name == 'DeleteShipmentDDRequest':
+                for element in body_element:
+                    #_logger.debug(element.name)
+                    if element.name == 'Version':
+                        element.setPrefix('ns0')
+                                                
 
 class stock_dhl_ice(models.Model):
     _name = 'stock.dhl.ice'
@@ -661,10 +863,3 @@ class stock_dhl_event(models.Model):
                     # record.event_date = datetime.strptime(record.dhl_event_timestamp, '%d.%m.%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
                 except ValueError:
                     record.event_date = False
-            
-            
-            '''split_date_time = record.dhl_event_timestamp.split(' ')
-            split_day_month_year = split_date_time[0].split('.')
-            combine_year_month_day = split_day_month_year[2] + "-" + split_day_month_year[1] + "-" + split_day_month_year[0]
-            combine_date_time = combine_year_month_day + " " + split_date_time[1] + ":00"
-            record.event_date = fields.Datetime.from_string(combine_date_time)'''

@@ -6,24 +6,14 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <field name="zip" position="attributes">
-                    <attribute name="on_change">_validate_zip(zip)</attribute>
+                <field name="parent_id" position="after">
+                    <field name="del_name1"/>
+                    <field name="del_name2" attrs="{'invisible':[('is_company', '=', False)]}"/>
                 </field>
-                <page string="Contacts" position="after">
-                    <page string="DHL">
+                <page name="sales_purchases" position="before">
+                    <page string="E-Mail">
                         <group>
-                            <field name="dhl_name1"/>
-                            <field name="dhl_name2"/>
-                            <field name="dhl_streetName" attrs="{'invisible':[('use_parent_address', '!=', False)]}"/>
-                            <field name="dhl_streetNumber" attrs="{'invisible':[('use_parent_address', '!=', False)]}"/>
-                            <field name="dhl_zip" attrs="{'invisible':[('use_parent_address', '!=', False)]}"/>
-                            <field name="dhl_city" attrs="{'invisible':[('use_parent_address', '!=', False)]}"/>
-                            <!--field name="dhl_streetName"/>
-                            <field name="dhl_streetNumber"/>
-                            <field name="dhl_zip"/>
-                            <field name="dhl_city"/-->
-                            <field name="dhl_phone" widget="phone"/>
-                            <field name="dhl_email"/>
+                            <field name="mail_template_stock_picking"/>
                         </group>
                     </page>
                 </page>

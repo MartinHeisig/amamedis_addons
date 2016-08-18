@@ -23,10 +23,15 @@
         'base',
         'base_phone',
         'delivery',
+        'email_template',
         'partner_street_number',
         'purchase_transport_multi_address',
+        'quotation_split',
         'sale_stock',
         'stock',
+        'stock_dropshipping',
+        #'dhl_delivery',
+        #'release_quantity',
     ],
 
     # always loaded

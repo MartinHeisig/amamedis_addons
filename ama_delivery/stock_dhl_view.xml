@@ -220,6 +220,9 @@
                     <field name="stock_dhl_ice_text"/>
                     <field name="error"/>
                     <field name="error_occurred"/>
+                    <field name="error_counter"/>
+                    <field name="auto_tracking"/>
+                    <field name="ownership"/>
                 </tree>
             </field>
         </record>
@@ -232,8 +235,10 @@
                     <header>
                         <button name="tracking" type="object"
                                 string="Track&amp;Trace"/>
+                        <!--button name="action_delete" type="object"
+                                string="Stornieren"/-->
                         <button name="action_delete" type="object"
-                                string="Stornieren"/>
+                                string="Stornieren" attrs="{'invisible': [('stock_dm_state_id','!=',1)]}"/>
                         <field name="stock_dm_state_id" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -249,10 +254,13 @@
                             <!--field name="res_company_id"/-->
                         </group>
                         <group string="States">
+                            <field name="ownership"/>
                             <field name="stock_dhl_status_id"/>
                             <field name="stock_dhl_status_text"/>
                             <field name="error"/>
                             <field name="error_occurred"/>
+                            <field name="error_counter"/>
+                            <field name="auto_tracking"/>
                             <!--field name="stock_dm_id"/-->
                             <!--field name="stock_dm_state_id"/-->
                             <field name="stock_dhl_ice_id"/>
