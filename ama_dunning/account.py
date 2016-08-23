@@ -178,7 +178,7 @@ class ama_dun_mail_compose_message(models.Model):
         if context.get('default_model') == 'account.invoice' and \
                 context.get('default_res_id') and context.get('mark_reminder_as_sent'):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])
-            invoice = invoice.with_context(mail_post_autofollow=True)
+            #invoice = invoice.with_context(mail_post_autofollow=True)
             # _logger.info(str(context['mark_reminder_as_sent']))
             if context['mark_reminder_as_sent'] == 'ze1':
                 invoice.write({'reminder_sent_ze1': True})
