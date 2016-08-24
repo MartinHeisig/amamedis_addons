@@ -46,5 +46,5 @@ class amamedis_base_stock(models.Model):
             else:
                 record.orig_order = False
     
-    orig_order = fields.Many2one('sale.order', string='Originalauftrag', compute=_get_origin, default=False)
+    orig_order = fields.Many2one('sale.order', string='Originalauftrag', compute='_get_origin', store=True, default=False)
         
