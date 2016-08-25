@@ -136,13 +136,16 @@ class mail_thread(models.Model):
         if 'References' in msg_txt:
             msg_txt.replace_header('References', '')
             
+        #_logger.debug('CT: ' + msg_txt.get_content_type())
+            
         # Fix to avoid the auto-pass of bounced mails
         if 'Content-Type' in msg_txt:
-            if msg_txt['Content-Type'].startswith('multipart/report;'):
-                _logger.debug(msg_txt['Content-Type'])
-                msg_txt.replace_header('Content-Type', 'multipart/mixed;' + str(msg_txt['Content-Type'].split(';')[-1:][0])) #multipart/mixed; 
+            if msg_txt.get_content_type() == 'multipart/report':
+                _logger.debug(msg_txt.get_content_type())
+                msg_txt.set_type('multipart/mixed')
+                #msg_txt.replace_header('Content-Type', 'multipart/mixed;' + str(msg_txt['Content-Type'].split(';')[-1:][0])) #multipart/mixed; 
                 save_original = True
-                _logger.debug(msg_txt['Content-Type'])
+                _logger.debug(msg_txt.get_content_type())
         
         if 'From' in msg_txt:
             if 'mailer-daemon' in msg_txt['From'].lower():
@@ -153,6 +156,11 @@ class mail_thread(models.Model):
                 msg_txt.replace_header('From', 'mailer_daemon@' + str(msg_txt['From'].split('@')[-1:][0]))
                 save_original = True
                 _logger.debug(msg_txt['From'])
+        
+        '''i = 0
+        for item in msg_txt.walk():
+            _logger.debug(str(i) + ": " + str(item))
+            i+=1'''
                     
         # parse the message, verify we are not in a loop by checking message_id is not duplicated
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
