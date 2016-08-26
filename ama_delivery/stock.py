@@ -87,6 +87,9 @@ class ama_del_stock_picking(models.Model):
                 line.release_quantity_check = True
                 line.release_quantity_value = line.release_quantity
                 
+            self.env['stock.picking'].search([])._get_origin()
+            self.env['stock.picking'].search([])._compute_date_done()
+                
             dhl_ids = self.env[model.model].search([])
             for id in dhl_ids:
                 if id.name and not self.env['stock.dhl.picking.unit'].search([('name','=',id.name)]):
@@ -196,14 +199,23 @@ class ama_del_stock_picking(models.Model):
             if record.state != 'done':
                 record.delivery_done = False
             else:
-                if not record.stock_dm_picking_unit_ids:
+                if record.del_date <= fields.Date.today():
+                    record.delivery_done = True
+                else:
+                    if record.stock_dm_picking_unit_ids and all(pu.stock_dm_state_id and pu.stock_dm_state_id.sequence in [50, 80] for pu in record.stock_dm_picking_unit_ids):
+                        record.delivery_done = True
+                    else:
+                        record.delivery_done = False
+                    
+                    
+                '''if not record.stock_dm_picking_unit_ids:
                     record.delivery_done = True
                 else:
                     record.delivery_done = True
                     for pu in record.stock_dm_picking_unit_ids:
                         if not pu.stock_dm_state_id or (pu.stock_dm_state_id and pu.stock_dm_state_id.sequence not in [50, 80]):
                             record.delivery_done = False
-                            break
+                            break'''
             
     
     def action_delivery_note_send(self, cr, uid, ids, context=None):
@@ -285,7 +297,7 @@ class mail_compose_message(models.Model):
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
         if context.get('default_model') == 'stock.picking' and context.get('default_res_id') and context.get('mark_dn_as_sent'):
-            context = dict(context, mail_post_autofollow=True)
+            #context = dict(context, mail_post_autofollow=True)
             self.pool.get('stock.picking').browse(cr, uid, context['default_res_id'], context=context).mail_sent = True
             #self.pool.get('sale.order').signal_workflow(cr, uid, [context['default_res_id']], 'quotation_sent')
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)

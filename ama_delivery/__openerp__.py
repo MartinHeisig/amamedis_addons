@@ -30,8 +30,8 @@
         'sale_stock',
         'stock',
         'stock_dropshipping',
-        #'dhl_delivery',
-        #'release_quantity',
+        'dhl_delivery',
+        'release_quantity',
     ],
 
     # always loaded
