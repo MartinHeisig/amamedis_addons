@@ -405,7 +405,7 @@ class stock_dhl_picking_unit(models.Model):
                                     'dhl_standard_event_code': dhl_event['@' + constants_dhl.STANDARD_EVENT_CODE],
                                 })
                         
-                        record.stock_dhl_ice_id = self.env['stock.dhl.ice'].search([('code','=',self.dhl_ice)], limit=1)
+                        record.stock_dhl_ice_id = self.env['stock.dhl.ice'].search([('code','=',record.dhl_ice)], limit=1)
                         if record.stock_dhl_ice_id and record.stock_dhl_ice_id.stock_dm_state_id:
                             if not record.stock_dm_state_id:
                                 record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
