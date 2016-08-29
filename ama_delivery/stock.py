@@ -7,6 +7,8 @@ from openerp.tools.translate import _
 from math import ceil
 from subprocess import Popen, PIPE
 
+import sys
+
 import urllib
 import PyPDF2
 import base64
@@ -23,12 +25,15 @@ from suds.wsse import *
 
 import constants_dhl
 
+reload(sys)
+sys.setdefaultencoding('iso-8859-1')
+
 _logger = logging.getLogger(__name__)
 
 # logging.basicConfig(level=logging.NOTSET)
 
 logging.getLogger('suds').setLevel(logging.WARNING) #WARNING
-logging.getLogger('suds.client').setLevel(logging.DEBUG)
+logging.getLogger('suds.client').setLevel(logging.DEBUG) #DEBUG
 logging.getLogger('suds.transport').setLevel(logging.DEBUG)
 
 class ama_cs_product_template(models.Model):
@@ -513,7 +518,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
 
                             company_r_cis = client.factory.create('ns1:Company')
                             company_r_cis.name1 = (not recipient.is_company and recipient.parent_id.del_name1) or recipient.del_name1
-                            company_r_cis.name2 = ((not recipient.is_company and recipient.parent_id.del_name2) or recipient.del_name1) or recipient.del_name2 or ''
+                            company_r_cis.name2 = (not recipient.is_company and (recipient.parent_id.del_name2 or recipient.del_name1)) or recipient.del_name2 or ''
 
                             company_r = client.factory.create('ns0:Company')
                             company_r.Company = company_r_cis
@@ -643,8 +648,8 @@ class ama_del_stock_transfer_details(models.TransientModel):
                         client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False, plugins=[MyPlugin()])
                     
                         authentification = client.factory.create('cis:AuthentificationType')
-                        authentification.user = str(intraship_username)
-                        authentification.signature = str(intraship_password)
+                        authentification.user = intraship_username.encode('iso-8859-1')
+                        authentification.signature = intraship_password.encode('iso-8859-1')
                         client.set_options(soapheaders=authentification)
 
                         version = client.factory.create('ns1:Version')
@@ -660,25 +665,27 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             shipmentItem.weightInKG = u'31.5'
 
                             shipmentDetails = client.factory.create('ShipmentDetailsTypeType')
-                            shipmentDetails.product = str(record.picking_id.carrier_id.product)
-                            shipmentDetails.accountNumber = str(''.join([ekp or '', record.picking_id.carrier_id.procedure or '', partner_id or '']))
-                            shipmentDetails.customerReference = str(record.picking_id.orig_order.name) or str(record.picking_id.name) or ''
-                            shipmentDetails.shipmentDate = str(datetime.today().date().strftime('%Y-%m-%d'))
+                            shipmentDetails.product = record.picking_id.carrier_id.product.encode('iso-8859-1')
+                            shipmentDetails.accountNumber = (''.join([ekp or '', record.picking_id.carrier_id.procedure or '', partner_id or ''])).encode('iso-8859-1')
+                            shipmentDetails.customerReference = record.picking_id.orig_order.name.encode('iso-8859-1') or record.picking_id.name.encode('iso-8859-1') or ''
+                            shipmentDetails.shipmentDate = (datetime.today().date().strftime('%Y-%m-%d')).encode('iso-8859-1')
                             shipmentDetails.ShipmentItem = shipmentItem
 
                             name_s = client.factory.create('ns0:NameType')
-                            name_s.name1 = sender.del_name1 and str(sender.del_name1.strip())
-                            name_s.name2 = sender.del_name2 and str(sender.del_name2.strip()) or ''
+                            name_s.name1 = sender.del_name1 and sender.del_name1.strip().encode('iso-8859-1')
+                            name_s.name2 = sender.del_name2 and sender.del_name2.strip().encode('iso-8859-1') or ''
 
                             origin_s = client.factory.create('ns0:CountryType')
-                            origin_s.country = (sender.country_id and sender.country_id.name and str(sender.country_id.name.strip())) or u'Deutschland'
-                            origin_s.countryISOCode = (sender.country_id and sender.country_id.code and str(sender.country_id.code.strip())) or u'DE'
+                            origin_s.country = (sender.country_id and sender.country_id.name and sender.country_id.name.strip().encode('iso-8859-1')) or u'Deutschland'
+                            origin_s.countryISOCode = (sender.country_id and sender.country_id.code and sender.country_id.code.strip().encode('iso-8859-1')) or u'DE'
 
                             address_s = client.factory.create('ns0:NativeAddressType')
-                            address_s.streetName = sender.street_name and str(sender.street_name[:40].strip())
-                            address_s.streetNumber = sender.street_number and str(sender.street_number[:7].strip()) or u'1'
-                            address_s.zip = sender.zip and str(sender.zip[:5].strip())
-                            address_s.city = sender.city and str(sender.city[:50].strip())
+                            _logger.debug(sys.stdout.encoding)
+                            _logger.debug(type(sender.street_name[:40].strip()))
+                            address_s.streetName = sender.street_name and sender.street_name[:40].strip().encode('iso-8859-1')
+                            address_s.streetNumber = sender.street_number and sender.street_number[:7].strip().encode('iso-8859-1') or u'1'
+                            address_s.zip = sender.zip and sender.zip[:5].strip().encode('iso-8859-1')
+                            address_s.city = sender.city and sender.city[:50].strip().encode('iso-8859-1')
                             address_s.Origin = origin_s
 
                             #communication_s = client.factory.create('ns0:CommunicationType')
@@ -690,23 +697,24 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             #shipper.Communication = communication_s
 
                             origin_r = client.factory.create('ns0:CountryType')
-                            origin_r.country = (recipient.country_id and recipient.country_id.name and str(recipient.country_id.name.strip())) or u'Deutschland'
-                            origin_r.countryISOCode = (recipient.country_id and recipient.country_id.code and str(recipient.country_id.code.strip())) or u'DE'
+                            origin_r.country = (recipient.country_id and recipient.country_id.name and recipient.country_id.name.strip().encode('iso-8859-1')) or u'Deutschland'
+                            origin_r.countryISOCode = (recipient.country_id and recipient.country_id.code and recipient.country_id.code.strip().encode('iso-8859-1')) or u'DE'
 
                             address_r = client.factory.create('ns0:ReceiverNativeAddressType')
-                            address_r.name2 = ((not recipient.is_company and str(recipient.parent_id.del_name2)) or str(recipient.del_name1)) or str(recipient.del_name2) or ''
-                            address_r.name3 = (not recipient.is_company and str(recipient.parent_id.del_name2) and str(recipient.del_name1)) or ''
-                            address_r.streetName = recipient.street_name and str(recipient.street_name[:40].strip())
-                            address_r.streetNumber = recipient.street_number and str(recipient.street_number[:7].strip()) or u'1'
-                            address_r.zip = recipient.zip and str(recipient.zip[:5].strip())
-                            address_r.city = recipient.city and str(recipient.city[:50].strip())
+                            
+                            address_r.name2 = (not recipient.is_company and (recipient.parent_id.del_name2.encode('iso-8859-1') or recipient.del_name1.encode('iso-8859-1'))) or recipient.del_name2.encode('iso-8859-1') or ''
+                            address_r.name3 = (not recipient.is_company and recipient.parent_id.del_name2.encode('iso-8859-1') and recipient.del_name1.encode('iso-8859-1')) or ''
+                            address_r.streetName = recipient.street_name and recipient.street_name[:40].strip().encode('iso-8859-1')
+                            address_r.streetNumber = recipient.street_number and recipient.street_number[:7].strip().encode('iso-8859-1') or u'1'
+                            address_r.zip = recipient.zip and recipient.zip[:5].strip().encode('iso-8859-1')
+                            address_r.city = recipient.city and recipient.city[:50].strip().encode('iso-8859-1')
                             address_r.Origin = origin_r
 
                             #communication_r = client.factory.create('ns0:CommunicationType')
                             #communication_r.email = u''
 
                             receiver = client.factory.create('ReceiverType')
-                            receiver.name1 = (not recipient.is_company and str(recipient.parent_id.del_name1)) or str(recipient.del_name1)
+                            receiver.name1 = (not recipient.is_company and recipient.parent_id.del_name1.encode('iso-8859-1')) or recipient.del_name1.encode('iso-8859-1')
                             receiver.Address = address_r
                             #receiver.Communication = communication_r
 
@@ -728,6 +736,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             #createShipmentOrderResponse = client.factory.create('bcs:CreateShipmentOrderResponse')
                             
                         try:
+                            _logger.debug(sys.getdefaultencoding())
                             createShipmentOrderResponse = client.service.createShipmentOrder(Version = version, ShipmentOrder = shipmentOrders)
                         except Exception as e:
                             record.picking_id.message_post(subtype='mt_comment', subject='Fehler DHL-Versand (Server)', body=unicode(e))
