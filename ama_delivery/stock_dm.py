@@ -27,6 +27,7 @@ class stock_dm_picking_unit(models.Model):
     delivery_carrier_res_model = fields.Many2one('ir.model', string='Datenmodell des Lieferanten', related='delivery_carrier_id.res_model', help='Der Auslieferungsmethode (dem Logistiker) zugewiesenes Datenmodell', store=True, readonly=True)
     delivery_carrier_res_id = fields.Integer(string='ID im Datenmodell des Lieferanten', help='DatensatzID im jeweiligen Modell des Logistikers')
     stock_dm_state_id = fields.Many2one('stock.dm.state', string='Status der Lieferung', compute='_compute_carrier_state', ondelete='restrict', help='Interner Status der Sendung')
+    sequence = fields.Integer(string="Sequence", related='stock_dm_state_id.sequence')
     partner_id = fields.Many2one('res.partner', string='Lieferkontakt', related='stock_picking_id.delivery_address_id', help='Lieferkontakt bzw. -adresse der Sendung', store=True, readonly=True)
     
     @api.multi

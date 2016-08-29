@@ -306,12 +306,22 @@ class stock_dhl_picking_unit(models.Model):
                         record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Fehler beim Tracking der DHL Sendung '" + str(record.name) + "'. Server sendet Statuscode " + str(r.status_code) + " mit Inhalt: '" + str(r.text) + "'."
                         _logger.error("Fehler beim Tracking der DHL Sendung '" + str(record.name) + "'. Server sendet Statuscode " + str(r.status_code) + " mit Inhalt: '" + str(r.text) + "'.")
+                        record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                        if record.error_counter >= 5:
+                            record.auto_tracking = False
+                        else:
+                            record.auto_tracking = True
 
                 except Exception as e:
                     record.error_occurred = True
                     record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                     record.error = "Fehler beim Tracking der DHL Sendung '" + str(record.name) + "'. HTTP-Request fehlgeschlagen: " + str(e)
                     _logger.error("Fehler beim Tracking der DHL Sendung '" + str(record.name) + "'. HTTP-Request fehlgeschlagen: " + str(e))
+                    record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                    if record.error_counter >= 5:
+                        record.auto_tracking = False
+                    else:
+                        record.auto_tracking = True
 
 
                 if xml_response.startswith('<?xml'):
@@ -326,6 +336,11 @@ class stock_dhl_picking_unit(models.Model):
                         record.dhl_error = xml_response_dict['data']['@' + constants_dhl.ERROR]
                         record.error = record.dhl_error
                         _logger.error(record.dhl_code + ": " + xml_response_dict['data']['@' + constants_dhl.ERROR])
+                        record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                        if record.error_counter >= 5:
+                            record.auto_tracking = False
+                        else:
+                            record.auto_tracking = True
                     else:
                         record.error_occurred = False
                         record.error_counter = False
@@ -423,16 +438,31 @@ class stock_dhl_picking_unit(models.Model):
                         record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Abfrage lieferte Fehlermeldung: " + h.unescape(errormessage)
                         _logger.error("Abfragefehler Tracking(Details) für DHL-Sendung '" + str(record.name) + "'. Abfrage lieferte Fehlermeldung: " + str(errormessage))
+                        record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                        if record.error_counter >= 5:
+                            record.auto_tracking = False
+                        else:
+                            record.auto_tracking = True
                     except Exception as e:
                         record.error_occurred = True
                         record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Server sendet unübliche Fehlermeldung: " + h.unescape(xml_response)
                         _logger.error("Abfragefehler Tracking(Details) für DHL-Sendung '" + str(record.name) + "'. Server sendet unübliche Fehlermeldung: " + str(xml_response))
+                        record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                        if record.error_counter >= 5:
+                            record.auto_tracking = False
+                        else:
+                            record.auto_tracking = True
                 else:
                     record.error_occurred = True
                     record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                     record.error = "Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response)
                     _logger.error("Abfragefehler Tracking(Details) für DHL-Sendung '" + str(record.name) + "'. Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response))
+                    record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                    if record.error_counter >= 5:
+                        record.auto_tracking = False
+                    else:
+                        record.auto_tracking = True
                     
             time.sleep(sleep_time)
             
@@ -467,12 +497,22 @@ class stock_dhl_picking_unit(models.Model):
                         record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Fehler beim Abrufen des POD der DHL Sendung '" + str(record.name) + "'. Server sendet Statuscode " + str(r.status_code) + " mit Inhalt: '" + str(r.text) + "'."
                         _logger.error("Fehler beim Abrufen des POD der DHL Sendung '" + str(record.name) + "'. Server sendet Statuscode " + str(r.status_code) + " mit Inhalt: '" + str(r.text) + "'.")
+                        record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                        if record.error_counter >= 5:
+                            record.auto_tracking = False
+                        else:
+                            record.auto_tracking = True
 
                 except Exception as e:
                     record.error_occurred = True
                     record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                     record.error = "Fehler beim Abrufen des POD der DHL Sendung '" + str(record.name) + "'. HTTP-Request fehlgeschlagen: " + str(e)
                     _logger.error("Fehler beim Abrufen des POD der DHL Sendung '" + str(record.name) + "'. HTTP-Request fehlgeschlagen: " + str(e))
+                    record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                    if record.error_counter >= 5:
+                        record.auto_tracking = False
+                    else:
+                        record.auto_tracking = True
 
 
                 if xml_response.startswith('<?xml'):
@@ -497,16 +537,31 @@ class stock_dhl_picking_unit(models.Model):
                         record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Abfrage lieferte Fehlermeldung (POD): " + h.unescape(errormessage)
                         _logger.error("Abfragefehler Tracking(POD) für DHL-Sendung '" + str(record.name) + "'. Abfrage lieferte Fehlermeldung: " + str(errormessage))
+                        record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                        if record.error_counter >= 5:
+                            record.auto_tracking = False
+                        else:
+                            record.auto_tracking = True
                     except Exception as e:
                         record.error_occurred = True
                         record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                         record.error = "Server sendet unübliche Fehlermeldung (POD): " + h.unescape(xml_response)
                         _logger.error("Abfragefehler Tracking(POD)für DHL-Sendung '" + str(record.name) + "'. Server sendet unübliche Fehlermeldung: " + str(xml_response))
+                        record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                        if record.error_counter >= 5:
+                            record.auto_tracking = False
+                        else:
+                            record.auto_tracking = True
                 else:
                     record.error_occurred = True
                     record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
                     record.error = "Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung (POD): " + str(xml_response)
                     _logger.error("Abfragefehler Tracking(POD) für DHL-Sendung '" + str(record.name) + "'. Server-Antwort entspricht weder einer gültigen Antwort, noch einer üblichen Fehlermeldung: " + str(xml_response))
+                    record.stock_dm_state_id = self.env.ref('ama_delivery.dms70').id
+                    if record.error_counter >= 5:
+                        record.auto_tracking = False
+                    else:
+                        record.auto_tracking = True
                     
                 time.sleep(sleep_time)
     
