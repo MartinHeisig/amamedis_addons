@@ -643,8 +643,8 @@ class ama_del_stock_transfer_details(models.TransientModel):
                         client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False, plugins=[MyPlugin()])
                     
                         authentification = client.factory.create('cis:AuthentificationType')
-                        authentification.user = intraship_username
-                        authentification.signature = intraship_password
+                        authentification.user = unicode(intraship_username)
+                        authentification.signature = unicode(intraship_password)
                         client.set_options(soapheaders=authentification)
 
                         version = client.factory.create('ns1:Version')
@@ -660,25 +660,25 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             shipmentItem.weightInKG = u'31.5'
 
                             shipmentDetails = client.factory.create('ShipmentDetailsTypeType')
-                            shipmentDetails.product = record.picking_id.carrier_id.product
-                            shipmentDetails.accountNumber = ''.join([ekp or '', record.picking_id.carrier_id.procedure or '', partner_id or ''])
-                            shipmentDetails.customerReference = record.picking_id.orig_order.name or record.picking_id.name or ''
-                            shipmentDetails.shipmentDate = datetime.today().date().strftime('%Y-%m-%d')
+                            shipmentDetails.product = unicode(record.picking_id.carrier_id.product)
+                            shipmentDetails.accountNumber = unicode(''.join([ekp or '', record.picking_id.carrier_id.procedure or '', partner_id or '']))
+                            shipmentDetails.customerReference = unicode(record.picking_id.orig_order.name) or unicode(record.picking_id.name) or ''
+                            shipmentDetails.shipmentDate = unicode(datetime.today().date().strftime('%Y-%m-%d'))
                             shipmentDetails.ShipmentItem = shipmentItem
 
                             name_s = client.factory.create('ns0:NameType')
-                            name_s.name1 = sender.del_name1 and sender.del_name1.strip()
-                            name_s.name2 = sender.del_name2 and sender.del_name2.strip() or ''
+                            name_s.name1 = sender.del_name1 and unicode(sender.del_name1.strip())
+                            name_s.name2 = sender.del_name2 and unicode(sender.del_name2.strip()) or ''
 
                             origin_s = client.factory.create('ns0:CountryType')
-                            origin_s.country = (sender.country_id and sender.country_id.name and sender.country_id.name.strip()) or u'Deutschland'
-                            origin_s.countryISOCode = (sender.country_id and sender.country_id.code and sender.country_id.code.strip()) or u'DE'
+                            origin_s.country = (sender.country_id and sender.country_id.name and unicode(sender.country_id.name.strip())) or u'Deutschland'
+                            origin_s.countryISOCode = (sender.country_id and sender.country_id.code and unicode(sender.country_id.code.strip())) or u'DE'
 
                             address_s = client.factory.create('ns0:NativeAddressType')
-                            address_s.streetName = sender.street_name and sender.street_name[:40].strip()
-                            address_s.streetNumber = sender.street_number and sender.street_number[:7].strip() or '1'
-                            address_s.zip = sender.zip and sender.zip[:5].strip()
-                            address_s.city = sender.city and sender.city[:50].strip()
+                            address_s.streetName = sender.street_name and unicode(sender.street_name[:40].strip())
+                            address_s.streetNumber = sender.street_number and unicode(sender.street_number[:7].strip()) or u'1'
+                            address_s.zip = sender.zip and unicode(sender.zip[:5].strip())
+                            address_s.city = sender.city and unicode(sender.city[:50].strip())
                             address_s.Origin = origin_s
 
                             #communication_s = client.factory.create('ns0:CommunicationType')
@@ -690,23 +690,23 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             #shipper.Communication = communication_s
 
                             origin_r = client.factory.create('ns0:CountryType')
-                            origin_r.country = (recipient.country_id and recipient.country_id.name and recipient.country_id.name.strip()) or u'Deutschland'
-                            origin_r.countryISOCode = (recipient.country_id and recipient.country_id.code and recipient.country_id.code.strip()) or u'DE'
+                            origin_r.country = (recipient.country_id and recipient.country_id.name and unicode(recipient.country_id.name.strip())) or u'Deutschland'
+                            origin_r.countryISOCode = (recipient.country_id and recipient.country_id.code and unicode(recipient.country_id.code.strip())) or u'DE'
 
                             address_r = client.factory.create('ns0:ReceiverNativeAddressType')
-                            address_r.name2 = ((not recipient.is_company and recipient.parent_id.del_name2) or recipient.del_name1) or recipient.del_name2 or ''
-                            address_r.name3 = (not recipient.is_company and recipient.parent_id.del_name2 and recipient.del_name1) or ''
-                            address_r.streetName = recipient.street_name and recipient.street_name[:40].strip()
-                            address_r.streetNumber = recipient.street_number and recipient.street_number[:7].strip() or '1'
-                            address_r.zip = recipient.zip and recipient.zip[:5].strip()
-                            address_r.city = recipient.city and recipient.city[:50].strip()
+                            address_r.name2 = ((not recipient.is_company and unicode(recipient.parent_id.del_name2)) or unicode(recipient.del_name1)) or unicode(recipient.del_name2) or ''
+                            address_r.name3 = (not recipient.is_company and unicode(recipient.parent_id.del_name2) and unicode(recipient.del_name1)) or ''
+                            address_r.streetName = recipient.street_name and unicode(recipient.street_name[:40].strip())
+                            address_r.streetNumber = recipient.street_number and unicode(recipient.street_number[:7].strip()) or u'1'
+                            address_r.zip = recipient.zip and unicode(recipient.zip[:5].strip())
+                            address_r.city = recipient.city and unicode(recipient.city[:50].strip())
                             address_r.Origin = origin_r
 
                             #communication_r = client.factory.create('ns0:CommunicationType')
                             #communication_r.email = u''
 
                             receiver = client.factory.create('ReceiverType')
-                            receiver.name1 = (not recipient.is_company and recipient.parent_id.del_name1) or recipient.del_name1
+                            receiver.name1 = (not recipient.is_company and unicode(recipient.parent_id.del_name1)) or unicode(recipient.del_name1)
                             receiver.Address = address_r
                             #receiver.Communication = communication_r
 
@@ -716,7 +716,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             shipment.Receiver = receiver
 
                             shipmentOrder = client.factory.create('ns1:ShipmentOrderType')
-                            shipmentOrder.sequenceNumber = str(i)
+                            shipmentOrder.sequenceNumber = unicode(i)
                             shipmentOrder.Shipment = shipment
 
                             shipmentOrders.append(shipmentOrder)
