@@ -16,11 +16,16 @@ class ama_sale_order(models.Model):
     @api.onchange('order_line')
     def _validate_autochecks(self):
         for record in self:
-            record.auto_sale = record.order_line and any(s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0].auto_sale or not s.product_id.categ_id.route_ids for s in record.order_line) or False
+            record.auto_sale = record.order_line and any(s.product_id and s.product_id.categ_id and s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0] and s.product_id.categ_id.route_ids[0].auto_sale for s in record.order_line) or False
+            record.auto_purchase = record.order_line and any(s.product_id and s.product_id.categ_id and s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0] and s.product_id.categ_id.route_ids[0].auto_purchase for s in record.order_line) or False
+            record.auto_stock = record.order_line and any(s.product_id and s.product_id.categ_id and s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0] and s.product_id.categ_id.route_ids[0].auto_stock for s in record.order_line) or False
+            record.auto_stock_carrier = record.order_line and any(s.product_id and s.product_id.categ_id and s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0] and s.product_id.categ_id.route_ids[0].auto_stock_carrier for s in record.order_line) or False
+            record.auto_invoice = record.order_line and any(s.product_id and s.product_id.categ_id and s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0] and s.product_id.categ_id.route_ids[0].auto_invoice for s in record.order_line) or False
+            '''record.auto_sale = record.order_line and any(s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0].auto_sale or not s.product_id.categ_id.route_ids for s in record.order_line) or False
             record.auto_purchase = record.order_line and any(s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0].auto_purchase or not s.product_id.categ_id.route_ids for s in record.order_line) or False
             record.auto_stock = record.order_line and any(s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0].auto_stock or not s.product_id.categ_id.route_ids for s in record.order_line) or False
             record.auto_stock_carrier = record.order_line and any(s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0].auto_stock_carrier or not s.product_id.categ_id.route_ids for s in record.order_line) or False
-            record.auto_invoice = record.order_line and any(s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0].auto_invoice or not s.product_id.categ_id.route_ids for s in record.order_line) or False
+            record.auto_invoice = record.order_line and any(s.product_id.categ_id.route_ids and s.product_id.categ_id.route_ids[0].auto_invoice or not s.product_id.categ_id.route_ids for s in record.order_line) or False'''
 
             
     @api.multi
