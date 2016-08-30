@@ -51,7 +51,7 @@
             <field name="model">stock.dm.picking.unit</field>
             <field name="arch" type="xml">
                 <tree string="Sendungen" colors="red:sequence in (70, 80)">
-                    <field name="sequence" attrs="{'invisible':True}"/>
+                    <field name="sequence"  invisible="1"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="stock_picking_id"/>

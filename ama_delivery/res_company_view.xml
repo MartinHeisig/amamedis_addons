@@ -25,15 +25,15 @@
                                 <field name="ekp_dhl"/>
                                 <field name="partner_id_dhl"/>
                                 <field name="cig_user_dhl"/>
-                                <field name="cig_pass_dhl"/>
+                                <field name="cig_pass_dhl" password="True"/>
                                 <field name="intraship_user_dhl"/>
-                                <field name="intraship_pass_dhl"/>
+                                <field name="intraship_pass_dhl" password="True"/>
                                 <field name="cig_user_dhl2"/>
-                                <field name="cig_pass_dhl2"/>
+                                <field name="cig_pass_dhl2" password="True"/>
                                 <field name="gkp_user_dhl"/>
-                                <field name="gkp_pass_dhl"/>
+                                <field name="gkp_pass_dhl" password="True"/>
                                 <field name="zt_user_dhl"/>
-                                <field name="zt_pass_dhl"/>
+                                <field name="zt_pass_dhl" password="True"/>
                                 <field name="endpoint_order_dhl"/>
                                 <field name="endpoint_track_dhl"/>
                             </group>
@@ -41,11 +41,11 @@
                                 <field name="ekp_dhl_test"/>
                                 <field name="partner_id_dhl_test"/>
                                 <field name="cig_user_dhl_test"/>
-                                <field name="cig_pass_dhl_test"/>
+                                <field name="cig_pass_dhl_test" password="True"/>
                                 <field name="intraship_user_dhl_test"/>
-                                <field name="intraship_pass_dhl_test"/>
+                                <field name="intraship_pass_dhl_test" password="True"/>
                                 <field name="zt_user_dhl_test"/>
-                                <field name="zt_pass_dhl_test"/>
+                                <field name="zt_pass_dhl_test" password="True"/>
                                 <field name="endpoint_order_dhl_test"/>
                                 <field name="endpoint_track_dhl_test"/>
                                 <field name="sandbox_dhl"/>

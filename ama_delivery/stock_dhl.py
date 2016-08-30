@@ -564,6 +564,11 @@ class stock_dhl_picking_unit(models.Model):
                         record.auto_tracking = True
                     
                 time.sleep(sleep_time)
+                
+    @api.multi
+    def action_delivered(self):
+        for record in self:
+            record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','50')], limit=1)
     
     @api.multi
     def action_delete(self):
