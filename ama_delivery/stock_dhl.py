@@ -32,6 +32,7 @@ logging.getLogger('suds.transport').setLevel(logging.DEBUG)
 
 class stock_dhl_picking_unit(models.Model):
     _name = 'stock.dhl.picking.unit'
+    _order = 'create_date desc'
     '''DHL-gebrandete Sendung'''
     
     name = fields.Char(string='Name', help='Sendungsnummer', required=True)

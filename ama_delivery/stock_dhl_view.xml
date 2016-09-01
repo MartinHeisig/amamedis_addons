@@ -223,6 +223,7 @@
                     <field name="error_counter"/>
                     <field name="auto_tracking"/>
                     <field name="ownership"/>
+                    <field name="stock_dm_state_id"/>
                 </tree>
             </field>
         </record>

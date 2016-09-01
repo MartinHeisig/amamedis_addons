@@ -17,6 +17,7 @@ _logger = logging.getLogger(__name__)
 
 class stock_dm_picking_unit(models.Model):
     _name = 'stock.dm.picking.unit'
+    _order = 'create_date desc'
     '''ungebrandete Sendung'''
 
     name = fields.Char(string='Name', compute='_compute_name', help='Logistiker-Sendungsnummer')
