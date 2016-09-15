@@ -238,12 +238,12 @@ class stock_dhl_picking_unit(models.Model):
         _logger.info('Ich bins der CronJob')
         
         # get all undelivered packages
-        ids = self.search([('dhl_delivery_event_flag', '!=', '1')])
+        ids = self.search([('auto_tracking', '=', True),('dhl_delivery_event_flag', '!=', '1')])
         _logger.info(str(ids))
         ids.tracking()
         
         # get all delivered packages without image received
-        ids = self.search([('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
+        ids = self.search([('auto_tracking', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
         _logger.info(str(ids))
         ids.tracking()
         

@@ -215,9 +215,10 @@
                 <tree string="Shipment List" colors="red:error_occurred==True">
                     <!--button name="synchronize_cron" type="object" string="CronJob"/-->
                     <field name="name"/>
-                    <field name="stock_dm_picking_unit_id"/>
+                    <!--field name="stock_dm_picking_unit_id"/-->
                     <field name="partner_id"/>
                     <field name="stock_dhl_ice_text"/>
+                    <field name="dhl_status_timestamp"/>
                     <field name="error"/>
                     <field name="error_occurred"/>
                     <field name="error_counter"/>
