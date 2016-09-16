@@ -46,11 +46,12 @@ class stock_dhl_picking_unit(models.Model):
     stock_dhl_event_ids_2 = fields.One2many(comodel_name='stock.dhl.event', inverse_name='stock_dhl_picking_unit_id', string="DHL Events")
     partner_id = fields.Many2one('res.partner', string='Lieferkontakt', related='stock_dm_picking_unit_id.partner_id', help='Lieferkontakt bzw. -adresse der Sendung', store=True, readonly=True)
     error = fields.Char(string='Fehlermeldung')
-    error_occurred = fields.Boolean(default=False)
+    error_occurred = fields.Boolean(string='Fehler aufgetreten', default=False)
     stock_dhl_status_id = fields.Many2one('stock.dhl.status', ondelete='restrict', string="DHL Status", compute='_compute_status', readonly=True, store=True)
     auto_tracking = fields.Boolean(string='Automatische Sendungsverfolgung', default=True, help='Legt fest ob die Sendung weiterhin verfolgt wird')
     error_counter = fields.Integer(string='Anzahl Tracking-Fehler', default=False, help='Erreicht der Zaehler 5 wird nicht mehr automatisch getrackt.')
     ownership = fields.Boolean(string='Eigene Sendung', default=False, help='Legt fest, mit welcher Methode die Sendung verfolgt wird, da es hier Unterschiede zwischen eigenen und fremden Sendungen gibt.')
+    active = fields.Boolean(string='Aktiv', default=True)
     
     stock_dhl_ice_code = fields.Char(related='stock_dhl_ice_id.code', string="ICE-Code", readonly=True)
     stock_dhl_ice_text = fields.Char(related='stock_dhl_ice_id.text', string="ICE-Text", readonly=True)
@@ -59,7 +60,7 @@ class stock_dhl_picking_unit(models.Model):
     stock_dhl_ttpro_code = fields.Char(related='stock_dhl_ttpro_id.code', string="TTpro-Code", readonly=True)
     stock_dhl_ttpro_text = fields.Char(related='stock_dhl_ttpro_id.text', string="TTpro-Text", readonly=True)
     stock_dhl_status_text = fields.Char(related='stock_dhl_status_id.text', string="Status-Text", readonly=True)
-    new_image_received = fields.Boolean(default=False)
+    new_image_received = fields.Boolean(string='Signatur empfangen', default=False)
     
     # not displayed fields
     # DHL response fields
@@ -238,12 +239,12 @@ class stock_dhl_picking_unit(models.Model):
         _logger.info('Ich bins der CronJob')
         
         # get all undelivered packages
-        ids = self.search([('auto_tracking', '=', True),('dhl_delivery_event_flag', '!=', '1')])
+        ids = self.search([('auto_tracking', '=', True),('active', '=', True),('dhl_delivery_event_flag', '!=', '1')])
         _logger.info(str(ids))
         ids.tracking()
         
         # get all delivered packages without image received
-        ids = self.search([('auto_tracking', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
+        ids = self.search([('auto_tracking', '=', True),('auto_tracking', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
         _logger.info(str(ids))
         ids.tracking()
         

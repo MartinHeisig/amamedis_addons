@@ -265,6 +265,7 @@
                             <field name="error_occurred"/>
                             <field name="error_counter"/>
                             <field name="auto_tracking"/>
+                            <field name="active"/>
                             <!--field name="stock_dm_id"/-->
                             <!--field name="stock_dm_state_id"/-->
                             <field name="stock_dhl_ice_id"/>
