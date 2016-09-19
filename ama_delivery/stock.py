@@ -702,8 +702,8 @@ class ama_del_stock_transfer_details(models.TransientModel):
 
                             address_r = client.factory.create('ns0:ReceiverNativeAddressType')
                             
-                            address_r.name2 = (not recipient.is_company and (recipient.parent_id.del_name2.encode('iso-8859-1') or recipient.del_name1.encode('iso-8859-1'))) or recipient.del_name2.encode('iso-8859-1') or ''
-                            address_r.name3 = (not recipient.is_company and recipient.parent_id.del_name2.encode('iso-8859-1') and recipient.del_name1.encode('iso-8859-1')) or ''
+                            address_r.name2 = (not recipient.is_company and ((recipient.parent_id.del_name2 and recipient.parent_id.del_name2.encode('iso-8859-1')) or (recipient.del_name1 and recipient.del_name1.encode('iso-8859-1')))) or (recipient.del_name2 and recipient.del_name2.encode('iso-8859-1')) or ''
+                            address_r.name3 = (not recipient.is_company and recipient.parent_id.del_name2 and recipient.del_name1 and recipient.del_name1.encode('iso-8859-1')) or ''
                             address_r.streetName = recipient.street_name and recipient.street_name[:40].strip().encode('iso-8859-1')
                             address_r.streetNumber = recipient.street_number and recipient.street_number[:7].strip().encode('iso-8859-1') or u'1'
                             address_r.zip = recipient.zip and recipient.zip[:5].strip().encode('iso-8859-1')
@@ -714,7 +714,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             #communication_r.email = u''
 
                             receiver = client.factory.create('ReceiverType')
-                            receiver.name1 = (not recipient.is_company and recipient.parent_id.del_name1.encode('iso-8859-1')) or recipient.del_name1.encode('iso-8859-1')
+                            receiver.name1 = (not recipient.is_company and recipient.parent_id.del_name1 and recipient.parent_id.del_name1.encode('iso-8859-1')) or (recipient.del_name1 and recipient.del_name1.encode('iso-8859-1'))
                             receiver.Address = address_r
                             #receiver.Communication = communication_r
 
