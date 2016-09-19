@@ -830,7 +830,7 @@
             <field name="code">INFCL</field>
             <field name="text_en">In facility</field>
             <field name="text_de">Lagerung</field>
-            <field name="stock_dm_state_id" ref="dms70"/>
+            <field name="stock_dm_state_id" ref="dms40"/>
         </record>
         <record model="stock.dhl.ice" id="ice20">
             <field name="code">ITBAR</field>
