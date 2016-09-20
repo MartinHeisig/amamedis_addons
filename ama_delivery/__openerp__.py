@@ -22,6 +22,7 @@
     'depends': [
         'base',
         'base_phone',
+        'base_report_to_printer',
         'delivery',
         'email_template',
         'partner_street_number',

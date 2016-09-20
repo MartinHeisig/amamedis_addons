@@ -36,6 +36,7 @@ logging.getLogger('suds').setLevel(logging.WARNING) #WARNING
 logging.getLogger('suds.client').setLevel(logging.DEBUG) #DEBUG
 logging.getLogger('suds.transport').setLevel(logging.DEBUG)
 
+
 class ama_cs_product_template(models.Model):
     _inherit = 'product.template'
 
@@ -163,6 +164,7 @@ class ama_del_stock_picking(models.Model):
     del_date = fields.Date(string='Erwartetes Lieferdatum', compute='_compute_date_done', help='Datum an dem die Rechnung spaetestens generiert wird.', default=False, store=True)
     
     carrier_label = fields.Many2one('ir.attachment', ondelete='restrict', string="Frachtführer Label", readonly=True, store=True)
+    carrier_label_printer = fields.Many2one('printing.printer', string="Labeldrucker", store=True, default=lambda self: self.env['printing.printer'].search([('default','=',True)], limit=1))
     carrier_status_code = fields.Char('Frachtführer Status-Code', readonly=True)
     carrier_status_message = fields.Char('Frachtführer Status-Message', readonly=True)
     
@@ -265,7 +267,15 @@ class ama_del_stock_picking(models.Model):
             'target': 'new',
             'context': ctx,
         }
-
+    
+    @api.multi
+    def action_print_label(self):
+        for record in self:
+            if record.carrier_label and record.carrier_label_printer:
+                datas = base64.decodestring(record.carrier_label.datas)
+                record.carrier_label_printer.print_document(False, datas, 'pdf')
+    
+    
     def force_delivery_note_send(self, cr, uid, ids, context=None):
         for picking_id in ids:
             email_act = self.action_delivery_note_send(cr, uid, [picking_id], context=context)

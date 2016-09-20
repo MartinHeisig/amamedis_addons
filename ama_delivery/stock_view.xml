@@ -83,6 +83,12 @@
                 </field>
                 <field name="carrier_tracking_ref" position="after">
                     <field name="carrier_label"/>
+                    <div>
+                        <button name="action_print_label" class="oe_highlight" string="Drucke Label" groups="stock.group_stock_user" type="object" attrs="{'invisible':['|',('carrier_label','=',False),('carrier_label_printer','=',False)]}"/>
+                    </div>
+                    <div>
+                        <field name="carrier_label_printer" attrs="{'invisible':[('carrier_label','=',False)]}"/>
+                    </div>
                     <field name="carrier_status_code"/>
                     <field name="carrier_status_message"/>
                 </field>
