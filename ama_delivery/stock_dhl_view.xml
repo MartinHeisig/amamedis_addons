@@ -469,7 +469,7 @@
         </record>
         
         <menuitem id="stock_dhl_main_menu" name="DHL"
-            parent="delivery.menu_delivery" sequence="50"/>
+            parent="delivery.menu_delivery" sequence="51"/>
         
         <menuitem id="stock_dhl_combination_menu" name="ICE-RIC-Liste"
             parent="stock_dhl_main_menu" action="stock_dhl_combination_list_action"
@@ -494,5 +494,99 @@
         <menuitem id="stock_dhl_picking_unit_menu" name="DHL Sendungen"
             parent="stock_dhl_main_menu" action="stock_dhl_picking_unit_list_action"
             sequence="5"/>
+        
+        <menuitem id="stock_fedex_main_menu" name="FedEx"
+            parent="delivery.menu_delivery" sequence="53"/>
+            
+        <menuitem id="stock_fedex_picking_unit_menu" name="FedEx Sendungen"
+            parent="stock_fedex_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_dpd_main_menu" name="DPD"
+            parent="delivery.menu_delivery" sequence="52"/>
+            
+        <menuitem id="stock_dpd_picking_unit_menu" name="DPD Sendungen"
+            parent="stock_dpd_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_GLS_main_menu" name="GLS"
+            parent="delivery.menu_delivery" sequence="55"/>
+            
+        <menuitem id="stock_GLS_picking_unit_menu" name="GLS Sendungen"
+            parent="stock_GLS_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_hermes_main_menu" name="Hermes"
+            parent="delivery.menu_delivery" sequence="57"/>
+            
+        <menuitem id="stock_hermes_picking_unit_menu" name="Hermes Sendungen"
+            parent="stock_hermes_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_ups_main_menu" name="UPS"
+            parent="delivery.menu_delivery" sequence="59"/>
+            
+        <menuitem id="stock_ups_picking_unit_menu" name="UPS Sendungen"
+            parent="stock_ups_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_tnt_main_menu" name="TNT"
+            parent="delivery.menu_delivery" sequence="58"/>
+            
+        <menuitem id="stock_tnt_picking_unit_menu" name="TNT Sendungen"
+            parent="stock_tnt_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_gdsk_main_menu" name="GdSK"
+            parent="delivery.menu_delivery" sequence="54"/>
+            
+        <menuitem id="stock_gdsk_picking_unit_menu" name="GdSK Sendungen"
+            parent="stock_gdsk_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_go_main_menu" name="GO!"
+            parent="delivery.menu_delivery" sequence="56"/>
+            
+        <menuitem id="stock_go_picking_unit_menu" name="GO! Sendungen"
+            parent="stock_go_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_depost_main_menu" name="Deutsche Post"
+            parent="delivery.menu_delivery" sequence="50"/>
+            
+        <menuitem id="stock_depost_picking_unit_menu" name="Deutsche Post Sendungen"
+            parent="stock_depost_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="5"/>
+        
+        <menuitem id="stock_fulfillment_main_menu" name="Fulfillment"
+            parent="delivery.menu_delivery" sequence="70"/>
+            
+        <menuitem id="stock_ahd_unit_menu" name="AHD"
+            parent="stock_fulfillment_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="10"/>
+            
+        <menuitem id="stock_amazon_unit_menu" name="Amazon"
+            parent="stock_fulfillment_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="20"/>
+            
+        <menuitem id="stock_celesio_unit_menu" name="Celesio"
+            parent="stock_fulfillment_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="30"/>
+            
+        <menuitem id="stock_noweda_unit_menu" name="Noweda"
+            parent="stock_fulfillment_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="40"/>
+            
+        <menuitem id="stock_phoenix_unit_menu" name="Phoenix"
+            parent="stock_fulfillment_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="50"/>
+            
+        <menuitem id="stock_pharma_unit_menu" name="Pharmahandel"
+            parent="stock_fulfillment_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="60"/>
+            
+        <menuitem id="stock_sanacorp_unit_menu" name="Sanacorp"
+            parent="stock_fulfillment_main_menu" action="stock_dhl_picking_unit_list_action"
+             sequence="70"/>
     </data>
 </openerp>
