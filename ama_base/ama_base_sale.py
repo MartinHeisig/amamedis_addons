@@ -58,6 +58,7 @@ class amamedis_sale_order(models.Model):
 
     delivery_date = fields.Char('Lieferdatum')
     client_order_date = fields.Date('Bestelldatum')
+    ref = fields.Char('Kundennummer', related='partner_id.ref')
 
 
 class sale_order_line(models.Model):
