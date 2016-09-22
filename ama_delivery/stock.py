@@ -675,9 +675,9 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             shipmentItem.weightInKG = u'31.5'
 
                             shipmentDetails = client.factory.create('ShipmentDetailsTypeType')
-                            shipmentDetails.product = record.picking_id.carrier_id.product.encode('iso-8859-1')
+                            shipmentDetails.product = record.picking_id.carrier_id.product and record.picking_id.carrier_id.product.encode('iso-8859-1')
                             shipmentDetails.accountNumber = (''.join([ekp or '', record.picking_id.carrier_id.procedure or '', partner_id or ''])).encode('iso-8859-1')
-                            shipmentDetails.customerReference = record.picking_id.orig_order.name.encode('iso-8859-1') or record.picking_id.name.encode('iso-8859-1') or ''
+                            shipmentDetails.customerReference = (record.picking_id.orig_order.name and record.picking_id.orig_order.name.encode('iso-8859-1')) or (record.picking_id.name and record.picking_id.name.encode('iso-8859-1')) or ''
                             shipmentDetails.shipmentDate = (datetime.today().date().strftime('%Y-%m-%d')).encode('iso-8859-1')
                             shipmentDetails.ShipmentItem = shipmentItem
 
