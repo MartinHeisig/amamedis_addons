@@ -114,5 +114,18 @@
                 </page>
             </field>    
         </record>
+        
+        <record id="stock_transfer_details" model="ir.ui.view">
+            <field name="name">dhl.delivery.stock.transfer.details.wizard</field>
+            <field name="model">stock.transfer_details</field>
+            <field name="inherit_id" ref="stock.view_stock_enter_transfer_details"/>
+            <field name="arch" type="xml">
+                <footer position="before">
+                    <group string="Versand">
+                        <field name="forced_package_number"/>
+                    </group>
+                </footer>
+            </field>
+        </record>
     </data>
 </openerp>

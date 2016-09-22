@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm, Warning, RedirectWarning, ValidationError
 import openerp.tools.mail as mail
 from openerp.tools.translate import _
 from math import ceil
@@ -53,6 +53,7 @@ class ama_stock_location_route(models.Model):
     auto_stock_carrier = fields.Boolean(string='Auto Bestellung Logistiker', help='Automatische Bestellung der Paketlabels beim verknüpften Logistiker', default=False)
     auto_invoice = fields.Boolean(string='Auto E-Mail Rechnung', help='Automatische Rechnungserstellung und Versendung nach Lieferung', default=False)
 
+    
 class ama_rq_stock_move(models.Model):
     _inherit = 'stock.move'
     
@@ -321,6 +322,15 @@ class mail_compose_message(models.Model):
 class ama_del_stock_transfer_details(models.TransientModel):
     _inherit = 'stock.transfer_details'
     
+    forced_package_number = fields.Integer('Erzwinge Paketanzahl', default=False, help='Es wird erzwungen, das genau so viele Labels erstellt werden. Bleibt hier die 0 stehen, dann berechnet die Beauftragung beim Logistiker die genaue Paketanzahl.')
+    
+    @api.multi
+    @api.constrains('forced_package_number')
+    def _check_forced_package_number(self):
+        for record in self:
+            if record.forced_package_number < 0:
+                raise ValidationError("Die Anzahl der erzwungenen Pakete muss größer oder gleich 0 sein!")
+    
     @api.v7
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
@@ -367,25 +377,19 @@ class ama_del_stock_transfer_details(models.TransientModel):
         for record in self:
             parcels = 0
             
-            _logger.debug('START')
-            for item in record.item_ids:
-                _logger.debug(item.product_id.container_size)
-                if item.product_id.container_size != 0:
-                    _logger.debug('item.quantity ' + str(float(item.quantity)))
-                    _logger.debug('item.product_uom_id.factor ' + str(item.product_uom_id.factor))
-                    quantity = float(item.quantity) / item.product_uom_id.factor
-                    _logger.debug('quantity ' + str(quantity))
-                    _logger.debug('item.product_id.container_size ' + str(float(item.product_id.container_size)))
-                    pcs_per_box = float(item.product_id.container_size) / item.product_id.uom_id.factor
-                    _logger.debug('pcs_per_box ' + str(pcs_per_box))
-                    parcels += int(ceil(quantity / pcs_per_box))
-                    _logger.info('quantity: ' + str(quantity) + ' pcs_per_box: ' + str(pcs_per_box) + ' parcels: ' + str(parcels))
-                else:
-                    if item.product_id.name:
-                        _logger.error('Lieferung: Fuer das Produkt \"' + item.product_id.name.encode('utf-8') + '\" ist keine Gebindegroesse hinterlegt.')
-                        raise Warning(('Lieferung'), ('Fuer das Produkt \"' + item.product_id.name.encode('utf-8') + '\" ist keine Gebindegroesse hinterlegt.'))
-            _logger.debug('ENDE')
-            
+            if not record.forced_package_number:
+                for item in record.item_ids:
+                    if item.product_id.container_size != 0:
+                        quantity = float(item.quantity) / item.product_uom_id.factor
+                        pcs_per_box = float(item.product_id.container_size) / item.product_id.uom_id.factor
+                        parcels += int(ceil(quantity / pcs_per_box))
+                    else:
+                        if item.product_id.name:
+                            _logger.error('Lieferung: Fuer das Produkt \"' + item.product_id.name.encode('utf-8') + '\" ist keine Gebindegroesse hinterlegt.')
+                            raise Warning(('Lieferung'), ('Fuer das Produkt \"' + item.product_id.name.encode('utf-8') + '\" ist keine Gebindegroesse hinterlegt.'))
+            else:
+                parcels = record.forced_package_number
+                
             record.picking_id.number_of_packages = parcels
             
             if record.picking_id.auto_stock_carrier and record.picking_id.dhl_check:
