@@ -57,8 +57,7 @@
           </page>
         </page>
         <field name="fax" position="replace">
-          <!--field name="has_fax_contact" invisible="1"/-->
-          <field name="has_fax_contact"/>
+          <field name="has_fax_contact" invisible="1"/>
           <label for="fax" style="font-weight:bold;"/>
           <div>
             <field name="fax" class="oe_inline" widget="fax"/>
