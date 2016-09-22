@@ -56,7 +56,21 @@
             </group>
           </page>
         </page>
-        <field name="ref" position="after">
+        <field name="fax" position="replace">
+          <!--field name="has_fax_contact" invisible="1"/-->
+          <field name="has_fax_contact"/>
+          <label for="fax" style="font-weight:bold;"/>
+          <div>
+            <field name="fax" class="oe_inline" widget="fax"/>
+            <button name="action_generate_fax_contact" class="oe_highlight oe_read_only" string="Generieren" type="object" attrs="{'invisible':['|','|',('fax','=',False),('is_company','=',False),('has_fax_contact','=',True)]}"/>
+          </div>
+        </field>
+        <field name="ref" position="replace">
+          <label for="ref" style="font-weight:bold;"/>
+          <div>
+            <field name="ref" class="oe_inline"/>
+            <button name="action_compute_ref" class="oe_highlight" string="Generieren" type="object" attrs="{'invisible':['|',('is_company','=',False),('ref','!=',False)]}"/>
+          </div>
           <field name="bga"/>
         </field>
         <field name="debit" position="after">

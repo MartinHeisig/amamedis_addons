@@ -37,6 +37,7 @@ class amamedis_partner(models.Model):
     branch_ids = fields.Many2many('res.partner', 'res_partner_branch', 'partner_id', 'branch_id', 'Filialen')
     oc_folder = fields.Char('Owncloud-Verzeichnis')
     type = fields.Selection(selection_add=[('fax', 'Fax')])
+    has_fax_contact = fields.Boolean('Faxkontakt existiert', compute='_compute_has_fax_contact', store=True)
     
     '''Better Way for new Api but doesnt change the name in Many2One DropDown fields'''
     @api.multi
@@ -67,7 +68,45 @@ class amamedis_partner(models.Model):
             if self._context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             record.display_name = name
+            
+    @api.multi
+    def action_compute_ref(self):
+        for record in self:
+            ref = ((record.section_id and record.section_id.code) or '') + (record.bga or str(record.id))
+            if self.env['res.partner'].search_count([('ref', '=', ref)]):
+                raise Warning('Generierung fehlgeschlagen - Kundennummer %s ist schon in Benutzung. Bitte manuell eingeben!' % ref)
+            else:
+                record.ref = ref
+                
+    @api.multi
+    @api.depends('fax', 'child_ids')
+    def _compute_has_fax_contact(self):
+        for record in self:
+            record.has_fax_contact = False
+            if record.fax:
+                for child in record.child_ids:
+                    if child.name == "Mail2Fax" + record.fax or child.email == record.fax + "@fax.fax-mobile.de":
+                        record.has_fax_contact = True
+                        return
+            else:
+                record.has_fax_contact = True
 
+    @api.multi
+    def action_generate_fax_contact(self):
+        for record in self:
+            record._compute_has_fax_contact()
+            if not record.has_fax_contact:
+                self.env['res.partner'].create({
+                    'name': "Mail2Fax" + record.fax,
+                    'email': record.fax + "@fax.fax-mobile.de",
+                    'type': 'fax',
+                    'fax': record.fax,
+                    'function': 'Fax',
+                    'is_company': False,
+                    'parent_id': record.id,
+                    'use_parent_address': True,
+                    'category_id': [(4, 27)]
+                    })
 
     ''' Adds city to all displays of partners and gives possibility to show city
     in many2one relation.'''
@@ -114,9 +153,7 @@ class amamedis_partner(models.Model):
     @api.multi
     def remove_contact(self, context={}):
         for record in self:
-            # raise except_orm('REMOVE', str(context))
             if context.get('contact_remove'):
-                # raise except_orm('HUHU', context.get('contact_remove'))
                 self.env['res.partner'].browse(context.get('contact_remove')).parent_id = False
                 self.env['res.partner'].browse(context.get('contact_remove')).use_parent_address = False
             record.contact_remove = False
