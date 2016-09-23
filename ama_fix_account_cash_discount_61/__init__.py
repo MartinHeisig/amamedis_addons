@@ -1,1 +1,0 @@
-import ama_fix_payment_term
