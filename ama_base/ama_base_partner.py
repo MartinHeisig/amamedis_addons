@@ -32,8 +32,8 @@ class amamedis_partner(models.Model):
     bga = fields.Char('BGA', size=64)
     first_name = fields.Char('Vorname / Firmenname Zusatz', size=64)
     gender = fields.Selection((('w','weiblich'),('m','männlich')), 'Geschlecht')
-    contact_add = fields.Many2one('res.partner', 'Add Contact', domain=[('active','=',True),('parent_id','=',False)])
-    contact_remove = fields.Many2one('res.partner', 'Remove Contact')
+    contact_add = fields.Many2one('res.partner', 'Kontakt verknüpfen', domain=[('active','=',True),('parent_id','=',False)])
+    contact_remove = fields.Many2one('res.partner', 'Verknüpfung auflösen')
     branch_ids = fields.Many2many('res.partner', 'res_partner_branch', 'partner_id', 'branch_id', 'Filialen')
     oc_folder = fields.Char('Owncloud-Verzeichnis')
     type = fields.Selection(selection_add=[('fax', 'Fax')])
@@ -105,7 +105,9 @@ class amamedis_partner(models.Model):
                     'is_company': False,
                     'parent_id': record.id,
                     'use_parent_address': True,
-                    'category_id': [(4, 27)]
+                    'category_id': [(4, 27)],
+                    'customer': False,
+                    'supplier': False,
                     })
 
     ''' Adds city to all displays of partners and gives possibility to show city

@@ -61,7 +61,7 @@
           <label for="fax" style="font-weight:bold;"/>
           <div>
             <field name="fax" class="oe_inline" widget="fax"/>
-            <button name="action_generate_fax_contact" class="oe_highlight oe_read_only" string="Generieren" type="object" attrs="{'invisible':['|','|',('fax','=',False),('is_company','=',False),('has_fax_contact','=',True)]}"/>
+            <button name="action_generate_fax_contact" class="oe_highlight oe_read_only" string="Fax-Kontakt erstellen" type="object" attrs="{'invisible':['|','|',('fax','=',False),('is_company','=',False),('has_fax_contact','=',True)]}"/>
           </div>
         </field>
         <field name="ref" position="replace">
@@ -93,16 +93,19 @@
           </page>
         </page>
         <field name="child_ids" position="before">
-            <group col="4">
+            <group col="2">
                 <div>
                     <label for="contact_add" style="font-weight:bold;"/>
                     <field name="contact_add" class="oe_inline"/>
-                    <button name="add_contact" string="Add" type="object" attrs="{'invisible':[('contact_add','=',False)]}" context="{'contact_add': contact_add}"/>
-                </div>
-                <div>
+                    <button name="add_contact" string="Verknüpfen" type="object" attrs="{'invisible':[('contact_add','=',False)]}" context="{'contact_add': contact_add}"/>
+                    <br></br>
+                <!--/div>
+                <div-->
                     <label for="contact_remove" style="font-weight:bold;"/>
                     <field name="contact_remove" class="oe_inline" domain="[('active','=',True),('parent_id','=',active_id)]"/>
-                    <button name="remove_contact" string="Remove" type="object" attrs="{'invisible':[('contact_remove','=',False)]}" context="{'contact_remove': contact_remove}"/>
+                    <button name="remove_contact" string="Auflösen" type="object" attrs="{'invisible':[('contact_remove','=',False)]}" context="{'contact_remove': contact_remove}"/>
+                    <br></br>
+                    <span style="color:red"><b>ACHTUNG! Keine Firma über das X löschen, dies entspricht einer ENDGÜLTIGEN Löschung</b></span>
                 </div>
             </group>
         </field>
