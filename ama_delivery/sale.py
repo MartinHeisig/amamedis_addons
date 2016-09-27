@@ -168,6 +168,19 @@ class ama_sale_order(models.Model):
                     sp_transfer = self.env['stock.transfer_details'].with_context(ctx).create({'picking_id': ids and ids[0] or False})
                     
                     sp_transfer.do_detailed_transfer()
+            
+            if record.auto_invoice and not record.invoice_exists:
+                # sale_advance_payment_inv = record.action_view_sale_advance_payment_inv
+                ids = record.id
+                if not isinstance(ids, list): ids = [ids]
+                ctx = self.env.context.copy()
+                ctx.update({
+                    'active_model': record._name,
+                    'active_ids': ids,
+                    'active_id': ids and ids[0] or False
+                    })
+                wizard = self.env['sale.advance.payment.inv'].with_context(ctx).create({})
+                wizard.create_invoices()
 
 
 class ama_rq_sale_order_line(models.Model):

@@ -49,7 +49,7 @@
                                 <field name="endpoint_order_dhl_test"/>
                                 <field name="endpoint_track_dhl_test"/>
                                 <field name="sandbox_dhl"/>
-                                <field name="api_order_dhl"/>
+                                <field name="api_order_dhl" readonly="1"/>
                             </group>
                         </group>
                         <!--group string="Produktionsbetrieb" col="4">
