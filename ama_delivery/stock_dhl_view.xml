@@ -495,7 +495,7 @@
             parent="stock_dhl_main_menu" action="stock_dhl_picking_unit_list_action"
             sequence="5"/>
         
-        <menuitem id="stock_fedex_main_menu" name="FedEx"
+        <!--menuitem id="stock_fedex_main_menu" name="FedEx"
             parent="delivery.menu_delivery" sequence="53"/>
             
         <menuitem id="stock_fedex_picking_unit_menu" name="FedEx Sendungen"
@@ -587,6 +587,6 @@
             
         <menuitem id="stock_sanacorp_unit_menu" name="Sanacorp"
             parent="stock_fulfillment_main_menu" action="stock_dhl_picking_unit_list_action"
-             sequence="70"/>
+             sequence="70"/-->
     </data>
 </openerp>
