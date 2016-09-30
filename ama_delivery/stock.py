@@ -376,21 +376,33 @@ class ama_del_stock_transfer_details(models.TransientModel):
     def do_detailed_transfer(self):
         for record in self:
             parcels = 0
+            parcels_dict = {}
             
+            order = record.picking_id.orig_order.name and (record.picking_id.orig_order.name.encode('iso-8859-1').strip() + ' ')
+            pick = record.picking_id.name and (record.picking_id.name.encode('iso-8859-1').strip() + ' ')
+            parcels_dict[0] = (((order or '') + (pick or '')) or '')[:35].strip()
+                
             if not record.forced_package_number:
                 for item in record.item_ids:
                     if item.product_id.container_size != 0:
                         quantity = float(item.quantity) / item.product_uom_id.factor
                         pcs_per_box = float(item.product_id.container_size) / item.product_id.uom_id.factor
                         parcels += int(ceil(quantity / pcs_per_box))
+                        start = len(parcels_dict)-1
+                        for p in range(start,parcels):
+                            i = p+1
+                            parcels_dict[i] = (((order or '') + (pick or '') + ((item and item.product_id.default_code and item.product_id.default_code.encode('iso-8859-1').strip()) or '')) or '')[:35].strip()
                     else:
                         if item.product_id.name:
                             _logger.error('Lieferung: Fuer das Produkt \"' + item.product_id.name.encode('utf-8') + '\" ist keine Gebindegroesse hinterlegt.')
                             raise Warning(('Lieferung'), ('Fuer das Produkt \"' + item.product_id.name.encode('utf-8') + '\" ist keine Gebindegroesse hinterlegt.'))
             else:
                 parcels = record.forced_package_number
-                
+                    
             record.picking_id.number_of_packages = parcels
+            
+            '''for key in parcels_dict:
+                _logger.debug('Paket %s mit Referenz %s' %(key, parcels_dict.get(key)))'''
             
             if record.picking_id.auto_stock_carrier and record.picking_id.dhl_check:
                 _logger.info('Initiiere DHL-Versand fuer Lieferschein %s' % (record.picking_id.name))
@@ -401,29 +413,6 @@ class ama_del_stock_transfer_details(models.TransientModel):
                 company = record.picking_id.company_id
                 sender = company.partner_id
                 
-                # Get number of parcels to send
-                # _logger.info(str(record.item_ids))
-                '''for item in record.item_ids:
-                    #_logger.info(item.product_id.container_size)
-                    if item.product_id.container_size != 0:
-                        # Get sender address
-                        #if not sender:
-                            #if record.picking_id.picking_type_id and record.picking_id.picking_type_id.id == record.env['ir.model.data'].get_object_reference('stock_dropshipping', 'picking_type_dropship')[1]:
-                                #sender = record.picking_id.partner_id
-                            #else:
-                                #sender = item.sourceloc_id.partner_id
-                        _logger.debug('item.quantity ' + str(float(item.quantity)))
-                        _logger.debug('item.product_uom_id.factor ' + str(item.product_uom_id.factor))
-                        quantity = float(item.quantity) / item.product_uom_id.factor
-                        _logger.debug('quantity ' + str(quantity))
-                        _logger.debug('item.product_id.container_size ' + str(float(item.product_id.container_size)))
-                        pcs_per_box = float(item.product_id.container_size) / item.product_id.uom_id.factor
-                        _logger.debug('pcs_per_box ' + str(pcs_per_box))
-                        parcels += int(ceil(quantity / pcs_per_box))
-                        _logger.info('quantity: ' + str(quantity) + ' pcs_per_box: ' + str(pcs_per_box) + ' parcels: ' + str(parcels))
-                    else:
-                        if item.product_id.name:
-                            _logger.error(('Fehler'), ('Fuer das Produkt \"' + item.product_id.name.encode('utf-8') + '\" ist keine Gebindegroesse hinterlegt.'))'''
                 # Error handling
                 if parcels == 0:
                     _logger.error('DHL Versand: Die Anzahl der berechneten Pakete ist null!')
@@ -451,7 +440,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                 
                 parcels_todo = parcels
                 max_request = (company.sandbox_dhl and 10) or 30
-                _logger.debug('parcels_todo %s max_request %s' % (str(parcels_todo),str(max_request)))
+                #_logger.debug('parcels_todo %s max_request %s' % (str(parcels_todo),str(max_request)))
                 
                 location = (company.sandbox_dhl and company.endpoint_order_dhl_test) or company.endpoint_order_dhl
                 cig_username = (company.sandbox_dhl and company.cig_user_dhl_test) or (company.api_order_dhl == '1' and company.cig_user_dhl) or (company.api_order_dhl == '2' and company.cig_user_dhl2)
@@ -463,6 +452,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                 
                 pdf = PyPDF2.PdfFileMerger()
                 receive_error = 0
+                j = 1
                 
                 while parcels_todo > 0 and receive_error in range(3):
                     i = 1
@@ -485,7 +475,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                         parcels_request = min(parcels_todo,max_request)
 
                         while i <= parcels_request:
-                            _logger.debug('i %s <= parcels_request %s' % (str(i),str(parcels_request)))
+                            #_logger.debug('i %s <= parcels_request %s' % (str(i),str(parcels_request)))
                             shipmentItem = client.factory.create('ns0:ShipmentItemDDType')
                             shipmentItem.WeightInKG = u'31.5'
                             shipmentItem.PackageType = 'PK'
@@ -674,14 +664,14 @@ class ama_del_stock_transfer_details(models.TransientModel):
                         parcels_request = min(parcels_todo,max_request)
 
                         while i <= parcels_request:
-                            _logger.debug('i %s <= parcels_request %s' % (str(i),str(parcels_request)))
+                            #_logger.debug('i %s <= parcels_request %s' % (str(i),str(parcels_request)))
                             shipmentItem = client.factory.create('ShipmentItemType')
                             shipmentItem.weightInKG = u'31.5'
 
                             shipmentDetails = client.factory.create('ShipmentDetailsTypeType')
                             shipmentDetails.product = record.picking_id.carrier_id.product and record.picking_id.carrier_id.product.encode('iso-8859-1')
                             shipmentDetails.accountNumber = (''.join([ekp or '', record.picking_id.carrier_id.procedure or '', partner_id or ''])).encode('iso-8859-1')
-                            shipmentDetails.customerReference = (record.picking_id.orig_order.name and record.picking_id.orig_order.name.encode('iso-8859-1')) or (record.picking_id.name and record.picking_id.name.encode('iso-8859-1')) or ''
+                            shipmentDetails.customerReference = parcels_dict.get(j) or parcels_dict.get(0) or ''
                             shipmentDetails.shipmentDate = (datetime.today().date().strftime('%Y-%m-%d')).encode('iso-8859-1')
                             shipmentDetails.ShipmentItem = shipmentItem
 
@@ -694,8 +684,8 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             origin_s.countryISOCode = (sender.country_id and sender.country_id.code and sender.country_id.code.strip().encode('iso-8859-1')) or u'DE'
 
                             address_s = client.factory.create('ns0:NativeAddressType')
-                            _logger.debug(sys.stdout.encoding)
-                            _logger.debug(type(sender.street_name[:40].strip()))
+                            #_logger.debug(sys.stdout.encoding)
+                            #_logger.debug(type(sender.street_name[:40].strip()))
                             address_s.streetName = sender.street_name and sender.street_name[:40].strip().encode('iso-8859-1')
                             address_s.streetNumber = sender.street_number and sender.street_number[:7].strip().encode('iso-8859-1') or u'1'
                             address_s.zip = sender.zip and sender.zip[:5].strip().encode('iso-8859-1')
@@ -738,19 +728,20 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             shipment.Receiver = receiver
 
                             shipmentOrder = client.factory.create('ns1:ShipmentOrderType')
-                            shipmentOrder.sequenceNumber = str(i)
+                            shipmentOrder.sequenceNumber = str(j)
                             shipmentOrder.Shipment = shipment
 
                             shipmentOrders.append(shipmentOrder)
 
                             i += 1
+                            j += 1
                             parcels_todo -= 1
                             
                             createShipmentOrderResponse = False
                             #createShipmentOrderResponse = client.factory.create('bcs:CreateShipmentOrderResponse')
                             
                         try:
-                            _logger.debug(sys.getdefaultencoding())
+                            #_logger.debug(sys.getdefaultencoding())
                             createShipmentOrderResponse = client.service.createShipmentOrder(Version = version, ShipmentOrder = shipmentOrders)
                         except Exception as e:
                             record.picking_id.message_post(subtype='mt_comment', subject='Fehler DHL-Versand (Server)', body=unicode(e))
@@ -771,6 +762,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                                 if statusCode == 0:
                                     if createShipmentOrderResponse.CreationState is not None:
                                         for element in createShipmentOrderResponse.CreationState:
+                                            sequenceNumber = element.sequenceNumber
                                             shipmentNumber = element.LabelData and element.LabelData.shipmentNumber and str(element.LabelData.shipmentNumber)
                                             labelURL = element.LabelData and element.LabelData.labelUrl and str(element.LabelData.labelUrl)
                                             _logger.debug('%s - %s' % (shipmentNumber, labelURL))
@@ -805,9 +797,10 @@ class ama_del_stock_transfer_details(models.TransientModel):
                                                             # Sendung löschen und Pakete_ToDo eins hochzählen
                                                             dhl_picking_unit.action_delete()
                                                             parcels_todo += 1
+                                                            parcels_dict[len(parcels_dict)] = parcels_dict.get(int(sequenceNumber)) or parcels_dict.get(0) or ''
                                                             receive_error += 1
                                                             _logger.error('DHL Versand', 'Konnte DHL Sendeschein nicht als PDF herunterladen. URL: ' + labelURL)
-                                                            raise Warning('DHL Versand', 'Konnte DHL Sendeschein nicht als PDF herunterladen. URL: ' + labelURL)
+                                                            #raise Warning('DHL Versand', 'Konnte DHL Sendeschein nicht als PDF herunterladen. URL: ' + labelURL)
                                     else:
                                         record.picking_unit.message_post(subtype='mt_comment', subject='Fehler DHL-Versand (Request)', body='Request-Antwort enthielt keine Sendungsdaten' % (statusCode, statusMessage))
                                         _logger.error('Fehler DHL-Versand (Request)', 'Request-Antwort enthielt keine Sendungsdaten' % (statusCode, statusMessage))
