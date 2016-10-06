@@ -59,6 +59,7 @@ class amamedis_sale_order(models.Model):
     delivery_date = fields.Char('Lieferdatum')
     client_order_date = fields.Date('Bestelldatum')
     ref = fields.Char('Kundennummer', related='partner_id.ref', store=True)
+    mail_text = fields.Text('E-Mail-Text', help='Text der zusaetzlich zum standardisierten Text der E-Mail hinzugefügt wird. Position direkt vor der Grussformel.')
 
 
 class sale_order_line(models.Model):
