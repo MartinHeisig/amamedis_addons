@@ -38,15 +38,20 @@ class amamedis_partner(models.Model):
     oc_folder = fields.Char('Owncloud-Verzeichnis')
     type = fields.Selection(selection_add=[('fax', 'Fax')])
     has_fax_contact = fields.Boolean('Faxkontakt existiert', compute='_compute_has_fax_contact', store=True)
+    is_main = fields.Boolean('ist Hauptapotheke', default=False, help='Gibt an, ob es sich um eine Hauptapotheke handelt.')
+    is_cooperation = fields.Boolean('ist Kooperation', default=False, help='Gibt an, ob ein Unternehmen eine Kooperation ist.')
+    cooperation_id = fields.Many2one('res.partner', 'gehört zu Kooperation', domain=[('active','=',True),('is_cooperation','=',True)], help='die zugehoerige Kooperation')
     
     '''Better Way for new Api but doesnt change the name in Many2One DropDown fields'''
     @api.multi
-    @api.depends('name', 'parent_id.name', 'city', 'zip')
+    @api.depends('name', 'first_name', 'parent_id.name', 'city', 'zip', 'ref', 'email')
     def _compute_display_name(self):
         if self._context is None:
             self._context = {}
         for record in self:
             name = record.name
+            '''if not record.is_company and record.first_name:
+                name = "%s %s" % (record.first_name, name)'''
             if record.parent_id and not record.is_company:
                 name = "%s, %s" % (record.parent_name, name)
             if record.city and record.zip:
@@ -63,6 +68,8 @@ class amamedis_partner(models.Model):
                 name += "\n" + record.street
             if self._context.get('show_ref') and record.ref:
                 name += "\n" + record.ref
+            '''if self._context.get('show_email') and record.email:
+                name += "\n" + record.email'''
             name = name.replace('\n\n','\n')
             name = name.replace('\n\n','\n')
             if self._context.get('show_email') and record.email:
@@ -113,7 +120,7 @@ class amamedis_partner(models.Model):
     ''' Adds city to all displays of partners and gives possibility to show city
     in many2one relation.'''
     @api.multi
-    @api.depends('name', 'parent_id.name', 'city', 'zip')
+    @api.depends('name', 'first_name', 'parent_id.name', 'city', 'zip', 'ref', 'email')
     def name_get(self):
         if self._context is None:
             self._context = {}
@@ -136,6 +143,11 @@ class amamedis_partner(models.Model):
                 name += "\n" + record.street
             if self._context.get('show_ref') and record.ref:
                 name += "\n" + record.ref
+            if self._context.get('show_email_add') and record.email:
+                if not record.is_company and record.first_name:
+                    name += "\n" + "%s %s <%s>" % (record.first_name, record.name, record.email)
+                else:
+                    name += "\n" + "%s <%s>" % (record.name, record.email)
             name = name.replace('\n\n','\n')
             name = name.replace('\n\n','\n')
             if self._context.get('show_email') and record.email:

@@ -109,6 +109,11 @@
                 </div>
             </group>
         </field>
+        <xpath expr="//notebook/page[@name='sales_purchases']//field[@name='supplier']" position="after">
+          <field name="is_main" attrs="{'invisible':[('is_company','=',False)]}"/>
+          <field name="is_cooperation" attrs="{'invisible':[('is_company','=',False)]}"/>
+          <field name="cooperation_id" attrs="{'invisible':['|',('is_company','=',False),('is_cooperation','=',True)]}"/>
+        </xpath>
         <!-- first name on partner contacts kanban view -->
         <xpath expr="//h4//a//field[@name='name']" position="after">
           <t t-if="record.first_name.raw_value"><br/><field name="first_name"/></t>
