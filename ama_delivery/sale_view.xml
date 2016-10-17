@@ -22,6 +22,7 @@
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']" position="before">
+                    <!--field name="origin_address_id"/-->
                     <field name="number_packages"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree" position="attributes">

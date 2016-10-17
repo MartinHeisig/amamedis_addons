@@ -907,3 +907,44 @@ class MyPlugin(MessagePlugin):
                             element.childAtPath('Shipment/ShipmentDetails/accountNumber').setPrefix('ns0')
                         if element.childAtPath('Shipment/Receiver/name1') is not None:
                             element.childAtPath('Shipment/Receiver/name1').setPrefix('ns0')
+
+                            
+class ama_del_stock_return_picking(models.TransientModel):
+    _inherit = 'stock.return.picking'
+    
+    def create_returns(self, cr, uid, ids, context=None):
+        """
+         Creates return picking.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param ids: List of ids selected
+         @param context: A standard dictionary
+         @return: A dictionary which of fields with values.
+        """
+        new_picking_id, pick_type_id = self._create_returns(cr, uid, ids, context=context)
+        # Override the context to disable all the potential filters that could have been set previously
+        #FIX MH to change origin and destination partner, overrides all
+        pick_obj = self.pool.get('stock.picking')
+        pick = pick_obj.browse(cr, uid, new_picking_id, context=context)
+        tmp = pick.delivery_address_id
+        pick.delivery_address_id = pick.origin_address_id
+        pick.origin_address_id = tmp
+        ctx = {
+            'search_default_picking_type_id': pick_type_id,
+            'search_default_draft': False,
+            'search_default_assigned': False,
+            'search_default_confirmed': False,
+            'search_default_ready': False,
+            'search_default_late': False,
+            'search_default_available': False,
+        }
+        return {
+            'domain': "[('id', 'in', [" + str(new_picking_id) + "])]",
+            'name': _('Returned Picking'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'stock.picking',
+            'type': 'ir.actions.act_window',
+            'context': ctx,
+        }
