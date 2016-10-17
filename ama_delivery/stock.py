@@ -406,12 +406,11 @@ class ama_del_stock_transfer_details(models.TransientModel):
             
             if record.picking_id.auto_stock_carrier and record.picking_id.dhl_check:
                 _logger.info('Initiiere DHL-Versand fuer Lieferschein %s' % (record.picking_id.name))
-                #parcels = 0
-                sender = None
-                # changed to sender all time amamedis
-                # if need of single warehouse each time need to be fixed in the lines below because of no partner in source_loc while dropshipping
+                
+                # sender set to orgin address which is fixed to company for each picking
+                # so ist better use in a retour picking now
+                sender = record.picking_id.origin_address_id
                 company = record.picking_id.company_id
-                sender = company.partner_id
                 
                 # Error handling
                 if parcels == 0:
