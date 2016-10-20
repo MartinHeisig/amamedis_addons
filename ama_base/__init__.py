@@ -3,3 +3,4 @@ import ama_base_sale
 import ama_base_product
 import ama_base_mail
 import ama_base_stock
+import ama_base_account

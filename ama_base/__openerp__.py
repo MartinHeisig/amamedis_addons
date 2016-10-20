@@ -58,7 +58,7 @@ Auftragszeilen
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sale', 'product', 'sale_stock', 'purchase', 'mail'],
+    'depends': ['base', 'sale', 'product', 'sale_stock', 'purchase', 'mail', 'account_invoice_merge'],
 
     # always loaded
     'data': [
@@ -68,6 +68,7 @@ Auftragszeilen
         'ama_base_purchase_view.xml',
         'ama_base_stock_view.xml',
         'ama_base_mail_view.xml',
+        'ama_base_account_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -27,27 +27,10 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class amamedis_base_stock(models.Model):
-    _inherit = 'stock.picking'
+class amamedis_base_account_invoice(models.Model):
+    _inherit = 'account.invoice'
     
-    @api.multi
-    @api.depends('origin')
-    def _get_origin(self):
-        for record in self:
-            so_ids = False
-            po_ids = self.env['purchase.order'].search([('name', '=', record.origin)])
-            if po_ids and po_ids[0]:
-                so_ids = self.env['sale.order'].search([('name', '=', po_ids[0].origin)])
-            else:
-                so_ids = self.env['sale.order'].search([('name', '=', record.origin)])
-            
-            if so_ids and so_ids[0]:
-                record.orig_order = so_ids[0]
-            else:
-                record.orig_order = False
-                
-    orig_order = fields.Many2one('sale.order', string='Originalauftrag', compute='_get_origin', store=True, default=False)
-    mail_text = fields.Text('E-Mail-Text Lieferung', help='Text der zusaetzlich zum standardisierten Text der E-Mail mit dem Lieferschein hinzugefuegt wird. Position direkt vor der Grussformel.')
+    mail_text = fields.Text('E-Mail-Text Rechnung', help='Text der zusaetzlich zum standardisierten Text der E-Mail mit der Rechnung hinzugefuegt wird. Position direkt vor der Grussformel.')
     
     @api.model
     def create(self, vals):
@@ -55,18 +38,20 @@ class amamedis_base_stock(models.Model):
         #Write your logic here
         if vals.get('origin'):
             so_ids = False
-            po_ids = self.env['purchase.order'].search([('name', '=', vals['origin'])])
-            if po_ids and po_ids[0]:
-                so_ids = self.env['sale.order'].search([('name', '=', po_ids[0].origin)])
-            else:
-                so_ids = self.env['sale.order'].search([('name', '=', vals['origin'])])
+            
+            so_ids = self.env['sale.order'].search([('name', '=', vals['origin'])])
             
             if so_ids and so_ids[0]:
-                vals['mail_text'] = so_ids[0].mail_text_pick
+                vals['mail_text'] = so_ids[0].mail_text_inv
         
-        res = super(amamedis_base_stock, self).create(vals)
+        res = super(amamedis_base_account_invoice, self).create(vals)
  
         #Write your logic here
          
         return res
-    
+        
+    @api.model
+    def _get_first_invoice_fields(self, invoice):
+        res = super(amamedis_base_account_invoice, self)._get_first_invoice_fields(invoice)
+        res['mail_text'] = invoice.mail_text
+        return res
