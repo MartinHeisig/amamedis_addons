@@ -244,7 +244,7 @@ class stock_dhl_picking_unit(models.Model):
         ids.tracking()
         
         # get all delivered packages without image received
-        ids = self.search([('auto_tracking', '=', True),('auto_tracking', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
+        ids = self.search([('auto_tracking', '=', True),('active', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
         _logger.info(str(ids))
         ids.tracking()
         
@@ -274,7 +274,8 @@ class stock_dhl_picking_unit(models.Model):
                 cig_user = record.stock_dm_picking_unit_id.stock_picking_id.company_id.cig_user_dhl
                 cig_pass = record.stock_dm_picking_unit_id.stock_picking_id.company_id.cig_pass_dhl
                 
-            if record.dhl_delivery_event_flag != '1' and record.auto_tracking:
+            #if record.dhl_delivery_event_flag != '1' and record.auto_tracking:
+            if record.dhl_delivery_event_flag != '1':
         
                 method = "d-get-piece-detail"
                 #method = "get-status-for-public-user"
@@ -469,7 +470,8 @@ class stock_dhl_picking_unit(models.Model):
             time.sleep(sleep_time)
             
             record.new_image_received = False
-            if not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE' and record.auto_tracking:
+            #if not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE' and record.auto_tracking:
+            if not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE':
                 method = 'd-get-signature'
                 xml_response = ''
                 xml_response_dict = ''
@@ -523,12 +525,15 @@ class stock_dhl_picking_unit(models.Model):
                     record.error_counter = False
                     record.error = ''
                     xml_response_dict = xmltodict.parse(xml_response)
+                    
+                    #_logger.debug('CODE: %s' % (xml_response_dict['data']['@' + constants_dhl.CODE]))
+                    if xml_response_dict['data']['@' + constants_dhl.CODE] == '0':
 
-                    record.dhl_image_event_date = xml_response_dict['data']['data']['@' + constants_dhl.EVENT_DATE]
-                    record.dhl_image_mime_type = xml_response_dict['data']['data']['@' + constants_dhl.MIME_TYPE]
-                    record.dhl_image = xml_response_dict['data']['data']['@' + constants_dhl.IMAGE]
+                        record.dhl_image_event_date = xml_response_dict['data']['data']['@' + constants_dhl.EVENT_DATE]
+                        record.dhl_image_mime_type = xml_response_dict['data']['data']['@' + constants_dhl.MIME_TYPE]
+                        record.dhl_image = xml_response_dict['data']['data']['@' + constants_dhl.IMAGE]
 
-                    record.new_image_received = True
+                        record.new_image_received = True
 
                 elif xml_response.find('<B>SIM:</B>') != -1:
                     try:
