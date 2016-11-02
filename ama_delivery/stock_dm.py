@@ -17,13 +17,14 @@ _logger = logging.getLogger(__name__)
 
 class stock_dm_picking_unit(models.Model):
     _name = 'stock.dm.picking.unit'
-    _order = 'create_date desc'
+    _order = 'event_date desc, create_date desc'
     '''ungebrandete Sendung'''
 
     name = fields.Char(string='Name', compute='_compute_name', help='Logistiker-Sendungsnummer')
     code = fields.Char(string='Sendungsnummer', help='Sendungsnummer', required=True)
     stock_picking_id = fields.Many2one('stock.picking', ondelete='restrict', string='Lieferschein', help='Lieferschein, zu dem diese Sendung gehoert', required=True)
     order_date = fields.Datetime(string='erstellt am', related='stock_picking_id.date_done')
+    event_date = fields.Datetime(string='Letzter Status von', compute='_get_event_date', readonly=True, store=True)
     delivery_carrier_id = fields.Many2one('delivery.carrier', ondelete='restrict', string='Logistiker', help='Auslieferungsmethode fuer diese Sendung', required=True)
     delivery_carrier_res_model = fields.Many2one('ir.model', string='Datenmodell des Lieferanten', related='delivery_carrier_id.res_model', help='Der Auslieferungsmethode (dem Logistiker) zugewiesenes Datenmodell', store=True, readonly=True)
     delivery_carrier_res_id = fields.Integer(string='ID im Datenmodell des Lieferanten', help='DatensatzID im jeweiligen Modell des Logistikers')
@@ -46,6 +47,15 @@ class stock_dm_picking_unit(models.Model):
                 carrier_picking_unit = self.env[record.delivery_carrier_res_model.model].browse(record.delivery_carrier_res_id)
                 if carrier_picking_unit and hasattr(self.env[record.delivery_carrier_res_model.model], "stock_dm_state_id") and carrier_picking_unit.stock_dm_state_id:
                     record.stock_dm_state_id = carrier_picking_unit.stock_dm_state_id
+                    
+    @api.multi
+    @api.depends('delivery_carrier_res_model','delivery_carrier_res_id')
+    def _get_event_date(self):
+        for record in self:
+            if record.delivery_carrier_res_model and record.delivery_carrier_res_id and record.delivery_carrier_res_id > 0:
+                carrier_picking_unit = self.env[record.delivery_carrier_res_model.model].browse(record.delivery_carrier_res_id)
+                if carrier_picking_unit and hasattr(self.env[record.delivery_carrier_res_model.model], "stock_dm_state_id") and carrier_picking_unit.stock_dm_state_id:
+                    record.event_date = carrier_picking_unit.event_date
                     
     @api.multi
     def tracking(self):

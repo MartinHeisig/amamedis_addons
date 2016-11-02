@@ -52,6 +52,7 @@ class stock_dhl_picking_unit(models.Model):
     error_counter = fields.Integer(string='Anzahl Tracking-Fehler', default=False, help='Erreicht der Zaehler 5 wird nicht mehr automatisch getrackt.')
     ownership = fields.Boolean(string='Eigene Sendung', default=False, help='Legt fest, mit welcher Methode die Sendung verfolgt wird, da es hier Unterschiede zwischen eigenen und fremden Sendungen gibt.')
     active = fields.Boolean(string='Aktiv', default=True)
+    event_date = fields.Datetime('Letzter Status von', compute='_get_event_date', readonly=True, store=True)
     
     stock_dhl_ice_code = fields.Char(related='stock_dhl_ice_id.code', string="ICE-Code", readonly=True)
     stock_dhl_ice_text = fields.Char(related='stock_dhl_ice_id.text', string="ICE-Text", readonly=True)
@@ -118,7 +119,7 @@ class stock_dhl_picking_unit(models.Model):
     dhl_standard_event_code = fields.Char(string="standard-event-code")
     dhl_status = fields.Char(string="status")
     dhl_status_liste = fields.Char(string="status-liste")
-    dhl_status_timestamp = fields.Char(string="status-timestamp")
+    dhl_status_timestamp = fields.Char(string="status-timestamp", default=str(datetime.now()))
     dhl_upu = fields.Char(string="upu")
     dhl_image = fields.Text(string="signature")
     dhl_image_event_date = fields.Char(string="signature-event-date")
@@ -130,34 +131,19 @@ class stock_dhl_picking_unit(models.Model):
              "Sendungen sind einmalig und koennen nicht dupliziert werden.\nFalls es sich um eine regulaere Sendung handelt, pruefen Sie ob Ihr Ihnen zugewiesener Nummernpool zu klein ist."),
             ]
     
-    '''@api.multi
-    @api.depends('dhl_ice')
-    def _compute_ice(self):
+    @api.multi
+    @api.depends('dhl_status_timestamp','create_date')
+    def _get_event_date(self):
         for record in self:
-            record.stock_dhl_ice_id = self.env['stock.dhl.ice'].search([('code','=',record.dhl_ice)], limit=1)
-            _logger.debug(len(record.stock_dm_state_id))
-            _logger.debug(record.stock_dm_state_id)
-            if not record.stock_dm_state_id or record.stock_dhl_ice_id.stock_dm_state_id.sequence > record.stock_dm_state_id.sequence:
-                #record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
-                record.write({'stock_dm_state_id': record.stock_dhl_ice_id.stock_dm_state_id.id})
-                _logger.debug('Hier bin ich')
-                _logger.debug(record.stock_dm_state_id)'''
+            if record.dhl_status_timestamp:
+                try:
+                    tz = pytz.timezone('Europe/Berlin') 
+                    record.event_date = tz.localize(datetime.strptime(record.dhl_status_timestamp, '%d.%m.%Y %H:%M')).astimezone(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+                except ValueError:
+                    record.event_date = False
+            else:
+                record.event_date = record.create_date
     
-    '''@api.multi
-    @api.onchange('dhl_ice')
-    def _onchange_dhl_ice(self):
-        for record in self:
-            _logger.debug('Neuer ICE-Code?')
-            _logger.debug(record.stock_dhl_ice_id)
-            record.stock_dhl_ice_id = self.env['stock.dhl.ice'].search([('code','=',self.dhl_ice)], limit=1)
-            _logger.debug(record.stock_dhl_ice_id)
-            if record.stock_dhl_ice_id and record.stock_dhl_ice_id.stock_dm_state_id:
-                if not record.stock_dm_state_id:
-                    record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
-                else:
-                    if record.stock_dm_state_id.sequence and (record.stock_dm_state_id.sequence == 70 or (record.stock_dhl_ice_id.stock_dm_state_id.sequence and record.stock_dm_state_id.sequence < record.stock_dhl_ice_id.stock_dm_state_id.sequence)):
-                        record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id'''
-
     @api.multi
     @api.depends('dhl_ric')
     def _compute_ric(self):
@@ -184,15 +170,6 @@ class stock_dhl_picking_unit(models.Model):
             if record.dhl_code:
                 record.stock_dhl_status_id = self.env['stock.dhl.status'].search([('code','=',record.dhl_code)], limit=1)
 
-    '''@api.multi
-    @api.depends('stock_dhl_ice_id')
-    def _compute_stock_dm_state_id(self):
-        for record in self:
-            if not record.stock_dm_state_id or record.stock_dhl_ice_id.stock_dm_state_id.sequence > record.stock_dm_state_id.sequence:
-                _logger.debug(record.stock_dm_state_id)
-                record.stock_dm_state_id = record.stock_dhl_ice_id.stock_dm_state_id
-                _logger.debug(record.stock_dm_state_id)'''
-                
     @api.multi
     @api.onchange('stock_dm_state_id')
     def _onchange_stock_dm_state_id(self):
@@ -220,14 +197,6 @@ class stock_dhl_picking_unit(models.Model):
             else:
                 record.auto_tracking = True
     
-    '''@api.multi
-    @api.onchange('stock_dm_picking_unit_id')
-    def _onchange_stock_dm_picking_unit(self):
-        for record in self:
-            if record.stock_dm_picking_unit_id:
-                record.stock_dm_picking_unit_id.delivery_carrier_res_id = record.NewId
-                raise except_orm('TEST',record.NewId)'''
-    
     @api.multi
     def raise_id(self):
         for record in self:
@@ -253,8 +222,6 @@ class stock_dhl_picking_unit(models.Model):
         _logger.info(str(ids))
         ids.tracking()
         
-            
-    
     @api.multi
     def tracking(self):
         for record in self:

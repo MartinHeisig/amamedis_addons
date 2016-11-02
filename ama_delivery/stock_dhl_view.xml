@@ -211,14 +211,11 @@
             <field name="name">stock.dhl.picking.unit.list</field>
             <field name="model">stock.dhl.picking.unit</field>
             <field name="arch" type="xml">
-                <!--tree string="Shipment List" colors="red:error_occurred=='True'"-->
-                <tree string="Shipment List" colors="red:error_occurred==True">
-                    <!--button name="synchronize_cron" type="object" string="CronJob"/-->
+                <tree string="Shipment List" default_order='event_date desc, name' colors="red:error_occurred==True">
                     <field name="name"/>
-                    <!--field name="stock_dm_picking_unit_id"/-->
                     <field name="partner_id"/>
                     <field name="stock_dhl_ice_text"/>
-                    <field name="dhl_status_timestamp"/>
+                    <field name="event_date"/>
                     <field name="error"/>
                     <field name="error_occurred"/>
                     <field name="error_counter"/>
