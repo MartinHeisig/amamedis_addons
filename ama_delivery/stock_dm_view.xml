@@ -57,6 +57,7 @@
                     <field name="stock_picking_id"/>
                     <field name="order_date"/>
                     <field name="event_date"/>
+                    <field name="last_scan"/>
                     <field name="delivery_carrier_id"/>
                     <field name="partner_id"/>
                     <field name="delivery_carrier_res_model"/>

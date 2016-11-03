@@ -52,7 +52,8 @@ class stock_dhl_picking_unit(models.Model):
     error_counter = fields.Integer(string='Anzahl Tracking-Fehler', default=False, help='Erreicht der Zaehler 5 wird nicht mehr automatisch getrackt.')
     ownership = fields.Boolean(string='Eigene Sendung', default=False, help='Legt fest, mit welcher Methode die Sendung verfolgt wird, da es hier Unterschiede zwischen eigenen und fremden Sendungen gibt.')
     active = fields.Boolean(string='Aktiv', default=True)
-    event_date = fields.Datetime('Letzter Status von', compute='_get_event_date', readonly=True, store=True)
+    event_date = fields.Datetime('Letzter Status', compute='_get_event_date', readonly=True, store=True)
+    last_scan = fields.Datetime('Letzter Abruf', readonly=True, store=True)
     
     stock_dhl_ice_code = fields.Char(related='stock_dhl_ice_id.code', string="ICE-Code", readonly=True)
     stock_dhl_ice_text = fields.Char(related='stock_dhl_ice_id.text', string="ICE-Text", readonly=True)
@@ -119,7 +120,7 @@ class stock_dhl_picking_unit(models.Model):
     dhl_standard_event_code = fields.Char(string="standard-event-code")
     dhl_status = fields.Char(string="status")
     dhl_status_liste = fields.Char(string="status-liste")
-    dhl_status_timestamp = fields.Char(string="status-timestamp", default=str(datetime.now()))
+    dhl_status_timestamp = fields.Char(string="status-timestamp", default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     dhl_upu = fields.Char(string="upu")
     dhl_image = fields.Text(string="signature")
     dhl_image_event_date = fields.Char(string="signature-event-date")
@@ -276,6 +277,7 @@ class stock_dhl_picking_unit(models.Model):
                         r.encoding = "utf-8"
                         xml_response = r.text
                         _logger.info(xml_response)
+                        record.last_scan = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     else:
                         record.error_occurred = True
                         record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)
@@ -468,6 +470,7 @@ class stock_dhl_picking_unit(models.Model):
                         r.encoding = "utf-8"
                         xml_response = r.text
                         _logger.info(xml_response)
+                        record.last_scan = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     else:
                         record.error_occurred = True
                         record.error_counter = (not record.error_counter and 1) or (record.error_counter + 1)

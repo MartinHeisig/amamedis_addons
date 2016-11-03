@@ -216,6 +216,7 @@
                     <field name="partner_id"/>
                     <field name="stock_dhl_ice_text"/>
                     <field name="event_date"/>
+                    <field name="last_scan"/>
                     <field name="error"/>
                     <field name="error_occurred"/>
                     <field name="error_counter"/>
