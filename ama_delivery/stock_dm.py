@@ -76,6 +76,12 @@ class stock_dm_picking_unit(models.Model):
                     attribute = getattr(self.env[record.delivery_carrier_res_model.model], "tracking", None)
                     if callable(attribute):
                         carrier_picking_unit.tracking()
+                        
+    @api.multi
+    def refresh(self):
+        for record in self:
+            record._get_event_date()
+            record._get_last_scan()
 
     @api.multi
     def open_carrier_picking_unit(self):

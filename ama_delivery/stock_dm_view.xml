@@ -116,6 +116,21 @@
             </field>
         </record>
 
+        <record model="ir.actions.server" id="stock_dm_refresh_button_action">
+            <field name="name">Status aktualisieren</field>
+            <field name="model_id" ref="model_stock_dm_picking_unit"/>
+            <field name="code">action = self.refresh(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        
+        <record model="ir.values" id="stock_dm_refresh_button">
+            <field name="model_id" ref="model_stock_dm_picking_unit"/>
+            <field name="name">Status aktualisieren</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('stock_dm_refresh_button_action'))" />
+            <field name="key">action</field>
+            <field name="model">stock.dm.picking.unit</field>
+        </record>
+        
         <!-- child menu stock.dm.states -->
         <menuitem id="stock_dm_state_menu" name="Auslieferungsstatus"
             parent="delivery.menu_delivery" action="stock_dm_state_list_action"

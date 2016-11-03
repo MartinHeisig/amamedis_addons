@@ -547,6 +547,8 @@ class stock_dhl_picking_unit(models.Model):
                     
                 time.sleep(sleep_time)
                 
+            record.stock_dm_picking_unit_id.refresh()
+                
     @api.multi
     def action_delivered(self):
         for record in self:
