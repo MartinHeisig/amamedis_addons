@@ -20,6 +20,7 @@ import logging
 
 from suds.client import Client
 from suds.transport.https import HttpAuthenticated
+from suds.sax.attribute import Attribute
 from suds.plugin import MessagePlugin
 from suds.wsse import *
 
@@ -459,7 +460,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                     if company.api_order_dhl == '1':
                     
                         WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/1.0/geschaeftskundenversand-api-1.0.wsdl'
-                        client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False, plugins=[MyPlugin()])
+                        client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False, plugins=[MyPlugin(company.force_address_check)])
                     
                         authentification = client.factory.create('ns1:AuthentificationType')
                         authentification.user = intraship_username
@@ -648,7 +649,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                         #WSDL_URL = u'file:///opt/dhl/geschaeftskundenversand-api-2.1.wsdl'
                         WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.1/geschaeftskundenversand-api-2.1.wsdl'
                         #WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.0/geschaeftskundenversand-api-2.0.wsdl'
-                        client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False, plugins=[MyPlugin()])
+                        client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False, plugins=[MyPlugin(company.force_address_check)])
                     
                         authentification = client.factory.create('cis:AuthentificationType')
                         authentification.user = intraship_username.encode('iso-8859-1')
@@ -727,6 +728,7 @@ class ama_del_stock_transfer_details(models.TransientModel):
                             shipment.Receiver = receiver
 
                             shipmentOrder = client.factory.create('ns1:ShipmentOrderType')
+                            shipmentOrder.PrintOnlyIfCodeable = ''
                             shipmentOrder.sequenceNumber = str(j)
                             shipmentOrder.Shipment = shipment
 
@@ -805,9 +807,13 @@ class ama_del_stock_transfer_details(models.TransientModel):
                                         _logger.error('Fehler DHL-Versand (Request)', 'Request-Antwort enthielt keine Sendungsdaten' % (statusCode, statusMessage))
                                         raise Warning('Fehler DHL-Versand (Request)', 'Request-Antwort enthielt keine Sendungsdaten' % (statusCode, statusMessage))
                                 else:
+                                    if createShipmentOrderResponse.CreationState is not None and createShipmentOrderResponse.CreationState[0]:
+                                        element = createShipmentOrderResponse.CreationState[0]
+                                        if element.LabelData and element.LabelData.Status and element.LabelData.Status.statusMessage:
+                                            statusMessage = element.LabelData.Status.statusMessage
                                     record.picking_id.message_post(subtype='mt_comment', subject='Fehler DHL-Versand (Request)', body='Request ergab den Statuscode %s mit der Nachricht %s' % (statusCode, statusMessage))
-                                    _logger.error('Fehler DHL-Versand (Request)', 'Request ergab den Statuscode %s mit der Nachricht %s' % (statusCode, statusMessage))
-                                    raise Warning('Fehler DHL-Versand (Request)', 'Request ergab den Statuscode %s mit der Nachricht %s' % (statusCode, statusMessage))
+                                    _logger.error('Fehler DHL-Versand (Request)', 'Request ergab den Statuscode %s mit der Nachricht: %s' % (statusCode, statusMessage))
+                                    raise Warning('Fehler DHL-Versand (Request)', 'Request ergab den Statuscode %s mit der Nachricht:\n %s' % (statusCode, statusMessage))
                         else:
                             record.picking_id.carrier_status_code = 'Request-Fehler'
                             record.picking_id.carrier_status_message = 'Abfrage lieferte kein Ergebnis'
@@ -883,6 +889,9 @@ class ama_del_stock_transfer_details(models.TransientModel):
                 
 class MyPlugin(MessagePlugin):
 
+    def __init__(self, fac):
+        self._fac = fac
+
     def marshalled(self, context):
         #_logger.debug('Marshalled')
         
@@ -906,6 +915,8 @@ class MyPlugin(MessagePlugin):
                             element.childAtPath('Shipment/ShipmentDetails/accountNumber').setPrefix('ns0')
                         if element.childAtPath('Shipment/Receiver/name1') is not None:
                             element.childAtPath('Shipment/Receiver/name1').setPrefix('ns0')
+                        if element.childAtPath('PrintOnlyIfCodeable') is not None:
+                            element.childAtPath('PrintOnlyIfCodeable').attributes.append(Attribute('active', self._fac and '1' or '0'))
 
                             
 class ama_del_stock_return_picking(models.TransientModel):

@@ -14,6 +14,7 @@ class res_company_access_data(models.Model):
     # DHL Login
     api_order_dhl = fields.Selection([('1', 'Intraship'),('2', 'Versenden')], string='API-Version', help='Auswahl, welche API verwendet werden soll', default='2')
     sandbox_dhl = fields.Boolean('DHL Test Modus', help='Alle DHL Anfragen laufen unter Testbedingungen. Es werden keine echten Labels erstellt oder Sendungen verfolgt')
+    force_address_check = fields.Boolean('Erzwinge Adressüberprüfung', help='Labels werden nur generiert, wenn DHL die Adresse verifiziert. Nur zu deaktivieren wenn zwingend eine Lieferung, trotz falscher Daten, versendet werden soll.', default=True)
     
     ekp_dhl = fields.Char('EKP Nummer', size=10, help='Die ersten zehn Ziffern Ihrer DHL Abrechnungsnummer')
     partner_id_dhl = fields.Char('DHL Teilnahme National', size=2, help='Die letzten zwei Ziffern ihrer DHL Abrechnungsnummer')
