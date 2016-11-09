@@ -214,12 +214,12 @@ class stock_dhl_picking_unit(models.Model):
         ids.tracking()
         
         # get all delivered packages without image received - case False
-        ids = self.search([('auto_tracking', '=', True),('active', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
+        ids = self.search([('ownership', '=', True),('auto_tracking', '=', True),('active', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', False)])
         _logger.info(str(ids))
         ids.tracking()
         
         # get all delivered packages without image received - case empty string
-        ids = self.search([('auto_tracking', '=', True),('active', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', '')])
+        ids = self.search([('ownership', '=', True),('auto_tracking', '=', True),('active', '=', True),('dhl_delivery_event_flag', '=', '1'),('dhl_dest_country', '=', 'DE'),('dhl_image', '=', '')])
         _logger.info(str(ids))
         ids.tracking()
         
@@ -249,22 +249,39 @@ class stock_dhl_picking_unit(models.Model):
                 
             #if record.dhl_delivery_event_flag != '1' and record.auto_tracking:
             if record.dhl_delivery_event_flag != '1':
-        
-                method = "d-get-piece-detail"
-                #method = "get-status-for-public-user"
+            
                 xml_response = ''
                 xml_response_dict = ''
-
-                request = '<?xml version="1.0" encoding="UTF-8"?><data '
-                request += constants_dhl.APPNAME + '=\"' + appname + '\" '
-                request += constants_dhl.PASSWORD + '=\"' + password + '\" '
-                request += constants_dhl.LANGUAGE_CODE + '=\"' + language_code + '\" '
-                request += constants_dhl.REQUEST + '=\"' + method + '\" '
-
-                #request += '><data '
-                request += constants_dhl.PIECE_CODE + '=\"' + piece_code + '\"/>'
-                #request += '</data>'
                 
+                if record.ownership:
+        
+                    method = "d-get-piece-detail"
+                    
+                    request = '<?xml version="1.0" encoding="UTF-8"?><data '
+                    request += constants_dhl.APPNAME + '=\"' + appname + '\" '
+                    request += constants_dhl.PASSWORD + '=\"' + password + '\" '
+                    request += constants_dhl.LANGUAGE_CODE + '=\"' + language_code + '\" '
+                    request += constants_dhl.REQUEST + '=\"' + method + '\" '
+
+                    request += constants_dhl.PIECE_CODE + '=\"' + piece_code + '\"/>'
+                    
+                else:
+                
+                    method = "get-status-for-public-user"
+                    
+                    request = '<?xml version="1.0" encoding="UTF-8"?><data '
+                    request += constants_dhl.APPNAME + '=\"' + appname + '\" '
+                    request += constants_dhl.PASSWORD + '=\"' + password + '\" '
+                    request += constants_dhl.LANGUAGE_CODE + '=\"' + language_code + '\" '
+                    request += constants_dhl.REQUEST + '=\"' + method + '\" '
+                    
+                    request += '><data '
+                    request += constants_dhl.PIECE_CODE + '=\"' + piece_code + '\"'
+                    if record.partner_id and record.partner_id.zip:
+                        request += ' ' + constants_dhl.ZIP_CODE + '=\"' + record.partner_id.zip + '\"'
+                    request += '/></data>'
+                    
+                    
                 headers = {'Content-Type': 'text/xml'}
                 payload = {'xml': request}
 
@@ -305,7 +322,7 @@ class stock_dhl_picking_unit(models.Model):
                     # XML parsen
                     xml_response_dict = xmltodict.parse(xml_response)
                     
-                    record.dhl_code = xml_response_dict['data']['@' + constants_dhl.CODE]
+                    record.dhl_code = record.ownership and xml_response_dict['data']['@' + constants_dhl.CODE] or xml_response_dict['data']['data']['@' + constants_dhl.CODE]
                     
                     if record.dhl_code != '0':
                         record.error_occurred = True
@@ -322,60 +339,60 @@ class stock_dhl_picking_unit(models.Model):
                         record.error_occurred = False
                         record.error_counter = False
                         record.error = ''
-                        record.dhl_airway_bill_number = xml_response_dict['data']['data']['@' + constants_dhl.AIRWAY_BILL_NUMBER]
-                        record.dhl_delivery_event_flag = xml_response_dict['data']['data']['@' + constants_dhl.DELIVERY_EVENT_FLAG]
-                        record.dhl_dest_country = xml_response_dict['data']['data']['@' + constants_dhl.DEST_COUNTRY]
-                        record.dhl_division = xml_response_dict['data']['data']['@' + constants_dhl.DIVISION]
-                        record.dhl_domestic_id = xml_response_dict['data']['data']['@' + constants_dhl.DOMESTIC_ID]
-                        record.dhl_error_status = xml_response_dict['data']['data']['@' + constants_dhl.ERROR_STATUS]
-                        record.dhl_event_country = xml_response_dict['data']['data']['@' + constants_dhl.EVENT_COUNTRY]
-                        record.dhl_event_location = xml_response_dict['data']['data']['@' + constants_dhl.EVENT_LOCATION]
-                        record.dhl_ice = xml_response_dict['data']['data']['@' + constants_dhl.ICE]
-                        record.dhl_identifier_type = xml_response_dict['data']['data']['@' + constants_dhl.IDENTIFIER_TYPE]
-                        record.dhl_international_flag = xml_response_dict['data']['data']['@' + constants_dhl.INTERNATIONAL_FLAG]
-                        record.dhl_leitcode = xml_response_dict['data']['data']['@' + constants_dhl.LEITCODE]
-                        record.dhl_matchcode = xml_response_dict['data']['data']['@' + constants_dhl.MATCHCODE]
-                        record.dhl_order_preferred_delivery_date = xml_response_dict['data']['data']['@' + constants_dhl.ORDER_PREFERRED_DELIVERY_DAY]
-                        record.dhl_origin_country = xml_response_dict['data']['data']['@' + constants_dhl.ORIGIN_COUNTRY]
-                        record.dhl_pan_recipient_address = xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_ADDRESS]
-                        record.dhl_pan_recipient_city = xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_CITY]
-                        record.dhl_pan_recipient_name = xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_NAME]
-                        record.dhl_pan_recipient_postalcode = xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_POSTALCODE]
-                        record.dhl_pan_recipient_street = xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_STREET]
-                        record.dhl_piece_code = xml_response_dict['data']['data']['@' + constants_dhl.PIECE_CODE]
-                        record.dhl_piece_customer_reference = xml_response_dict['data']['data']['@' + constants_dhl.PIECE_CUSTOMER_REFERENCE]
-                        record.dhl_piece_id = xml_response_dict['data']['data']['@' + constants_dhl.PIECE_ID]
-                        record.dhl_piece_identifier = xml_response_dict['data']['data']['@' + constants_dhl.PIECE_IDENTIFIER]
-                        record.dhl_product_code = xml_response_dict['data']['data']['@' + constants_dhl.PRODUCT_CODE]
-                        record.dhl_product_key = xml_response_dict['data']['data']['@' + constants_dhl.PRODUCT_KEY]
-                        record.dhl_product_name = xml_response_dict['data']['data']['@' + constants_dhl.PRODUCT_NAME]
-                        record.dhl_pslz_nr = xml_response_dict['data']['data']['@' + constants_dhl.PSLZ_NR]
-                        record.dhl_recipient_city = xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_CITY]
-                        record.dhl_recipient_id = xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_ID]
-                        record.dhl_recipient_id_text = xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_ID_TEXT]
-                        record.dhl_recipient_name = xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_NAME]
-                        record.dhl_recipient_street = xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_STREET]
-                        record.dhl_ric = xml_response_dict['data']['data']['@' + constants_dhl.RIC]
-                        record.dhl_routing_code_ean = xml_response_dict['data']['data']['@' + constants_dhl.ROUTING_CODE_EAN]
-                        record.dhl_ruecksendung = xml_response_dict['data']['data']['@' + constants_dhl.RUECKSENDUNG]
-                        record.dhl_searched_piece_code = xml_response_dict['data']['data']['@' + constants_dhl.SEARCHED_PIECE_CODE]
-                        record.dhl_searched_ref_no = xml_response_dict['data']['data']['@' + constants_dhl.SEARCHED_REF_NO]
-                        record.dhl_shipment_code = xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_CODE]
-                        record.dhl_shipment_customer_reference = xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_CUSTOMER_REFERENCE]
-                        record.dhl_shipment_height = xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_HEIGHT]
-                        record.dhl_shipment_length = xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_LENGTH]
-                        record.dhl_shipment_weight = xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_WEIGHT]
-                        record.dhl_shipment_width = xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_WIDTH]
-                        record.dhl_shipper_address = xml_response_dict['data']['data']['@' + constants_dhl.SHIPPER_ADDRESS]
-                        record.dhl_shipper_city = xml_response_dict['data']['data']['@' + constants_dhl.SHIPPER_CITY]
-                        record.dhl_shipper_name = xml_response_dict['data']['data']['@' + constants_dhl.SHIPPER_NAME]
-                        record.dhl_shipper_street = xml_response_dict['data']['data']['@' + constants_dhl.SHIPPER_STREET]
-                        record.dhl_short_status = xml_response_dict['data']['data']['@' + constants_dhl.SHORT_STATUS]
-                        record.dhl_standard_event_code = xml_response_dict['data']['data']['@' + constants_dhl.STANDARD_EVENT_CODE]
-                        record.dhl_status = xml_response_dict['data']['data']['@' + constants_dhl.STATUS]
-                        record.dhl_status_liste = xml_response_dict['data']['data']['@' + constants_dhl.STATUS_LISTE]
-                        record.dhl_status_timestamp = xml_response_dict['data']['data']['@' + constants_dhl.STATUS_TIMESTAMP]
-                        record.dhl_upu = xml_response_dict['data']['data']['@' + constants_dhl.UPU]
+                        record.dhl_airway_bill_number = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.AIRWAY_BILL_NUMBER] or xml_response_dict['data']['data']['data']['@' + constants_dhl.AIRWAY_BILL_NUMBER]
+                        record.dhl_delivery_event_flag = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.DELIVERY_EVENT_FLAG] or xml_response_dict['data']['data']['data']['@' + constants_dhl.DELIVERY_EVENT_FLAG]
+                        record.dhl_dest_country = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.DEST_COUNTRY] or xml_response_dict['data']['data']['data']['@' + constants_dhl.DEST_COUNTRY]
+                        record.dhl_division = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.DIVISION] or xml_response_dict['data']['data']['data']['@' + constants_dhl.DIVISION]
+                        record.dhl_domestic_id = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.DOMESTIC_ID] or xml_response_dict['data']['data']['data']['@' + constants_dhl.DOMESTIC_ID]
+                        record.dhl_error_status = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.ERROR_STATUS] or xml_response_dict['data']['data']['data']['@' + constants_dhl.ERROR_STATUS]
+                        record.dhl_event_country = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.EVENT_COUNTRY] or xml_response_dict['data']['data']['data']['@' + constants_dhl.EVENT_COUNTRY]
+                        record.dhl_event_location = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.EVENT_LOCATION] or xml_response_dict['data']['data']['data']['@' + constants_dhl.EVENT_LOCATION]
+                        record.dhl_ice = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.ICE] or xml_response_dict['data']['data']['data']['@' + constants_dhl.ICE]
+                        record.dhl_identifier_type = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.IDENTIFIER_TYPE] or xml_response_dict['data']['data']['data']['@' + constants_dhl.IDENTIFIER_TYPE]
+                        record.dhl_international_flag = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.INTERNATIONAL_FLAG] or xml_response_dict['data']['data']['data']['@' + constants_dhl.INTERNATIONAL_FLAG]
+                        record.dhl_leitcode = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.LEITCODE] or xml_response_dict['data']['data']['data']['@' + constants_dhl.LEITCODE]
+                        record.dhl_matchcode = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.MATCHCODE] or xml_response_dict['data']['data']['data']['@' + constants_dhl.MATCHCODE]
+                        record.dhl_order_preferred_delivery_date = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.ORDER_PREFERRED_DELIVERY_DAY] or xml_response_dict['data']['data']['data']['@' + constants_dhl.ORDER_PREFERRED_DELIVERY_DAY]
+                        record.dhl_origin_country = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.ORIGIN_COUNTRY] or xml_response_dict['data']['data']['data']['@' + constants_dhl.ORIGIN_COUNTRY]
+                        record.dhl_pan_recipient_address = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_ADDRESS]
+                        record.dhl_pan_recipient_city = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_CITY] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PAN_RECIPIENT_CITY]
+                        record.dhl_pan_recipient_name = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_NAME] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PAN_RECIPIENT_NAME]
+                        record.dhl_pan_recipient_postalcode = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_POSTALCODE]
+                        record.dhl_pan_recipient_street = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PAN_RECIPIENT_STREET] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PAN_RECIPIENT_STREET]
+                        record.dhl_piece_code = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PIECE_CODE] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PIECE_CODE]
+                        record.dhl_piece_customer_reference = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PIECE_CUSTOMER_REFERENCE]
+                        record.dhl_piece_id = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PIECE_ID] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PIECE_ID]
+                        record.dhl_piece_identifier = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PIECE_IDENTIFIER] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PIECE_IDENTIFIER]
+                        record.dhl_product_code = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PRODUCT_CODE] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PRODUCT_CODE]
+                        record.dhl_product_key = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PRODUCT_KEY]
+                        record.dhl_product_name = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PRODUCT_NAME] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PRODUCT_NAME]
+                        record.dhl_pslz_nr = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.PSLZ_NR] or xml_response_dict['data']['data']['data']['@' + constants_dhl.PSLZ_NR]
+                        record.dhl_recipient_city = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_CITY]
+                        record.dhl_recipient_id = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_ID] or xml_response_dict['data']['data']['data']['@' + constants_dhl.RECIPIENT_ID]
+                        record.dhl_recipient_id_text = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_ID_TEXT] or xml_response_dict['data']['data']['data']['@' + constants_dhl.RECIPIENT_ID_TEXT]
+                        record.dhl_recipient_name = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_NAME] or xml_response_dict['data']['data']['data']['@' + constants_dhl.RECIPIENT_NAME]
+                        record.dhl_recipient_street = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.RECIPIENT_STREET]
+                        record.dhl_ric = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.RIC] or xml_response_dict['data']['data']['data']['@' + constants_dhl.RIC]
+                        record.dhl_routing_code_ean = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.ROUTING_CODE_EAN]
+                        record.dhl_ruecksendung = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.RUECKSENDUNG]
+                        record.dhl_searched_piece_code = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SEARCHED_PIECE_CODE] or xml_response_dict['data']['data']['data']['@' + constants_dhl.SEARCHED_PIECE_CODE]
+                        record.dhl_searched_ref_no = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SEARCHED_REF_NO] or xml_response_dict['data']['data']['data']['@' + constants_dhl.SEARCHED_REF_NR]
+                        record.dhl_shipment_code = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_CODE]
+                        record.dhl_shipment_customer_reference = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_CUSTOMER_REFERENCE]
+                        record.dhl_shipment_height = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_HEIGHT] or xml_response_dict['data']['data']['data']['@' + constants_dhl.SHIPMENT_HEIGHT]
+                        record.dhl_shipment_length = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_LENGTH] or xml_response_dict['data']['data']['data']['@' + constants_dhl.SHIPMENT_LENGTH]
+                        record.dhl_shipment_weight = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_WEIGHT] or xml_response_dict['data']['data']['data']['@' + constants_dhl.SHIPMENT_WEIGHT]
+                        record.dhl_shipment_width = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPMENT_WIDTH] or xml_response_dict['data']['data']['data']['@' + constants_dhl.SHIPMENT_WIDTH]
+                        record.dhl_shipper_address = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPPER_ADDRESS]
+                        record.dhl_shipper_city = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPPER_CITY]
+                        record.dhl_shipper_name = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPPER_NAME]
+                        record.dhl_shipper_street = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHIPPER_STREET]
+                        record.dhl_short_status = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.SHORT_STATUS]
+                        record.dhl_standard_event_code = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.STANDARD_EVENT_CODE] or xml_response_dict['data']['data']['data']['@' + constants_dhl.STANDARD_EVENT_CODE]
+                        record.dhl_status = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.STATUS] or xml_response_dict['data']['data']['data']['@' + constants_dhl.STATUS]
+                        record.dhl_status_liste = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.STATUS_LISTE]
+                        record.dhl_status_timestamp = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.STATUS_TIMESTAMP]
+                        record.dhl_upu = record.ownership and xml_response_dict['data']['data']['@' + constants_dhl.UPU] or xml_response_dict['data']['data']['data']['@' + constants_dhl.UPU]
 
                         eventlist = xml_response_dict['data']['data']['data']['data']
                         if not isinstance(eventlist, list) and isinstance(eventlist, dict):
@@ -445,7 +462,7 @@ class stock_dhl_picking_unit(models.Model):
             
             record.new_image_received = False
             #if not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE' and record.auto_tracking:
-            if not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE':
+            if record.ownership and not record.dhl_image and record.dhl_delivery_event_flag == '1' and record.dhl_dest_country == 'DE':
                 method = 'd-get-signature'
                 xml_response = ''
                 xml_response_dict = ''
