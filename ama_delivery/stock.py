@@ -646,9 +646,9 @@ class ama_del_stock_transfer_details(models.TransientModel):
                     
                     elif company.api_order_dhl == '2':
                         
-                        #WSDL_URL = u'file:///opt/dhl/geschaeftskundenversand-api-2.1.wsdl'
-                        WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.1/geschaeftskundenversand-api-2.1.wsdl'
-                        #WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.0/geschaeftskundenversand-api-2.0.wsdl'
+                        #WSDL_URL = u'file:///etc/odoo/geschaeftskundenversand-api-2.1.wsdl'
+                        #WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.1/geschaeftskundenversand-api-2.1.wsdl'
+                        WSDL_URL = u'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.2/geschaeftskundenversand-api-2.2.wsdl'
                         client = Client(WSDL_URL, prettyxml=True, faults=True, location=location, transport=HttpAuthenticated(username = cig_username, password = cig_password), nosend=False, plugins=[MyPlugin(company.force_address_check)])
                     
                         authentification = client.factory.create('cis:AuthentificationType')
