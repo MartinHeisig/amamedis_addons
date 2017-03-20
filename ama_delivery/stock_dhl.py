@@ -572,6 +572,11 @@ class stock_dhl_picking_unit(models.Model):
             record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','50')], limit=1)
     
     @api.multi
+    def action_cancel(self):
+        for record in self:
+            record.stock_dm_state_id = self.env['stock.dm.state'].search([('sequence','=','80')], limit=1)
+    
+    @api.multi
     def action_delete(self):
         for record in self:
             if record.name:

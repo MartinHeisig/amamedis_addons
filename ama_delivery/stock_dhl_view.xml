@@ -241,6 +241,8 @@
                                 string="Stornieren" attrs="{'invisible': [('stock_dm_state_id','!=',1)]}"/>
                         <button name="action_delivered" type="object"
                                 string="Lieferung (manuell)" attrs="{'invisible': [('stock_dm_state_id','in',(5,8))]}"/>
+                        <button name="action_cancel" type="object"
+                                string="Stornierung (manuell)" attrs="{'invisible': [('stock_dm_state_id','in',(5,8))]}"/>
                         <field name="stock_dm_state_id" widget="statusbar"/>
                     </header>
                     <sheet>
