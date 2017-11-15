@@ -32,7 +32,8 @@ class ama_website_crm(models.Model):
     ACDGroup = fields.Integer('ACDGroup', readonly=True)
     DDI2 = fields.Char('DDI2', readonly=True)
     CLI = fields.Char('CLI (A-Teilnehmer)', widget='phone', readonly=True)
-    DestCLI = fields.Char('Zielperson', help='Personalnummer des zuletzt verbundenen Agenten oder genutzte Zielnummer einer Überlaufzielliste', readonly=True)
+    DestCLI = fields.Char('Zielperson ID', help='Personalnummer des zuletzt verbundenen Agenten oder genutzte Zielnummer einer Überlaufzielliste', readonly=True)
+    DestCLIName = fields.Many2one('ama.cli', ondelete='set null', string='Zielperson', compute='_search_cli_name', help='Name der Zielperson')
     AgentSec = fields.Integer('Sekunden', help='Sekunden, die der Anrufer mit dem 1. Agent bzw. Überlaufziels verbunden war', readonly=True)
     medium_nr = fields.Many2one('ama.acd.ddi', ondelete='set null', string='Kanal Detail', compute='_search_acd_ddi', store=True)
     SNR = fields.Char('SNR', help='vom Anrufer angerufene Nummer', widget='phone', readonly=True)
@@ -259,6 +260,13 @@ class ama_website_crm(models.Model):
                 values = {'res_id': record.partner_id.id, 'res_model': 'res.partner', 'partner_id': record.partner_id.id}
                 attachment.write(values)
             record.partner_id.message_post(body=re.sub(r"\r|\n|(\r\n)", "<br />", record.description or ''), subject=_("Description from Lead %s") % (record.id), type='comment')
+    
+    @api.depends('DestCLI')
+    @api.multi
+    def _search_cli_name(self):
+        for record in self:
+            if record.DestCLI:
+                record.DestCLIName = self.env['ama.cli'].search([('cli', '=', record.DestCLI)])
     
     @api.depends('ACDGroup', 'DDI2')
     @api.multi
@@ -669,3 +677,10 @@ class ama_attachment_partner(models.Model):
     _inherit = ['res.partner']
     
     attachments = fields.One2many('ir.attachment', 'partner_id')
+
+class ama_cli(models.Model):
+    _name = 'ama.cli'
+    
+    cli = fields.Char('Agent ID')
+    name = fields.Char('Agent Name')
+
