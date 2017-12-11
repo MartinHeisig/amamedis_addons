@@ -369,17 +369,32 @@ class ama_website_crm(models.Model):
                         elif self.pool.get('res.users').browse(cr, uid, uid).country_id:
                             countrycode = self.pool.get('res.users').browse(cr, uid, uid).country_id.code
                         else:
-                            countrycode = False
+                            countrycode = None
                             
-                            
-                        cli = phonenumbers.format_number(phonenumbers.parse(cli_t, countrycode), phonenumbers.PhoneNumberFormat.E164)
-                        _logger.debug("initial value: '%s' updated value: '%s'", cli_t, cli)
+                        try:    
+                            cli = phonenumbers.format_number(phonenumbers.parse(cli_t, countrycode), phonenumbers.PhoneNumberFormat.E164)
+                            _logger.debug("initial value: '%s' updated value: '%s'", cli_t, cli)
+    	                except:
+                            if cli_t.startswith('+') and cli_t[1:].isdigit():
+                                try:
+                                    cli = phonenumbers.format_number(phonenumbers.parse(cli_t[1:], countrycode), phonenumbers.PhoneNumberFormat.E164)
+                                    _logger.debug("wrong initial value: '%s' updated value: '%s'", cli_t, cli)
+                                except:
+                                    if line not in error_description:
+                                        error_description.append(line)
+                                        _logger.debug("phonenumber seems not to be valid (extra test without +): '%s'", cli_t)
+                                        cli = False
+                            else:
+                                if line not in error_description:
+                                    error_description.append(line)
+                                    _logger.debug("phonenumber seems not to be valid: '%s'", cli_t)
+                                    cli = False
                             
                         i = 0
                         partner_ids = False
                         partner = False
                         
-                        while not partner_ids and i<3:
+                        while cli and not partner_ids and i<3:
                             partner_ids = self.pool.get('res.partner').search(cr, uid, ['|',('phone', 'like', cli[:len(cli)-i]),'|',('mobile', 'like', cli[:len(cli)-i]),('fax', 'like', cli[:len(cli)-i])])
                             i += 1
                             # defaults['description'] += "\nSuchlauf fuer: " + cli[:len(cli)-i]
